@@ -1,0 +1,51 @@
+
+<!--html来源: http://chenjinfei.blog.51cto.com/2965201/774865 -->
+
+<html>
+    <meta charset="utf-8" />
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+                        <title>登录</title>
+                        <link rel="stylesheet" href="test.css"/>
+                        
+                            <!-- 以下是.css -->
+                            <style type="text/css">
+                                
+                            </style>
+    </head>
+    
+    <body> 
+        <div class="wrap"> 
+            <form action="#" method="post"> 
+                <section class="loginForm"> 
+                    <header> 
+                        <h1>登录</h1> 
+                    </header> 
+                    <div class="loginForm_content"> 
+                        <fieldset> 
+                            <div class="inputWrap"> 
+                                <input id="username" type="text" name="userName" placeholder="邮箱/会员帐号/手机号" autofocus required>
+                                    </div> 
+                            <div class="inputWrap"> 
+                                <input id="password" type="password" name="password" placeholder="请输入密码" required>
+                                    </div> 
+                        </fieldset> 
+                        <fieldset> 
+                            <input type="checkbox" checked="checked"> 
+                                <span>下次自动登录</span> 
+                                </fieldset> 
+                        <fieldset> 
+                            <input type="submit" value="登录" onclick="testLogin()">
+                                <a href="#">忘记密码？</a> <a href="#">注册</a> 
+                                </fieldset> 
+                    </div> 
+                </section> 
+            </form> 
+        </div>
+        
+        <!--  .js不在同一目录下，下面的文件路径应该怎么写  -->
+        <!--html页面绑定js事件，一般放在href之后，如果放在之前加载JS事件会阻塞界面-->
+        <script type="text/javascript" src="test.js" ></script>
+
+    </body>
+</html>

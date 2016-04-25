@@ -1,0 +1,50 @@
+<html>
+    <meta charset="utf-8" />
+    <head>
+        <title>asdf</title>
+        <style type="text/css">
+            #form{
+                width:200px;
+                height:100px;
+                background-color:orange;
+            }
+        </style>
+        <script type="text/javascript" src="Six.js" ></script>
+        <script type="text/javascript" >
+            
+//js中声明login函数，因为html中没有登录按钮，所以，通过oc中调用这个login函数来进行登录
+// 1.不带参数
+  var login = function(){
+      var username = $("#username").val();
+      var password = $("#password").val();
+      
+      if( password == "123"){
+          alert("登录成功");
+      }else{
+          alert("登录失败");
+      }
+  }
+        
+        // 2.带参数param
+        var loginWithParam = function(param){
+            var username = $("#username").val();
+            var password = $("#password").val();
+            
+            if(password == "123"){
+                alert("登录成功,传入的参数是:"+param + " , 用户名是:"+username);
+            }else{
+                alert("登录失败");
+            }
+        }
+        
+        </script>
+    </head>
+    <body>
+        <form id="form" method="post" action="#">
+            <label>用户名:<input id="username" type="text" name="username" /></label></br>
+            <label>密  码:<input id="password" type="text" name="password" /></label></br>
+        </form>
+    </body>
+</html>
+
+

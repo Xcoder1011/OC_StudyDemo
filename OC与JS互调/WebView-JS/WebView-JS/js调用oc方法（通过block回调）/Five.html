@@ -1,0 +1,92 @@
+<html lang="zh-CN"><head>
+    <meta charset="UTF-8">
+        <title>活动1-环球院妆</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+            <link rel="stylesheet" type="text/css" href="http://s.oboe360.com/kz/ui/wap/common/css/font-awesome.min.css">
+                <link rel="stylesheet" type="text/css" href="http://s.oboe360.com/kz/ui/wap/common/css/public.css">
+                    <link rel="stylesheet" type="text/css" href="http://s.oboe360.com/kz/ui/wap/website-c/css/pages.css">
+                        <script src="file:///android_asset/zepto.js" type="text/javascript"></script>
+                        <style id="style-1-cropbar-clipper">/* Copyright 2014 Evernote Corporation. All rights reserved. */
+                            .en-markup-crop-options {
+                                top: 18px !important;
+                                left: 50% !important;
+                                margin-left: -100px !important;
+                                width: 200px !important;
+                                border: 2px rgba(255,255,255,.38) solid !important;
+                                border-radius: 4px !important;
+                            }
+                        
+                        .en-markup-crop-options div div:first-of-type {
+                            margin-left: 0px !important;
+                        }
+                        </style></head>
+<body>
+    
+    <!--topToolbar start -->
+    <!--topToolbar end -->
+    
+    <!--main start-->
+    <div class="main">
+        
+        <!--chismasBanner start -->
+        <div class="chismasBanner mb15">
+            <dt class="center"><img src="http://img.oboe360.com\57\activitylogo\dc784e9966294a5a1e865f9f78adedb0.jpg" alt=""></dt>
+            <dd>
+                <i class="fa fa-clock-o lightGray font18"></i>
+                <span>活动已结束</span>
+            </dd>
+        </div>
+        <!--chismasBanner end -->
+        
+        <!--pro_list start-->
+        <div class="padd15Box pro_list">
+            
+            <dl class="flexBox" onclick="productDetail('308');">
+                <dt>
+                    <a href="javascript:void(0);"><img src="http://img.oboe360.com\57\pimg\20160327\308\500_500\5386c0ef8deefaa52ad52ad921c0e3c0.jpg" onerror="this.src='http://s.oboe360.com/kz/ui/wap/common/img/options.jpg'" alt=""></a>
+                </dt>
+                <dd class="flex">
+                    <h2><a class="fontNormal ellipsis" href="pro_details.html">活动商品</a></h2>
+                    <blockquote class="des deepGray">重量:5g</blockquote>
+                    <ul class="infos">
+                        <li class="font16 roseRed">￥200.00</li>
+                        <li class="gray">销量0件</li>
+                    </ul>
+                    <!--<a class="addToCart"><i class="fa fa-cart-plus font24 roseRed"></i></a>-->
+                </dd>
+            </dl>
+        </div>
+        <!--pro_list end-->
+        
+    </div>
+    <!--main end-->
+    
+    
+    
+    <script src="http://s.oboe360.com/kz/ui/wap/common/js/jquery-1.7.2.min.js"></script>
+    <script src="http://s.oboe360.com/kz/ui/wap/common/js/public.js"></script>
+    <script type="text/javascript">
+        $(function(){
+          setCountDownTime('0');//活动结束时间须转化为秒
+          })
+        </script>
+    <script type="text/javascript">
+        var activityType = '3';
+        function productDetail(id) {
+            if(activityType == '1') {
+                alert("活动还未开始");
+            }else if(activityType == '2') {
+                //AppHost.
+                alert("活动已结束");
+            }else {
+                
+                //传两个参数
+                SelectGoods(id,activityType);
+                
+                //！！！！注意：js的方法除第一个参数外，其他的参数首字母必须大写！！
+                // SelectGoods.selectGoodsIdWithPrice(id, "￥120.0");
+                // 下面这样写是错误的！！
+                // SelectGoods.selectGoodsIdwithPrice(id, "￥120.0");
+            }
+        }
+    </script></body></html>
