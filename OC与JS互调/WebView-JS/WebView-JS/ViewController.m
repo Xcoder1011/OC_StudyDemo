@@ -71,19 +71,19 @@
     };
     
     CellModel *model3 = [[CellModel alloc]init];
-    model3.name = @"使用js库";
+    model3.name = @"js调用oc方法";
     model3.clickBlock = ^{
         [weakSelf.navigationController pushViewController:[[ThreeViewController alloc]init] animated:YES];
     };
     
     CellModel *model4 = [[CellModel alloc]init];
-    model4.name = @"js调用oc方法（通过对象调用类中方法）";
+    model4.name = @"js调用oc方法（以JSExport协议关联native）";
     model4.clickBlock = ^{
         [weakSelf.navigationController pushViewController:[[FourViewController alloc]init] animated:YES];
     };
     
     CellModel *model5 = [[CellModel alloc]init];
-    model5.name = @"js调用oc方法（通过block回调）";
+    model5.name = @"js调用oc方法（以block形式关联JavaScript）";
     model5.clickBlock = ^{
         [weakSelf.navigationController pushViewController:[[FiveViewController alloc]init] animated:YES];
     };
