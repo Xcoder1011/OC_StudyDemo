@@ -32,6 +32,7 @@
 		21455B8E1CCDB9AE002E0261 /* GoodsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 21455B8B1CCDB9AE002E0261 /* GoodsModel.m */; };
 		21455B931CCDB9F7002E0261 /* Five.html in Resources */ = {isa = PBXBuildFile; fileRef = 21455B901CCDB9F7002E0261 /* Five.html */; };
 		21455B941CCDB9F7002E0261 /* FiveViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 21455B921CCDB9F7002E0261 /* FiveViewController.m */; };
+		21455B961CCDBBCD002E0261 /* Three.html in Resources */ = {isa = PBXBuildFile; fileRef = 21455B951CCDBBCD002E0261 /* Three.html */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -71,6 +72,7 @@
 		21455B901CCDB9F7002E0261 /* Five.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = Five.html; sourceTree = "<group>"; };
 		21455B911CCDB9F7002E0261 /* FiveViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FiveViewController.h; sourceTree = "<group>"; };
 		21455B921CCDB9F7002E0261 /* FiveViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FiveViewController.m; sourceTree = "<group>"; };
+		21455B951CCDBBCD002E0261 /* Three.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = Three.html; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -197,6 +199,7 @@
 			children = (
 				21455B831CCDB947002E0261 /* ThreeViewController.h */,
 				21455B841CCDB947002E0261 /* ThreeViewController.m */,
+				21455B951CCDBBCD002E0261 /* Three.html */,
 			);
 			name = "js调用oc方法";
 			path = "加载网络js文件/js调用oc方法";
@@ -286,6 +289,7 @@
 				2104D16E1CC74C5500070EEF /* j1mall.css in Resources */,
 				2104D1641CC719A800070EEF /* test.js in Resources */,
 				2104D1721CC74F9600070EEF /* j1mall_build.js in Resources */,
+				21455B961CCDBBCD002E0261 /* Three.html in Resources */,
 				2113B9761CC4D6D000CBCD47 /* LaunchScreen.storyboard in Resources */,
 				21455B931CCDB9F7002E0261 /* Five.html in Resources */,
 				2113B9731CC4D6D000CBCD47 /* Assets.xcassets in Resources */,
