@@ -15,6 +15,9 @@
 		2104D1721CC74F9600070EEF /* j1mall_build.js in Resources */ = {isa = PBXBuildFile; fileRef = 2104D1711CC74F9600070EEF /* j1mall_build.js */; };
 		210AF25E1CC8A7E800ECF06E /* Six.html in Resources */ = {isa = PBXBuildFile; fileRef = 210AF25D1CC8A7E800ECF06E /* Six.html */; };
 		210AF2601CC8A82200ECF06E /* Six.js in Resources */ = {isa = PBXBuildFile; fileRef = 210AF25F1CC8A82200ECF06E /* Six.js */; };
+		211128FA1CCF0C7B006D0FE2 /* SevenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 211128F81CCF0C7B006D0FE2 /* SevenViewController.m */; };
+		211128FB1CCF0C7B006D0FE2 /* SevenViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 211128F91CCF0C7B006D0FE2 /* SevenViewController.xib */; };
+		211128FD1CCF19AC006D0FE2 /* Seven.js in Resources */ = {isa = PBXBuildFile; fileRef = 211128FC1CCF19AC006D0FE2 /* Seven.js */; };
 		2113B9681CC4D6D000CBCD47 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2113B9671CC4D6D000CBCD47 /* main.m */; };
 		2113B96B1CC4D6D000CBCD47 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2113B96A1CC4D6D000CBCD47 /* AppDelegate.m */; };
 		2113B96E1CC4D6D000CBCD47 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2113B96D1CC4D6D000CBCD47 /* ViewController.m */; };
@@ -44,6 +47,10 @@
 		2104D1711CC74F9600070EEF /* j1mall_build.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = j1mall_build.js; sourceTree = "<group>"; };
 		210AF25D1CC8A7E800ECF06E /* Six.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = Six.html; sourceTree = "<group>"; };
 		210AF25F1CC8A82200ECF06E /* Six.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = Six.js; sourceTree = "<group>"; };
+		211128F71CCF0C7B006D0FE2 /* SevenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SevenViewController.h; sourceTree = "<group>"; };
+		211128F81CCF0C7B006D0FE2 /* SevenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SevenViewController.m; sourceTree = "<group>"; };
+		211128F91CCF0C7B006D0FE2 /* SevenViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SevenViewController.xib; sourceTree = "<group>"; };
+		211128FC1CCF19AC006D0FE2 /* Seven.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = Seven.js; sourceTree = "<group>"; };
 		2113B9631CC4D6D000CBCD47 /* WebView-JS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "WebView-JS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2113B9671CC4D6D000CBCD47 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		2113B9691CC4D6D000CBCD47 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -87,6 +94,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		211128F61CCF0C3C006D0FE2 /* oc调用js方法(加载本地js) */ = {
+			isa = PBXGroup;
+			children = (
+				211128F71CCF0C7B006D0FE2 /* SevenViewController.h */,
+				211128F81CCF0C7B006D0FE2 /* SevenViewController.m */,
+				211128F91CCF0C7B006D0FE2 /* SevenViewController.xib */,
+				211128FC1CCF19AC006D0FE2 /* Seven.js */,
+			);
+			path = "oc调用js方法(加载本地js)";
+			sourceTree = "<group>";
+		};
 		2113B95A1CC4D6D000CBCD47 = {
 			isa = PBXGroup;
 			children = (
@@ -113,6 +131,7 @@
 				21455B861CCDB9AE002E0261 /* js调用oc方法（以JSExport协议关联native） */,
 				21455B8F1CCDB9F7002E0261 /* js调用oc方法（以block形式关联JavaScript） */,
 				214120151CC5C75A0076ED8B /* oc调用js */,
+				211128F61CCF0C3C006D0FE2 /* oc调用js方法(加载本地js) */,
 				2113B9691CC4D6D000CBCD47 /* AppDelegate.h */,
 				2113B96A1CC4D6D000CBCD47 /* AppDelegate.m */,
 				2113B96C1CC4D6D000CBCD47 /* ViewController.h */,
@@ -294,10 +313,12 @@
 				21455B931CCDB9F7002E0261 /* Five.html in Resources */,
 				2113B9731CC4D6D000CBCD47 /* Assets.xcassets in Resources */,
 				213D11E01CC62F630023222E /* test.html in Resources */,
+				211128FB1CCF0C7B006D0FE2 /* SevenViewController.xib in Resources */,
 				2104D16C1CC74C4100070EEF /* j1mall.html in Resources */,
 				210AF2601CC8A82200ECF06E /* Six.js in Resources */,
 				21455B8C1CCDB9AE002E0261 /* Four.html in Resources */,
 				2104D1701CC74C6300070EEF /* j1mall.js in Resources */,
+				211128FD1CCF19AC006D0FE2 /* Seven.js in Resources */,
 				2113B9711CC4D6D000CBCD47 /* Main.storyboard in Resources */,
 				210AF25E1CC8A7E800ECF06E /* Six.html in Resources */,
 				213D11D81CC62CC20023222E /* test.css in Resources */,
@@ -314,6 +335,7 @@
 				213D118B1CC5FFD00023222E /* SixViewController.m in Sources */,
 				2113B96E1CC4D6D000CBCD47 /* ViewController.m in Sources */,
 				21455B8D1CCDB9AE002E0261 /* FourViewController.m in Sources */,
+				211128FA1CCF0C7B006D0FE2 /* SevenViewController.m in Sources */,
 				21455B8E1CCDB9AE002E0261 /* GoodsModel.m in Sources */,
 				21455B941CCDB9F7002E0261 /* FiveViewController.m in Sources */,
 				2113B96B1CC4D6D000CBCD47 /* AppDelegate.m in Sources */,

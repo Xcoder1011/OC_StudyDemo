@@ -21,6 +21,7 @@
     self.window = [[UIWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];
     ViewController *viewCtrl = [[ViewController alloc]init];
     UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:viewCtrl];
+    nav.navigationBar.translucent = NO;
     self.window.rootViewController = nav;
     [self.window makeKeyWindow];
     

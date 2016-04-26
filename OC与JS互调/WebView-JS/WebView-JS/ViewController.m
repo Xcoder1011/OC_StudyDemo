@@ -13,6 +13,7 @@
 #import "FourViewController.h"
 #import "FiveViewController.h"
 #import "SixViewController.h"
+#import "SevenViewController.h"
 
 @interface ViewController ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -94,7 +95,13 @@
         [weakSelf.navigationController pushViewController:[[SixViewController alloc]init] animated:YES];
     };
     
-    self.dataArray = @[model1,model2,model3,model4,model5,model6];
+    CellModel *model7 = [[CellModel alloc]init];
+    model7.name = @"oc调用js方法(加载本地js)";
+    model7.clickBlock = ^{
+        [weakSelf.navigationController pushViewController:[[SevenViewController alloc]initWithNibName:@"SevenViewController" bundle:[NSBundle mainBundle]] animated:YES];
+    };
+    
+    self.dataArray = @[model1,model2,model3,model4,model5,model6,model7];
 }
 
 #pragma mark  UITableViewDelegate
