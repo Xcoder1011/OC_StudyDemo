@@ -11,8 +11,6 @@
 		2104D1641CC719A800070EEF /* test.js in Resources */ = {isa = PBXBuildFile; fileRef = 2104D1621CC719A800070EEF /* test.js */; };
 		2104D16C1CC74C4100070EEF /* j1mall.html in Resources */ = {isa = PBXBuildFile; fileRef = 2104D16B1CC74C4100070EEF /* j1mall.html */; };
 		2104D16E1CC74C5500070EEF /* j1mall.css in Resources */ = {isa = PBXBuildFile; fileRef = 2104D16D1CC74C5500070EEF /* j1mall.css */; };
-		2104D1701CC74C6300070EEF /* j1mall.js in Resources */ = {isa = PBXBuildFile; fileRef = 2104D16F1CC74C6300070EEF /* j1mall.js */; };
-		2104D1721CC74F9600070EEF /* j1mall_build.js in Resources */ = {isa = PBXBuildFile; fileRef = 2104D1711CC74F9600070EEF /* j1mall_build.js */; };
 		210AF25E1CC8A7E800ECF06E /* Six.html in Resources */ = {isa = PBXBuildFile; fileRef = 210AF25D1CC8A7E800ECF06E /* Six.html */; };
 		210AF2601CC8A82200ECF06E /* Six.js in Resources */ = {isa = PBXBuildFile; fileRef = 210AF25F1CC8A82200ECF06E /* Six.js */; };
 		211128FA1CCF0C7B006D0FE2 /* SevenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 211128F81CCF0C7B006D0FE2 /* SevenViewController.m */; };
@@ -43,8 +41,6 @@
 		2104D1621CC719A800070EEF /* test.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = test.js; sourceTree = "<group>"; };
 		2104D16B1CC74C4100070EEF /* j1mall.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = j1mall.html; sourceTree = "<group>"; };
 		2104D16D1CC74C5500070EEF /* j1mall.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = j1mall.css; sourceTree = "<group>"; };
-		2104D16F1CC74C6300070EEF /* j1mall.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = j1mall.js; sourceTree = "<group>"; };
-		2104D1711CC74F9600070EEF /* j1mall_build.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = j1mall_build.js; sourceTree = "<group>"; };
 		210AF25D1CC8A7E800ECF06E /* Six.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = Six.html; sourceTree = "<group>"; };
 		210AF25F1CC8A82200ECF06E /* Six.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = Six.js; sourceTree = "<group>"; };
 		211128F71CCF0C7B006D0FE2 /* SevenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SevenViewController.h; sourceTree = "<group>"; };
@@ -172,8 +168,6 @@
 				213D117E1CC5FF8F0023222E /* TwoViewController.m */,
 				2104D16B1CC74C4100070EEF /* j1mall.html */,
 				2104D16D1CC74C5500070EEF /* j1mall.css */,
-				2104D16F1CC74C6300070EEF /* j1mall.js */,
-				2104D1711CC74F9600070EEF /* j1mall_build.js */,
 			);
 			path = "加载网络js文件";
 			sourceTree = "<group>";
@@ -307,7 +301,6 @@
 			files = (
 				2104D16E1CC74C5500070EEF /* j1mall.css in Resources */,
 				2104D1641CC719A800070EEF /* test.js in Resources */,
-				2104D1721CC74F9600070EEF /* j1mall_build.js in Resources */,
 				21455B961CCDBBCD002E0261 /* Three.html in Resources */,
 				2113B9761CC4D6D000CBCD47 /* LaunchScreen.storyboard in Resources */,
 				21455B931CCDB9F7002E0261 /* Five.html in Resources */,
@@ -317,7 +310,6 @@
 				2104D16C1CC74C4100070EEF /* j1mall.html in Resources */,
 				210AF2601CC8A82200ECF06E /* Six.js in Resources */,
 				21455B8C1CCDB9AE002E0261 /* Four.html in Resources */,
-				2104D1701CC74C6300070EEF /* j1mall.js in Resources */,
 				211128FD1CCF19AC006D0FE2 /* Seven.js in Resources */,
 				2113B9711CC4D6D000CBCD47 /* Main.storyboard in Resources */,
 				210AF25E1CC8A7E800ECF06E /* Six.html in Resources */,
