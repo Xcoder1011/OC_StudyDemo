@@ -1,0 +1,31 @@
+//
+//  PrefixHeader.pch
+//  GCDDemo
+//
+//  Created by wushangkun on 16/4/29.
+//  Copyright © 2016年 J1. All rights reserved.
+//
+
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+
+#ifndef __OPTIMIZE__
+#    define NSLog(...) NSLog(__VA_ARGS__)
+#else
+#    define NSLog(...) {}
+
+#endif
+
+
+#ifdef DEBUG
+#       define DLog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+#else
+#       define DLog(...)
+#endif
+
+
+#define HYWeakObj(o) autoreleasepool{} __weak typeof(o)  Weak##o = o;
+#define HYStrongObj(o) autoreleasepool{} __strong typeof(o) o = Weak##o;
+
+#endif /* PrefixHeader_pch */

@@ -16,6 +16,24 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.view.backgroundColor = [UIColor whiteColor];
+    
+    // 1.测试栅栏函数
+    //[self dispatchBarrierAsyncDemo];
+    
+    // 2.模拟for循环
+    //[self dispatchApplyDemo1];
+    
+    // 3.模拟dispatch_sync的同步效果
+    //[self dispatchApplyDemo2];
+    
+    // 4.监视多个异步任务是否都完成
+    [self dispatchGroupWaitDemo];
+
+}
+
+#pragma mark -- 基本概念
+-(void)learningGCD{
 
     // -------------   1. 系统标准的两个队列    -----------
     
@@ -257,6 +275,13 @@
     dispatch_async(dataQueue, ^{
         NSLog(@"write data 4");
     });
+    /*
+     2016-04-29 10:41:11.203 GCDDemo[1118:471931] read data 2
+     2016-04-29 10:41:11.203 GCDDemo[1118:471343] read data 1
+     2016-04-29 10:41:15.129 GCDDemo[1118:471343] write data 1
+     2016-04-29 10:41:16.480 GCDDemo[1118:471343] read data 3
+     2016-04-29 10:41:16.480 GCDDemo[1118:471931] write data 4
+     */
 }
 
 
@@ -278,6 +303,20 @@
     
     //dispatch_apply 和 dispatch_apply_f 是同步函数,会阻塞当前线程直到所有循环迭代执行完成。当提交到并发queue时,循环迭代的执行顺序是不确定的
     NSLog(@"done"); //这里有个需要注意的是，dispatch_apply这个是会阻塞主线程的。这个log打印会在dispatch_apply都结束后才开始执行
+    
+    /*
+     2016-04-29 10:43:20.750 GCDDemo[1147:484551] 0: a
+     2016-04-29 10:43:20.750 GCDDemo[1147:485069] 1: b
+     2016-04-29 10:43:20.750 GCDDemo[1147:484551] 4: e
+     2016-04-29 10:43:20.750 GCDDemo[1147:485033] 3: d
+     2016-04-29 10:43:20.750 GCDDemo[1147:485034] 2: c
+     2016-04-29 10:43:20.751 GCDDemo[1147:484551] 6: g
+     2016-04-29 10:43:20.751 GCDDemo[1147:485069] 5: f
+     2016-04-29 10:43:20.751 GCDDemo[1147:484551] 9: j
+     2016-04-29 10:43:20.751 GCDDemo[1147:485033] 7: h
+     2016-04-29 10:43:20.751 GCDDemo[1147:485034] 8: i
+     2016-04-29 10:43:23.339 GCDDemo[1147:484551] done
+     */
 }
 
 
@@ -306,21 +345,19 @@
     });
     
     /*!
-     21      *  @brief  执行结果
-     22      *
-     23      2016-02-25 19:49:53.189 dispatch_apply测试[3060:171856] 3: d
-     24      2016-02-25 19:49:53.189 dispatch_apply测试[3060:171852] 1: b
-     25      2016-02-25 19:49:53.189 dispatch_apply测试[3060:171853] 2: c
-     26      2016-02-25 19:49:53.189 dispatch_apply测试[3060:171850] 0: a
-     27      2016-02-25 19:49:53.189 dispatch_apply测试[3060:171856] 4: e
-     28      2016-02-25 19:49:53.189 dispatch_apply测试[3060:171852] 5: f
-     29      2016-02-25 19:49:53.190 dispatch_apply测试[3060:171853] 6: g
-     30      2016-02-25 19:49:53.190 dispatch_apply测试[3060:171850] 7: h
-     31      2016-02-25 19:49:53.190 dispatch_apply测试[3060:171852] 9: j
-     32      2016-02-25 19:49:53.190 dispatch_apply测试[3060:171856] 8: i
-     33      2016-02-25 19:49:53.218 dispatch_apply测试[3060:171760] 回到主线程执行用户界面更新等操作
-     34      *
-     35      */
+     * @brief  执行结果
+     2016-04-29 10:44:59.138 GCDDemo[1172:495843] 2: c
+     2016-04-29 10:44:59.138 GCDDemo[1172:495832] 0: a
+     2016-04-29 10:44:59.138 GCDDemo[1172:495847] 1: b
+     2016-04-29 10:45:02.016 GCDDemo[1172:495858] 3: d
+     2016-04-29 10:45:02.017 GCDDemo[1172:495843] 4: e
+     2016-04-29 10:45:02.017 GCDDemo[1172:495832] 5: f
+     2016-04-29 10:45:02.017 GCDDemo[1172:495847] 6: g
+     2016-04-29 10:45:02.017 GCDDemo[1172:495858] 7: h
+     2016-04-29 10:45:02.018 GCDDemo[1172:495843] 8: i
+     2016-04-29 10:45:02.018 GCDDemo[1172:495832] 9: j
+     2016-04-29 10:45:05.493 GCDDemo[1172:495519] 回到主线程执行用户界面更新等操作
+     */
     
 }
 
@@ -328,16 +365,39 @@
 
 // 5.6 Dispatch_groups : 专门用来监视多个异步任务
 /*
- * dispatch_group_t实例用来追踪不同队列中的不同任务。
+ * dispatch_group_async可以实现监听一组任务是否完成，完成后得到通知执行其他的操作。
  * 当group里所有事件都完成GCD API有两种方式发送通知，第一种是dispatch_group_wait，会阻塞当前进程，等所有任务都完成或等待超时.
  * 第二种方法是使用dispatch_group_notify，异步执行闭包，不会阻塞。
  */
 #pragma mark -- 方法一：dispatch_group_wait
 -(void)dispatchGroupWaitDemo{
+    dispatch_queue_t  concurrentQueue = dispatch_queue_create("dispatch_group_wait", DISPATCH_QUEUE_CONCURRENT);
+    dispatch_group_t group = dispatch_group_create();
     
+    // 比如你执行三个下载任务，当三个任务都下载完成后你才通知界面说完成
+    dispatch_group_async(group, concurrentQueue, ^{
+        NSLog(@"task 1 done");
+    });
+    dispatch_group_async(group, concurrentQueue, ^{
+        NSLog(@"task 2 done");
+    });
+    dispatch_group_async(group, concurrentQueue, ^{
+        NSLog(@"task 3 done");
+    });
     
+    // 会阻塞当前进程，等所有任务都完成或等待超时
+    dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+    NSLog(@"all task end");
     
+    /*
+     * @brief 执行结果
+     2016-04-29 13:49:28.813 GCDDemo[2375:988537] task 2 done
+     2016-04-29 13:49:28.813 GCDDemo[2375:988547] task 1 done
+     2016-04-29 13:49:28.813 GCDDemo[2375:988559] task 3 done
+     2016-04-29 13:49:28.814 GCDDemo[2375:987968] all task end
+     */
 }
+
 
 
 @end
