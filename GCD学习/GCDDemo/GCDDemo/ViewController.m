@@ -28,7 +28,20 @@
     //[self dispatchApplyDemo2];
     
     // 4.监视多个异步任务是否都完成
-    [self dispatchGroupWaitDemo];
+    //[self dispatchGroupWaitDemo];
+    //[self dispatchGroupNotifyDemo];
+    
+    // 5.创建block
+    //[self createDispatchBlock];
+    
+    // 6.dispatch block来设置等待时间
+    //[self dispatch_Block_Wait];
+    
+    // 7.dispatch_block_notify监视指定dispatch block结束，然后再加入一个block到队列中。
+    //[self dispatch_Block_Notify];
+    
+    // 8. 对dispatch block取消
+    [self dispatch_Block_Cancel];
 
 }
 
@@ -115,10 +128,14 @@
     
     // -------------   3. 同步异步线程创建    -----------
     
+    // 串行与并行针对的是队列，而同步与异步，针对的则是线程
     // 3.1 同步线程
     dispatch_sync(serialQue , ^{
-        //
+        
+        // 同步线程要阻塞当前线程，必须要等待同步线程中的任务执行完，返回以后，才能继续执行下一任务
+        // 异步线程则是不用等待。
     });
+    
     //3.2 异步线程
     dispatch_async(concurrentQue, ^{
         //
@@ -376,7 +393,7 @@
     
     // 比如你执行三个下载任务，当三个任务都下载完成后你才通知界面说完成
     dispatch_group_async(group, concurrentQueue, ^{
-        NSLog(@"task 1 done");
+        NSLog(@"task 1 done"); //异步方法
     });
     dispatch_group_async(group, concurrentQueue, ^{
         NSLog(@"task 2 done");
@@ -398,6 +415,212 @@
      */
 }
 
+#pragma mark -- 方法二 : dispatch_group_notify
+-(void)dispatchGroupNotifyDemo{
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_group_t group = dispatch_group_create();
+    
+    // 比如你执行三个下载任务，当三个任务都下载完成后你才通知界面说完成
+    dispatch_group_async(group, queue, ^{
+        NSLog(@"task 1 done");
+    });
+    dispatch_group_async(group, queue, ^{
+        NSLog(@"task 2 done");
+    });
+    dispatch_group_async(group, queue, ^{
+        NSLog(@"task 3 done");
+    });
 
+    // 使用dispatch_group_notify，异步执行闭包，不会阻塞
+    dispatch_group_notify(group, queue, ^{
+        NSLog(@"all task end");
+    });
+    /*
+     2016-04-29 14:01:25.156 GCDDemo[2561:1054338] task 3 done
+     2016-04-29 14:01:25.156 GCDDemo[2561:1054315] task 2 done
+     2016-04-29 14:01:25.156 GCDDemo[2561:1054316] task 1 done
+     2016-04-29 14:01:25.158 GCDDemo[2561:1054316] all task end
+     */
+}
+
+
+
+// -------------——   6. Dispatch Block   -----------——
+#pragma mark -- 创建block
+-(void)createDispatchBlock{
+    
+    // normal way
+    dispatch_queue_t concurrentQueue = dispatch_queue_create("concurrentQueue", DISPATCH_QUEUE_CONCURRENT);
+    dispatch_block_t block = dispatch_block_create(0, ^{
+        NSLog(@"run normal way");
+    });
+    dispatch_async(concurrentQueue, block);
+    
+    //QOS way
+    dispatch_block_t qosBlock = dispatch_block_create_with_qos_class(0, QOS_CLASS_USER_INITIATED, -1, ^{
+        NSLog(@"run normal way");
+    });
+    dispatch_async(concurrentQueue, qosBlock);
+}
+
+#pragma mark -- dispatch_block_wait
+//可以根据dispatch block来设置等待时间
+-(void)dispatch_Block_Wait{
+    
+    dispatch_queue_t concurrentQueue = dispatch_queue_create("concurrentQueue", DISPATCH_QUEUE_CONCURRENT);
+    dispatch_block_t block = dispatch_block_create(0, ^{
+        NSLog(@"start");
+        [NSThread sleepForTimeInterval:3.f];
+        NSLog(@"end");
+    });
+    dispatch_async(concurrentQueue, block);
+    
+    /*
+     * @param block : The dispatch block object to wait on
+     * @param timeout : DISPATCH_TIME_NOW || DISPATCH_TIME_FOREVER
+     *                  DISPATCH_TIME_FOREVER : 会一直等到前面任务都完成
+     */
+    dispatch_block_wait(block, DISPATCH_TIME_FOREVER);
+
+    NSLog(@"now can update UI ...");
+    /*
+     2016-04-29 14:46:37.015 GCDDemo[2808:1166774] start
+     2016-04-29 14:46:40.962 GCDDemo[2808:1166774] end
+     2016-04-29 14:46:42.830 GCDDemo[2808:1166185] now can update UI ...
+     */
+}
+
+
+#pragma mark -- dispatch_block_notify
+//可以监视指定dispatch block结束，然后再加入一个block到队列中。
+-(void)dispatch_Block_Notify{
+    
+    dispatch_queue_t serialQueue = dispatch_queue_create("dispatch_Block_Notify", DISPATCH_QUEUE_SERIAL);
+    dispatch_block_t firstBlock = dispatch_block_create(0, ^{
+        NSLog(@"first block start");
+        [NSThread sleepForTimeInterval:3.f];
+        NSLog(@"first block end");
+    });
+    
+    dispatch_async(serialQueue, firstBlock);
+    
+    dispatch_block_t secondBlock = dispatch_block_create(0, ^{
+        NSLog(@"second block start");
+    });
+    
+    /* first block执行完才在serial queue中执行second block
+     * @param block : 需要监视的block
+     * @param queue : 是需要提交执行的队列
+     * @param notification_block : 待加入到队列中的block
+     */
+    dispatch_block_notify(firstBlock, serialQueue, secondBlock);
+    /*
+     2016-04-29 15:07:31.050 GCDDemo[2995:1235155] first block start
+     2016-04-29 15:07:34.051 GCDDemo[2995:1235155] first block end
+     2016-04-29 15:07:34.051 GCDDemo[2995:1235155] second block start
+     */
+}
+
+
+#pragma mark -- dispatch_block_cancel
+// iOS8后GCD支持对dispatch block的取消
+-(void)dispatch_Block_Cancel{
+    
+    dispatch_queue_t serialQueue = dispatch_queue_create("dispatch_Block_Cancel", DISPATCH_QUEUE_SERIAL);
+    dispatch_block_t firstBlock = dispatch_block_create(0, ^{
+        NSLog(@"first block start");
+        [NSThread sleepForTimeInterval:3.f];
+        NSLog(@"first block end");
+    });
+    
+    dispatch_block_t secondBlock = dispatch_block_create(0, ^{
+        NSLog(@"second block start");
+    });
+    
+    dispatch_async(serialQueue, firstBlock);
+    dispatch_async(serialQueue, secondBlock);
+    
+    //取消firstBlock
+    dispatch_block_cancel(firstBlock);
+    /*
+     2016-04-29 15:22:14.067 GCDDemo[3154:1322627] second block start
+     */
+
+}
+
+
+// -------------——   7. Dispatch IO 文件操作   -----------——
+/*
+ * 多个线程去读取文件的切片数据，对于大的数据文件这样会比单线程要快很多
+ * dispatch io读取文件的方式类似于下面的方式:
+ */
+
+//dispatch_async(queue,^{/*read 0-99 bytes*/});
+//dispatch_async(queue,^{/*read 100-199 bytes*/});
+//dispatch_async(queue,^{/*read 200-299 bytes*/});
+
+//dispatch_io_create：创建dispatch io
+//dispatch_io_set_low_water：指定切割文件大小
+//dispatch_io_read：读取切割的文件然后合并。
+
+
+// -------------——   7. Dispatch Source GCD监视进程   -----------
+/*
+ * Dispatch Source用于监听系统的底层对象，比如文件描述符，Mach端口，信号量等
+ 
+ * DISPATCH_SOURCE_TYPE_DATA_ADD      ： 数据增加
+ * DISPATCH_SOURCE_TYPE_DATA_OR       ： 数据OR
+ * DISPATCH_SOURCE_TYPE_MACH_SEND     ： Mach端口发送
+ * DISPATCH_SOURCE_TYPE_MACH_RECV     ： Mach端口接收
+ * DISPATCH_SOURCE_TYPE_MEMORYPRESSURE： 数据增加
+ * DISPATCH_SOURCE_TYPE_PROC          ： 进程事件
+ * DISPATCH_SOURCE_TYPE_READ          ： 读数据
+ * DISPATCH_SOURCE_TYPE_SIGNAL        ： 信号
+ * DISPATCH_SOURCE_TYPE_TIMER         ： 定时器
+ * DISPATCH_SOURCE_TYPE_VNODE         ： 文件系统变化
+ * DISPATCH_SOURCE_TYPE_WRITE         ： 文件写入
+ */
+
+// 方法：
+// dispatch_source_create：创建dispatch source，创建后会处于挂起状态进行事件接收，需要设置事件处理handler进行事件处理。
+// dispatch_source_set_event_handler：设置事件处理handler
+// dispatch_source_set_cancel_handler：事件取消handler，就是在dispatch source释放前做些清理的事。
+// dispatch_source_cancel：关闭dispatch source，设置的事件处理handler不会被执行，已经执行的事件handler不会取消。
+
+#pragma mark -- 监视文件夹内文件变化
+-(void)dispatch_Source_Set_Event{
+    
+    NSURL *directoryURL;
+
+    int const fd = open([[directoryURL path]fileSystemRepresentation], O_EVTONLY);
+    if (fd < 0) {
+        char buffer[80];
+        strerror_r(errno, buffer, sizeof(buffer));
+        NSLog(@"Unable to open \"%@\": %s (%d)",[directoryURL path],buffer,errno);
+        return;
+    }
+    // DISPATCH_SOURCE_TYPE_VNODE :文件系统变化
+    dispatch_source_t source = dispatch_source_create(DISPATCH_SOURCE_TYPE_VNODE , fd, DISPATCH_VNODE_WRITE | DISPATCH_VNODE_DELETE, DISPATCH_TARGET_QUEUE_DEFAULT);
+    
+    dispatch_source_set_event_handler(source, ^{
+        unsigned long const data = dispatch_source_get_data(source);
+        if (data & DISPATCH_VNODE_WRITE) {
+            NSLog(@"The directory changed");
+        }
+        
+        if (data & DISPATCH_VNODE_DELETE) {
+            NSLog(@"The directory has been deleted");
+        }
+    });
+    
+    dispatch_source_set_cancel_handler(source, ^{
+        close(fd);
+    });
+//    self.source = source;
+//    dispatch_resume(self.source);
+    //还要注意需要用DISPATCH_VNODE_DELETE 去检查监视的文件或文件夹是否被删除，如果删除了就停止监听
+
+}
 
 @end
