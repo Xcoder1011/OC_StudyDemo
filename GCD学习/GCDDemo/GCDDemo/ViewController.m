@@ -41,7 +41,9 @@
     //[self dispatch_Block_Notify];
     
     // 8. 对dispatch block取消
-    [self dispatch_Block_Cancel];
+    //[self dispatch_Block_Cancel];
+    // 9. 监视文件夹内文件变化
+    [self dispatch_Source_Set_Event];
 
 }
 
