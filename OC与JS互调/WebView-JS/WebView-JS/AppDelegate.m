@@ -23,6 +23,9 @@
     UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:viewCtrl];
     nav.navigationBar.translucent = NO;
     self.window.rootViewController = nav;
+    // 隐藏导航条返回键带的title
+    [[UIBarButtonItem appearance] setBackButtonTitlePositionAdjustment:UIOffsetMake(0, -60)
+                                                         forBarMetrics:UIBarMetricsDefault];
     [self.window makeKeyWindow];
     
     return YES;
