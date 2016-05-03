@@ -41,8 +41,17 @@
     //[self dispatch_Block_Notify];
     
     // 8. 对dispatch block取消
-    [self dispatch_Block_Cancel];
-
+    //[self dispatch_Block_Cancel];
+    
+    // 9.监视文件夹内文件变化
+    //[self dispatch_Source_Set_Event];
+    
+    // 10.Dispatch Semaphore和的介绍
+    //[self dispatch_Semaphore];
+    
+    // 11.GCD死锁
+    [self testDeadLock];
+    
 }
 
 #pragma mark -- 基本概念
@@ -565,7 +574,8 @@
 //dispatch_io_read：读取切割的文件然后合并。
 
 
-// -------------——   7. Dispatch Source GCD监视进程   -----------
+
+// -------------——   8. Dispatch Source GCD监视进程   -----------
 /*
  * Dispatch Source用于监听系统的底层对象，比如文件描述符，Mach端口，信号量等
  
@@ -591,7 +601,9 @@
 #pragma mark -- 监视文件夹内文件变化
 -(void)dispatch_Source_Set_Event{
     
-    NSURL *directoryURL;
+    NSURL *directoryURL  ;  // set to a directory
+    
+    // NSURL *directoryURL = [NSURL fileURLWithPath:NSHomeDirectory()] ;
 
     int const fd = open([[directoryURL path]fileSystemRepresentation], O_EVTONLY);
     if (fd < 0) {
@@ -618,9 +630,174 @@
         close(fd);
     });
 //    self.source = source;
-//    dispatch_resume(self.source);
+    dispatch_resume(source);
     //还要注意需要用DISPATCH_VNODE_DELETE 去检查监视的文件或文件夹是否被删除，如果删除了就停止监听
-
 }
+
+
+// -------------——   9. Dispatch Semaphore和的介绍   -----------
+/*
+ * 另外一种保证同步的方法:
+ * 使用dispatch_semaphore_signal加1,dispatch_semaphore_wait减1,
+ * 为0时等待的设置方式来达到线程同步的目的,和同步锁一样能够解决资源抢占的问题。
+ */
+-(void)dispatch_Semaphore
+{
+    //创建semaphore
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSLog(@"start");
+        [NSThread sleepForTimeInterval:2.f];
+        NSLog(@"semaphore +1");
+        dispatch_semaphore_signal(semaphore); // +1 semaphore
+    });
+    
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    NSLog(@"continue");
+    /*
+     2016-05-03 13:54:31.224 GCDDemo[2786:632219] start
+     2016-05-03 13:54:33.230 GCDDemo[2786:632219] semaphore +1
+     2016-05-03 13:54:33.230 GCDDemo[2786:632022] continue
+     */
+}
+
+
+// -------------—---—--    10. GCD死锁       -----------------
+/*
+ * 发生场景: 当前串行队列里面同步执行当前串行队列就会死锁
+ * 解决办法: 将同步的串行队列放到另外一个线程就能够解决。
+ */
+
+#pragma mark -- GCD死锁
+-(void)testDeadLock
+{
+    int i = 5;
+    
+    switch (i) {
+        case 1:
+            [self deadLockCase1];
+            break;
+        case 2:
+            [self deadLockCase2];
+            break;
+        case 3:
+            [self deadLockCase3];
+            break;
+        case 4:
+            [self deadLockCase4];
+            break;
+        case 5:
+            [self deadLockCase5];
+            break;
+    }
+}
+
+-(void)deadLockCase1{
+    NSLog(@"1");
+   //主队列的同步线程，按照FIFO的原则（先入先出），2排在3后面会等3执行完，但因为同步线程，3又要等2执行完，相互等待成为死锁。
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        NSLog(@"2");
+    });
+    NSLog(@"3");
+    /*
+     2016-05-03 14:48:33.495 GCDDemo[3030:794468] 1
+     */
+}
+
+
+-(void)deadLockCase2{
+    NSLog(@"1");
+    //3会等2，因为2在全局并行队列里，不需要等待3，这样2执行完回到主队列，3就开始执行
+    dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        NSLog(@"2");
+    });
+    NSLog(@"3");
+    /*
+     2016-05-03 14:51:54.213 GCDDemo[3086:812928] 1
+     2016-05-03 14:51:54.214 GCDDemo[3086:812928] 2
+     2016-05-03 14:51:54.214 GCDDemo[3086:812928] 3
+     */
+}
+
+
+-(void)deadLockCase3{
+    dispatch_queue_t serialQueue = dispatch_queue_create("com.test.serialQueue", DISPATCH_QUEUE_SERIAL);
+    NSLog(@"1");
+    dispatch_async(serialQueue, ^{
+        NSLog(@"2");
+        //串行队列 里面 同步 一个串行队列 就会死锁
+        dispatch_sync(serialQueue, ^{
+            NSLog(@"3");
+        });
+        NSLog(@"4");
+    });
+    NSLog(@"5");
+    /*
+     2016-05-03 15:00:17.661 GCDDemo[3197:852936] 1
+     2016-05-03 15:00:17.661 GCDDemo[3197:852936] 5
+     2016-05-03 15:00:17.661 GCDDemo[3197:853317] 2
+     */
+}
+-(void)deadLockCase4{
+    
+    dispatch_queue_t serialQueue = dispatch_queue_create("com.test.serialQueue", DISPATCH_QUEUE_SERIAL);
+    NSLog(@"1");
+    dispatch_async(serialQueue, ^{
+        NSLog(@"2");
+        //将同步的串行队列放到另外一个线程就能够解决
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            NSLog(@"3");
+        });
+        NSLog(@"4");
+    });
+    NSLog(@"5");
+    /*
+     2016-05-03 15:07:10.296 GCDDemo[3303:891937] 1
+     2016-05-03 15:07:10.297 GCDDemo[3303:891937] 5
+     2016-05-03 15:07:10.297 GCDDemo[3303:891988] 2
+     2016-05-03 15:07:10.304 GCDDemo[3303:891937] 3
+     2016-05-03 15:07:10.305 GCDDemo[3303:891988] 4
+     */
+}
+
+-(void)deadLockCase5{
+//    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+//        NSLog(@"1");
+//        //回到主线程继续执行
+//        dispatch_sync(dispatch_get_main_queue(), ^{
+//            NSLog(@"2");
+//        });
+//        NSLog(@"3");
+//    });
+//    NSLog(@"4");
+    /*
+     2016-05-03 15:17:24.578 GCDDemo[3459:941619] 4
+     2016-05-03 15:17:24.578 GCDDemo[3459:941659] 1
+     2016-05-03 15:17:24.583 GCDDemo[3459:941619] 2
+     2016-05-03 15:17:24.584 GCDDemo[3459:941659] 3
+     */
+    
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        NSLog(@"1");
+        //回到主线程发现死循环后面就没法执行了
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            NSLog(@"2");
+        });
+        NSLog(@"3");
+    });
+    NSLog(@"4");
+    //死循环
+    while (1) {
+        
+    }
+    /*
+     2016-05-03 15:18:52.494 GCDDemo[3495:952249] 4
+     2016-05-03 15:18:52.494 GCDDemo[3495:952368] 1
+     */
+}
+
+
+
+
 
 @end
