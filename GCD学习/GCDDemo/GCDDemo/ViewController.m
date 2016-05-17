@@ -67,7 +67,7 @@
     dispatch_queue_t globalQueue ;
     globalQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
     
-    // 1.2 主队列，主线程中的
+    // 1.2 主队列，主线程中的，串行
     /*
      * 全局可用的serial queue，在应用程序主线程上执行任务。
      */
