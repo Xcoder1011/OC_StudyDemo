@@ -17,6 +17,10 @@
 		21D1DD0F1CEB03DA001DE4DB /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 21D1DD0E1CEB03DA001DE4DB /* HomeViewController.m */; };
 		21D1DD131CEB07EB001DE4DB /* TableViewDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 21D1DD121CEB07EB001DE4DB /* TableViewDataSource.m */; };
 		21D1DD161CEB0809001DE4DB /* TableViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 21D1DD151CEB0809001DE4DB /* TableViewDelegate.m */; };
+		21D1DD1A1CEB13BF001DE4DB /* HomeViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 21D1DD191CEB13BF001DE4DB /* HomeViewModel.m */; };
+		21D1DD1E1CEB13E4001DE4DB /* HomeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 21D1DD1C1CEB13E4001DE4DB /* HomeTableViewCell.m */; };
+		21D1DD1F1CEB13E4001DE4DB /* HomeTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 21D1DD1D1CEB13E4001DE4DB /* HomeTableViewCell.xib */; };
+		21D1DD261CEB1539001DE4DB /* HYNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 21D1DD251CEB1539001DE4DB /* HYNetworking.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +43,13 @@
 		21D1DD141CEB0809001DE4DB /* TableViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewDelegate.h; sourceTree = "<group>"; };
 		21D1DD151CEB0809001DE4DB /* TableViewDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewDelegate.m; sourceTree = "<group>"; };
 		21D1DD171CEB0840001DE4DB /* MVVMDemo.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVVMDemo.pch; sourceTree = "<group>"; };
+		21D1DD181CEB13BF001DE4DB /* HomeViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeViewModel.h; sourceTree = "<group>"; };
+		21D1DD191CEB13BF001DE4DB /* HomeViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeViewModel.m; sourceTree = "<group>"; };
+		21D1DD1B1CEB13E4001DE4DB /* HomeTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeTableViewCell.h; sourceTree = "<group>"; };
+		21D1DD1C1CEB13E4001DE4DB /* HomeTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeTableViewCell.m; sourceTree = "<group>"; };
+		21D1DD1D1CEB13E4001DE4DB /* HomeTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HomeTableViewCell.xib; sourceTree = "<group>"; };
+		21D1DD241CEB1539001DE4DB /* HYNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HYNetworking.h; sourceTree = "<group>"; };
+		21D1DD251CEB1539001DE4DB /* HYNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HYNetworking.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -143,6 +154,9 @@
 		21D1DCFF1CEB0021001DE4DB /* View */ = {
 			isa = PBXGroup;
 			children = (
+				21D1DD1B1CEB13E4001DE4DB /* HomeTableViewCell.h */,
+				21D1DD1C1CEB13E4001DE4DB /* HomeTableViewCell.m */,
+				21D1DD1D1CEB13E4001DE4DB /* HomeTableViewCell.xib */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -150,6 +164,8 @@
 		21D1DD001CEB0021001DE4DB /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				21D1DD181CEB13BF001DE4DB /* HomeViewModel.h */,
+				21D1DD191CEB13BF001DE4DB /* HomeViewModel.m */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -184,6 +200,8 @@
 		21D1DD041CEB00FC001DE4DB /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				21D1DD241CEB1539001DE4DB /* HYNetworking.h */,
+				21D1DD251CEB1539001DE4DB /* HYNetworking.m */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -265,6 +283,7 @@
 			files = (
 				21D1DCF31CEAFB45001DE4DB /* LaunchScreen.storyboard in Resources */,
 				21D1DCF01CEAFB45001DE4DB /* Assets.xcassets in Resources */,
+				21D1DD1F1CEB13E4001DE4DB /* HomeTableViewCell.xib in Resources */,
 				21D1DCEE1CEAFB45001DE4DB /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -280,9 +299,12 @@
 				21D1DD131CEB07EB001DE4DB /* TableViewDataSource.m in Sources */,
 				21D1DCEB1CEAFB45001DE4DB /* ViewController.m in Sources */,
 				21D1DD081CEB01C1001DE4DB /* HYViewController.m in Sources */,
+				21D1DD261CEB1539001DE4DB /* HYNetworking.m in Sources */,
 				21D1DCE81CEAFB45001DE4DB /* AppDelegate.m in Sources */,
+				21D1DD1E1CEB13E4001DE4DB /* HomeTableViewCell.m in Sources */,
 				21D1DD0F1CEB03DA001DE4DB /* HomeViewController.m in Sources */,
 				21D1DCE51CEAFB45001DE4DB /* main.m in Sources */,
+				21D1DD1A1CEB13BF001DE4DB /* HomeViewModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
