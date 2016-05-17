@@ -50,7 +50,7 @@
 }
 
 -(NSArray *)dataArray{
-    if (_dataArray == nil) {
+    if (!_dataArray) {
         _dataArray = [NSArray new];
     }
     return _dataArray;
