@@ -9,10 +9,14 @@
 /* Begin PBXBuildFile section */
 		21ACE5B91CEDB74200B9B4BA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 21ACE5B81CEDB74200B9B4BA /* main.m */; };
 		21ACE5BC1CEDB74200B9B4BA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 21ACE5BB1CEDB74200B9B4BA /* AppDelegate.m */; };
-		21ACE5BF1CEDB74200B9B4BA /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 21ACE5BE1CEDB74200B9B4BA /* ViewController.m */; };
 		21ACE5C21CEDB74200B9B4BA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 21ACE5C01CEDB74200B9B4BA /* Main.storyboard */; };
 		21ACE5C41CEDB74200B9B4BA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 21ACE5C31CEDB74200B9B4BA /* Assets.xcassets */; };
 		21ACE5C71CEDB74200B9B4BA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 21ACE5C51CEDB74200B9B4BA /* LaunchScreen.storyboard */; };
+		21ACE5D51CEEB05900B9B4BA /* SKNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 21ACE5D41CEEB05900B9B4BA /* SKNetworking.m */; };
+		21ACE5DC1CEEB10B00B9B4BA /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 21ACE5D81CEEB10B00B9B4BA /* ViewController.m */; };
+		21ACE5E81CEEB76700B9B4BA /* SKDownloadCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 21ACE5E61CEEB76700B9B4BA /* SKDownloadCell.m */; };
+		21ACE5E91CEEB76700B9B4BA /* SKDownloadCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 21ACE5E71CEEB76700B9B4BA /* SKDownloadCell.xib */; };
+		21ACE5EC1CEEB78900B9B4BA /* SKDownloadModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 21ACE5EB1CEEB78900B9B4BA /* SKDownloadModel.m */; };
 		5486ED40CA337377F9AB96D8 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 04F12679772F299B6DA687CE /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -22,12 +26,19 @@
 		21ACE5B81CEDB74200B9B4BA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		21ACE5BA1CEDB74200B9B4BA /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		21ACE5BB1CEDB74200B9B4BA /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		21ACE5BD1CEDB74200B9B4BA /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		21ACE5BE1CEDB74200B9B4BA /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		21ACE5C11CEDB74200B9B4BA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		21ACE5C31CEDB74200B9B4BA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		21ACE5C31CEDB74200B9B4BA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../Assets.xcassets; sourceTree = "<group>"; };
 		21ACE5C61CEDB74200B9B4BA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		21ACE5C81CEDB74200B9B4BA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		21ACE5C81CEDB74200B9B4BA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Info.plist; sourceTree = "<group>"; };
+		21ACE5D31CEEB05900B9B4BA /* SKNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKNetworking.h; sourceTree = "<group>"; };
+		21ACE5D41CEEB05900B9B4BA /* SKNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKNetworking.m; sourceTree = "<group>"; };
+		21ACE5D71CEEB10B00B9B4BA /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		21ACE5D81CEEB10B00B9B4BA /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		21ACE5E51CEEB76700B9B4BA /* SKDownloadCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKDownloadCell.h; sourceTree = "<group>"; };
+		21ACE5E61CEEB76700B9B4BA /* SKDownloadCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKDownloadCell.m; sourceTree = "<group>"; };
+		21ACE5E71CEEB76700B9B4BA /* SKDownloadCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SKDownloadCell.xib; sourceTree = "<group>"; };
+		21ACE5EA1CEEB78900B9B4BA /* SKDownloadModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKDownloadModel.h; sourceTree = "<group>"; };
+		21ACE5EB1CEEB78900B9B4BA /* SKDownloadModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKDownloadModel.m; sourceTree = "<group>"; };
 		222CD57718ADAE7CB8BBF3A5 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		369F7C9A950C1353296FFE5C /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -65,15 +76,13 @@
 		21ACE5B61CEDB74200B9B4BA /* SKNetworkingDemo */ = {
 			isa = PBXGroup;
 			children = (
-				21ACE5CE1CEDBCA500B9B4BA /* SKNetworking */,
 				21ACE5BA1CEDB74200B9B4BA /* AppDelegate.h */,
 				21ACE5BB1CEDB74200B9B4BA /* AppDelegate.m */,
-				21ACE5BD1CEDB74200B9B4BA /* ViewController.h */,
-				21ACE5BE1CEDB74200B9B4BA /* ViewController.m */,
-				21ACE5C01CEDB74200B9B4BA /* Main.storyboard */,
-				21ACE5C31CEDB74200B9B4BA /* Assets.xcassets */,
-				21ACE5C51CEDB74200B9B4BA /* LaunchScreen.storyboard */,
-				21ACE5C81CEDB74200B9B4BA /* Info.plist */,
+				21ACE5CE1CEDBCA500B9B4BA /* SKNetworking */,
+				21ACE5D61CEEB10B00B9B4BA /* Controller */,
+				21ACE5D91CEEB10B00B9B4BA /* Model */,
+				21ACE5DB1CEEB10B00B9B4BA /* View */,
+				21ACE5DA1CEEB10B00B9B4BA /* Other */,
 				21ACE5B71CEDB74200B9B4BA /* Supporting Files */,
 			);
 			path = SKNetworkingDemo;
@@ -90,8 +99,49 @@
 		21ACE5CE1CEDBCA500B9B4BA /* SKNetworking */ = {
 			isa = PBXGroup;
 			children = (
+				21ACE5D31CEEB05900B9B4BA /* SKNetworking.h */,
+				21ACE5D41CEEB05900B9B4BA /* SKNetworking.m */,
 			);
 			path = SKNetworking;
+			sourceTree = "<group>";
+		};
+		21ACE5D61CEEB10B00B9B4BA /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				21ACE5D71CEEB10B00B9B4BA /* ViewController.h */,
+				21ACE5D81CEEB10B00B9B4BA /* ViewController.m */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		21ACE5D91CEEB10B00B9B4BA /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				21ACE5EA1CEEB78900B9B4BA /* SKDownloadModel.h */,
+				21ACE5EB1CEEB78900B9B4BA /* SKDownloadModel.m */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		21ACE5DA1CEEB10B00B9B4BA /* Other */ = {
+			isa = PBXGroup;
+			children = (
+				21ACE5C01CEDB74200B9B4BA /* Main.storyboard */,
+				21ACE5C31CEDB74200B9B4BA /* Assets.xcassets */,
+				21ACE5C51CEDB74200B9B4BA /* LaunchScreen.storyboard */,
+				21ACE5C81CEDB74200B9B4BA /* Info.plist */,
+			);
+			path = Other;
+			sourceTree = "<group>";
+		};
+		21ACE5DB1CEEB10B00B9B4BA /* View */ = {
+			isa = PBXGroup;
+			children = (
+				21ACE5E51CEEB76700B9B4BA /* SKDownloadCell.h */,
+				21ACE5E61CEEB76700B9B4BA /* SKDownloadCell.m */,
+				21ACE5E71CEEB76700B9B4BA /* SKDownloadCell.xib */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		3C901FA783B09445D55232A3 /* Pods */ = {
@@ -172,6 +222,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				21ACE5C71CEDB74200B9B4BA /* LaunchScreen.storyboard in Resources */,
+				21ACE5E91CEEB76700B9B4BA /* SKDownloadCell.xib in Resources */,
 				21ACE5C41CEDB74200B9B4BA /* Assets.xcassets in Resources */,
 				21ACE5C21CEDB74200B9B4BA /* Main.storyboard in Resources */,
 			);
@@ -232,9 +283,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				21ACE5BF1CEDB74200B9B4BA /* ViewController.m in Sources */,
 				21ACE5BC1CEDB74200B9B4BA /* AppDelegate.m in Sources */,
 				21ACE5B91CEDB74200B9B4BA /* main.m in Sources */,
+				21ACE5DC1CEEB10B00B9B4BA /* ViewController.m in Sources */,
+				21ACE5E81CEEB76700B9B4BA /* SKDownloadCell.m in Sources */,
+				21ACE5D51CEEB05900B9B4BA /* SKNetworking.m in Sources */,
+				21ACE5EC1CEEB78900B9B4BA /* SKDownloadModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -247,6 +301,7 @@
 				21ACE5C11CEDB74200B9B4BA /* Base */,
 			);
 			name = Main.storyboard;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		21ACE5C51CEDB74200B9B4BA /* LaunchScreen.storyboard */ = {
@@ -255,6 +310,7 @@
 				21ACE5C61CEDB74200B9B4BA /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			path = ..;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
