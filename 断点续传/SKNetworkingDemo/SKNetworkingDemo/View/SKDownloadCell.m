@@ -12,22 +12,21 @@
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-    
     self.titleLabel.text = @"功夫熊猫.zip";
+    
+}
+
+- (IBAction)tapIconImageView:(UITapGestureRecognizer *)sender {
+    
+    NSLog(@"点击了图像");
+}
+
+
+-(void)updateConstraints {
+    [super updateConstraints];
     
     
 }
-//
-//- (IBAction)tapAction:(UITapGestureRecognizer *)sender {
-//    
-//    
-//}
-
-//-(void)updateConstraints {
-//    [super updateConstraints];
-//    
-//    
-//}
 
 
 @end

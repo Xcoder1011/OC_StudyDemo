@@ -22,6 +22,9 @@
                         <constraints>
                             <constraint firstAttribute="width" secondItem="BeH-oH-JZF" secondAttribute="height" multiplier="125:85" id="uyO-jZ-k2O"/>
                         </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="pqd-6B-0yT" appends="YES" id="Hxg-A3-Qfq"/>
+                        </connections>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="功夫熊猫.zip" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="htO-fl-V1E">
                         <rect key="frame" x="110" y="13" width="202" height="21"/>
@@ -55,11 +58,10 @@
                             <constraint firstAttribute="height" constant="2" id="G8J-yO-wzn"/>
                         </constraints>
                     </progressView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="开始缓存" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ijq-oH-1FF">
-                        <rect key="frame" x="13" y="36" width="87" height="15"/>
-                        <gestureRecognizers/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="开始缓存" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dCG-u6-48S">
+                        <rect key="frame" x="13" y="36" width="87" height="14"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="15" id="Cjx-Ra-kse"/>
+                            <constraint firstAttribute="height" constant="14" id="evT-la-k2P"/>
                         </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="11"/>
                         <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -69,6 +71,7 @@
                 <constraints>
                     <constraint firstItem="3rA-2R-LGB" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="4kS-Vr-ryP"/>
                     <constraint firstItem="OBi-4w-RfQ" firstAttribute="top" secondItem="3rA-2R-LGB" secondAttribute="bottom" constant="5" id="6eZ-mC-700"/>
+                    <constraint firstItem="dCG-u6-48S" firstAttribute="width" secondItem="BeH-oH-JZF" secondAttribute="width" id="7yK-oC-WbB"/>
                     <constraint firstItem="htO-fl-V1E" firstAttribute="leading" secondItem="BeH-oH-JZF" secondAttribute="trailing" constant="10" id="CIm-q6-z8a"/>
                     <constraint firstItem="BeH-oH-JZF" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="5" id="EoT-UX-4xh"/>
                     <constraint firstItem="OBi-4w-RfQ" firstAttribute="bottom" secondItem="BeH-oH-JZF" secondAttribute="bottom" id="JHn-xY-gQ9"/>
@@ -78,13 +81,12 @@
                     <constraint firstItem="gbL-ZO-RkK" firstAttribute="leading" secondItem="3rA-2R-LGB" secondAttribute="leading" id="RDm-NA-rkS"/>
                     <constraint firstItem="BeH-oH-JZF" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="5" id="Seo-SM-Xnh"/>
                     <constraint firstItem="OBi-4w-RfQ" firstAttribute="bottom" secondItem="gbL-ZO-RkK" secondAttribute="bottom" id="UL5-G8-I0r"/>
-                    <constraint firstItem="ijq-oH-1FF" firstAttribute="width" secondItem="BeH-oH-JZF" secondAttribute="width" id="Ud8-ah-u0K"/>
                     <constraint firstItem="OBi-4w-RfQ" firstAttribute="height" secondItem="gbL-ZO-RkK" secondAttribute="height" id="VnD-ky-M6W"/>
-                    <constraint firstItem="ijq-oH-1FF" firstAttribute="centerX" secondItem="BeH-oH-JZF" secondAttribute="centerX" id="ZXe-ct-Wd5"/>
-                    <constraint firstItem="ijq-oH-1FF" firstAttribute="centerY" secondItem="BeH-oH-JZF" secondAttribute="centerY" constant="1" id="bCh-x9-EQP"/>
+                    <constraint firstItem="dCG-u6-48S" firstAttribute="centerY" secondItem="BeH-oH-JZF" secondAttribute="centerY" id="W6d-50-tns"/>
                     <constraint firstAttribute="trailingMargin" secondItem="htO-fl-V1E" secondAttribute="trailing" id="bIq-Bu-LBE"/>
                     <constraint firstItem="OBi-4w-RfQ" firstAttribute="leading" secondItem="gbL-ZO-RkK" secondAttribute="trailing" id="cL1-RL-Mie"/>
                     <constraint firstItem="htO-fl-V1E" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="5" id="ey3-Li-aHm"/>
+                    <constraint firstItem="dCG-u6-48S" firstAttribute="centerX" secondItem="BeH-oH-JZF" secondAttribute="centerX" id="ocu-7O-wiE"/>
                 </constraints>
             </tableViewCellContentView>
             <gestureRecognizers/>
@@ -93,10 +95,14 @@
                 <outlet property="iconImageView" destination="BeH-oH-JZF" id="Ob4-JF-IkV"/>
                 <outlet property="networkSpeed" destination="OBi-4w-RfQ" id="nEs-3T-ngi"/>
                 <outlet property="progressView" destination="3rA-2R-LGB" id="du1-zX-elo"/>
-                <outlet property="statusLabel" destination="ijq-oH-1FF" id="fZa-pk-NKM"/>
                 <outlet property="titleLabel" destination="htO-fl-V1E" id="bH3-J5-rkV"/>
             </connections>
             <point key="canvasLocation" x="244" y="457"/>
         </tableViewCell>
+        <tapGestureRecognizer id="pqd-6B-0yT">
+            <connections>
+                <action selector="tapIconImageView:" destination="KGk-i7-Jjw" id="QHV-uM-ohz"/>
+            </connections>
+        </tapGestureRecognizer>
     </objects>
 </document>
