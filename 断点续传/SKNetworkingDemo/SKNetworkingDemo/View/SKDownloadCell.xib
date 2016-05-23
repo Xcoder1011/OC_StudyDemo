@@ -33,7 +33,7 @@
                             <constraint firstAttribute="height" constant="21" id="kpV-XI-ICJ"/>
                         </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1.9M/79.0M" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gbL-ZO-RkK">
@@ -95,6 +95,7 @@
                 <outlet property="iconImageView" destination="BeH-oH-JZF" id="Ob4-JF-IkV"/>
                 <outlet property="networkSpeed" destination="OBi-4w-RfQ" id="nEs-3T-ngi"/>
                 <outlet property="progressView" destination="3rA-2R-LGB" id="du1-zX-elo"/>
+                <outlet property="statusLabel" destination="dCG-u6-48S" id="dRh-Ut-vwj"/>
                 <outlet property="titleLabel" destination="htO-fl-V1E" id="bH3-J5-rkV"/>
             </connections>
             <point key="canvasLocation" x="244" y="457"/>

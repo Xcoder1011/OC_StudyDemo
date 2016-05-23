@@ -7,18 +7,28 @@
 //
 
 #import "SKDownloadCell.h"
+#import "SKDownloadModel.h"
+
 
 @implementation SKDownloadCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-    self.titleLabel.text = @"功夫熊猫.zip";
-    
+    self.progressView.progress = 0.0;
 }
 
 - (IBAction)tapIconImageView:(UITapGestureRecognizer *)sender {
     
     NSLog(@"点击了图像");
+//    self.model
+    if (self.startDownloadAciton) {
+        self.startDownloadAciton(self.model);
+    }
+}
+
+-(void)setModel:(SKDownloadModel *)model{
+    _model = model;
+    self.titleLabel.text = model.name;
 }
 
 

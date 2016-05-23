@@ -7,6 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+@class SKDownloadModel;
+
+/**
+ *  点击开始缓存/暂定缓存
+ */
+typedef void(^StartDownloadAciton)(SKDownloadModel *model);
 
 @interface SKDownloadCell : UITableViewCell
 /** 图片 */
@@ -22,6 +28,9 @@
 /** 实时网速 */
 @property (weak, nonatomic) IBOutlet UILabel *networkSpeed;
 
+@property (nonatomic, strong) SKDownloadModel *model;
 
+/** 点击开始缓存/暂定缓存 */
+@property (nonatomic, copy) StartDownloadAciton startDownloadAciton;
 
 @end

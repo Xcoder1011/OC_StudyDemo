@@ -9,11 +9,13 @@
 #import "ViewController.h"
 #import "SKDownloadCell.h"
 #import "SKNetworking.h"
+#import "SKDownloadModel.h"
 
 
 @interface ViewController () <UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) NSMutableArray *dataArray;
 
 @end
 
@@ -28,6 +30,8 @@
     [super viewDidLoad];
     
     [self initSubViews];
+    
+    [self loadListData];
 }
 
 
@@ -39,14 +43,14 @@
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 5;
+    return self.dataArray.count;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     //SKDownloadCell *cell = [tableView dequeueReusableCellWithIdentifier:[SKDownloadCell description] forIndexPath:indexPath];
-    
     SKDownloadCell *cell = [tableView dequeueReusableCellWithIdentifier:[SKDownloadCell description]];
+    __weak typeof(self) weakSelf = self;
     if (!cell) {
         NSArray *nibArray = [[NSBundle mainBundle]loadNibNamed:[SKDownloadCell description] owner:nil options:nil];
         for (id obj in nibArray) {
@@ -56,11 +60,30 @@
             }
         }
     }
+    [cell setModel:self.dataArray[indexPath.row]];
+    cell.startDownloadAciton = ^(SKDownloadModel *model) {
+        [weakSelf startDownloadWithModel:model];
+    };
     return cell;
 }
 
 
 #pragma mark -- Private method
+
+- (void)startDownloadWithModel:(SKDownloadModel *)model{
+
+    [SKNetworking downloadWithUrl:model.linkUrl
+                       cachePath:model.linkUrl
+                        progress:^(int64_t bytesRead, int64_t totalBytesRead) {
+                            NSLog(@"download:%lld, totalBytes:%lld",bytesRead,totalBytesRead);
+                        }
+                         success:^(id response) {
+                             NSLog(response);
+                         }
+                         failure:^(NSError *error) {
+                             NSLog(error.userInfo);
+                         }];
+}
 /**
  *  初始化视图
  */
@@ -72,8 +95,17 @@
  *  加载默认数据
  */
 -(void)loadListData {
-
     
+    for (int i=1; i<8; i++) {
+        SKDownloadModel *model = [[SKDownloadModel alloc]init];
+        model.name = [NSString stringWithFormat:@"速度与激情%d",i];
+        if (i%2 == 1) {
+            model.linkUrl = @"http://mw5.dwstatic.com/1/3/1528/133489-99-1436409822.mp4";
+        }
+        model.linkUrl = @"http://android-mirror.bugly.qq.com:8080/eclipse_mirror/juno/content.jar";
+        [self.dataArray addObject:model];
+    }
+    [self.tableView reloadData];
 }
 
 -(UITableView *)tableView {
@@ -89,6 +121,13 @@
         //[_tableView registerNib:[UINib nibWithNibName:@"SKDownloadCell" bundle:nil]forCellReuseIdentifier:@"SKDownloadCell"];
     }
     return _tableView;
+}
+
+-(NSMutableArray *)dataArray{
+    if (!_dataArray) {
+        _dataArray = [NSMutableArray array];
+    }
+    return _dataArray;
 }
 
 @end
