@@ -8,6 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
+#ifdef DEBUG
+#define DLog(s, ... ) NSLog(@"[%@ in line %d] ==== %@",[[NSString stringWithUTF8String:__FILE__] lastPathComponent], __LINE__, [NSString stringWithFormat:(s),##__VA_ARGS__])
+#else
+#define DLog(s, ... )
+#endif
+
 /**
  *  下载进度
  *
@@ -40,9 +46,40 @@ typedef NSURLSessionTask SKURLSessionTask;
 @interface SKNetworking : NSObject
 
 /**
- *  网络接口的基础URL
+ *  获取网络接口的基础URL
  */
 + (NSString *)baseUrl;
+
+/**
+ *  开启或关闭接口打印信息,默认是NO
+ *
+ *  @param isDebug 开发期，是否开启打印信息
+ */
++ (void)enableInterfaceDebug:(BOOL)isDebug;
+
+/**
+ *  设置网络接口的基础url
+ */
++ (void)setBaseUrl:(NSString *)baseUrl;
+
+/**
+ *  设置请求超时时间，默认为60秒
+ *
+ *  @param timeout 超时时间
+ */
++(void)setTimeout:(NSTimeInterval)timeout;
+
+/**
+ *  设置允许同时最大并发数量，默认为3
+ */
++(void)setMaxOperationCount:(NSInteger)maxOperationCount;
+
+/**
+ *   配置公共的请求头,只调用一次即可，通常放在应用启动的时候配置就可以了
+ *
+ *  @param httpHeaders 只需要将与服务器确定的固定参数设置即可
+ */
++ (void)setCommonHttpHeaders:(NSDictionary *)httpHeaders;
 
 /**
  *  下载文件

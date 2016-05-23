@@ -8,7 +8,7 @@
 
 #import "ViewController.h"
 #import "SKDownloadCell.h"
-#import <AFNetworking.h>
+#import "SKNetworking.h"
 
 
 @interface ViewController () <UITableViewDelegate,UITableViewDataSource>
@@ -67,6 +67,13 @@
 -(void)initSubViews {
     self.view.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:self.tableView];
+}
+/**
+ *  加载默认数据
+ */
+-(void)loadListData {
+
+    
 }
 
 -(UITableView *)tableView {
