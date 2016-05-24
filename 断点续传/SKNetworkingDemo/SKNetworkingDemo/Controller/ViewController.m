@@ -32,6 +32,8 @@
     [self initSubViews];
     
     [self loadListData];
+    
+    [SKNetworking enableInterfaceDebug:YES];
 }
 
 
@@ -61,8 +63,21 @@
         }
     }
     [cell setModel:self.dataArray[indexPath.row]];
+    __weak typeof(cell) weakCell  = cell;
     cell.startDownloadAciton = ^(SKDownloadModel *model) {
-        [weakSelf startDownloadWithModel:model];
+        
+        NSIndexPath *indexPath = [tableView indexPathForCell:weakCell];
+        [self.dataArray replaceObjectAtIndex:indexPath.row withObject:model];
+        
+        if (model.status == kSKDownloadStatusIsLoading) { //开始下载
+            NSLog(@"开始下载%ld",indexPath.row);
+            [weakSelf startDownloadWithModel:model];
+        }
+        if (model.status == kSKDownloadStatusPausing) { //暂定下载
+            NSLog(@"暂定下载%ld",indexPath.row);
+        }
+       
+        [weakSelf.tableView reloadData];
     };
     return cell;
 }
@@ -73,9 +88,13 @@
 - (void)startDownloadWithModel:(SKDownloadModel *)model{
 
     [SKNetworking downloadWithUrl:model.linkUrl
-                       cachePath:model.linkUrl
+                       cachePath:model.destinationPath
                         progress:^(int64_t bytesRead, int64_t totalBytesRead) {
                             NSLog(@"download:%lld, totalBytes:%lld",bytesRead,totalBytesRead);
+                            
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                // cell.progress
+                            });
                         }
                          success:^(id response) {
                              NSLog(response);
@@ -103,6 +122,8 @@
             model.linkUrl = @"http://mw5.dwstatic.com/1/3/1528/133489-99-1436409822.mp4";
         }
         model.linkUrl = @"http://android-mirror.bugly.qq.com:8080/eclipse_mirror/juno/content.jar";
+        model.destinationPath = model.name;
+        model.status = kSKDownloadStatusPausing;
         [self.dataArray addObject:model];
     }
     [self.tableView reloadData];

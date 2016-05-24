@@ -19,16 +19,34 @@
 
 - (IBAction)tapIconImageView:(UITapGestureRecognizer *)sender {
     
-    NSLog(@"点击了图像");
-//    self.model
+    if (self.model.status == kSKDownloadStatusPausing) {
+        self.model.status = kSKDownloadStatusIsLoading; //暂定->缓存
+    } else if (self.model.status == kSKDownloadStatusIsLoading) {
+        self.model.status = kSKDownloadStatusPausing; //缓存->暂停
+    }
+    
     if (self.startDownloadAciton) {
         self.startDownloadAciton(self.model);
     }
+    
 }
 
 -(void)setModel:(SKDownloadModel *)model{
     _model = model;
     self.titleLabel.text = model.name;
+    switch (model.status) {
+        case kSKDownloadStatusIsLoading:
+            self.statusLabel.text = @"暂停缓存";
+            break;
+        case kSKDownloadStatusPausing:
+            self.statusLabel.text = @"开始缓存";
+            break;
+        case kSKDownloadStatusDone:
+            self.statusLabel.text = @"";
+            break;
+        default:
+            break;
+    }
 }
 
 

@@ -23,7 +23,7 @@
                             <constraint firstAttribute="width" secondItem="BeH-oH-JZF" secondAttribute="height" multiplier="125:85" id="uyO-jZ-k2O"/>
                         </constraints>
                         <connections>
-                            <outletCollection property="gestureRecognizers" destination="pqd-6B-0yT" appends="YES" id="Hxg-A3-Qfq"/>
+                            <outletCollection property="gestureRecognizers" destination="mkL-6N-XL9" appends="YES" id="8Kg-sL-Anr"/>
                         </connections>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="功夫熊猫.zip" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="htO-fl-V1E">
@@ -100,9 +100,9 @@
             </connections>
             <point key="canvasLocation" x="244" y="457"/>
         </tableViewCell>
-        <tapGestureRecognizer id="pqd-6B-0yT">
+        <tapGestureRecognizer id="mkL-6N-XL9">
             <connections>
-                <action selector="tapIconImageView:" destination="KGk-i7-Jjw" id="QHV-uM-ohz"/>
+                <action selector="tapIconImageView:" destination="KGk-i7-Jjw" id="D9b-iH-Jox"/>
             </connections>
         </tapGestureRecognizer>
     </objects>

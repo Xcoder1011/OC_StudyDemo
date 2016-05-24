@@ -43,6 +43,9 @@ static NSMutableArray *default_requestTasks;
     default_httpheaders = httpHeaders;
 }
 
+static inline NSString *cachePath() {
+    return [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+}
 
 + (SKURLSessionTask *)downloadWithUrl:(NSString *)url
                             cachePath:(NSString *)cachePath
@@ -54,19 +57,26 @@ static NSMutableArray *default_requestTasks;
         return nil;
     }
     
-    NSURLRequest *downloadRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+    //判断cachePath
     
-    AFHTTPSessionManager *manager = [self _manager];
+    NSURLRequest *downloadRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+
+    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+    AFURLSessionManager *manager = [[AFURLSessionManager alloc]initWithSessionConfiguration:config];
+    // AFHTTPSessionManager *manager = [self _manager];
     
     SKURLSessionTask *session = nil;
     
     session = [manager downloadTaskWithRequest:downloadRequest
                                       progress:^(NSProgress * _Nonnull downloadProgress) {
                                           if (progress) {
+                                              //NSLog(@"download - %f", downloadProgress.fractionCompleted);
                                               progress(downloadProgress.completedUnitCount, downloadProgress.totalUnitCount);
                                           }
                                       }
                                    destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
+                                       NSLog(@"targetPath:%@\n response:%@",targetPath,response);
+                                       
                                        return [NSURL URLWithString:cachePath];
                                    }
                              completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
@@ -100,6 +110,16 @@ static NSMutableArray *default_requestTasks;
 
 
 #pragma private Method
+/**
+ *  缓存数据
+ *
+ *  @param responseObject 需要存储的数据
+ *  @param request        请求
+ *  @param parameters     参数，可为nil
+ */
++ (void)cacheWithResponceObject:(id)responseObject :(NSURLRequest *)request parameters:(NSDictionary *)parameters {
+
+}
 
 /**
  *  获取完整的请求链接
