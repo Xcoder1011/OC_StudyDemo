@@ -69,31 +69,27 @@
     __weak typeof(cell) weakCell  = cell;
     cell.startDownloadAciton = ^(SKDownloadModel *model) {
         
-      
         switch (model.status) {
             case kSKDownloadStatusNotLoaded:
             {
                 NSLog(@"开始缓存%ld",indexPath.row);
                 [weakSelf startDownloadWithModel:model];
-                model.status = kSKDownloadStatusIsLoading;
             }
                 break;
             case kSKDownloadStatusIsLoading:
             {
                 NSLog(@"暂定缓存%ld",indexPath.row);
                 [weakSelf pauseDownloadWithModel:model];
-                model.status = kSKDownloadStatusPausing;
             }
                 break;
             case kSKDownloadStatusPausing:
             {
                 NSLog(@"继续缓存%ld",indexPath.row);
                 [weakSelf resumeDownloadWithModel:model];
-                model.status = kSKDownloadStatusIsLoading;
             }
                 break;
             case kSKDownloadStatusDone:
-//                self.statusLabel.text = @"";
+                NSLog(@"缓存完成%ld",indexPath.row);
                 break;
             case kSKDownloadStatusError:
 //                self.statusLabel.text = @"缓存出错";
@@ -101,11 +97,7 @@
             default:
                 break;
         }
-//        
-//        NSIndexPath *indexPath = [tableView indexPathForCell:weakCell];
-//        [self.dataArray replaceObjectAtIndex:indexPath.row withObject:model];
-//       
-//        [weakSelf.tableView reloadData];
+
     };
     return cell;
 }
@@ -120,21 +112,31 @@
 
     [SKNetworking resumeDownloadWithUrl:model.linkUrl
                                progress:^(int64_t bytesRead, int64_t totalBytesRead) {
-                                   //
-                                   NSLog(@"resumeDownloadWithUrl:%lld, totalBytes:%lld",bytesRead,totalBytesRead);
                                    
                                    dispatch_async(dispatch_get_main_queue(), ^{
-                                       // cell.progress
+                                       model.status = kSKDownloadStatusIsLoading;
+                                       model.bytesRead = bytesRead;
+                                       model.totalBytesRead = totalBytesRead;
+                                       [self _dispactchUpdateUIWith:model];
                                    });
                                }
                                 success:^(id response) {
                                     //
                                     NSLog(@"%@",response);
+                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                        model.status = kSKDownloadStatusDone;
+                                        [self _dispactchUpdateUIWith:model];
+                                    });
 
                                 }
                                 failure:^(NSError *error) {
                                     //
                                     NSLog(@"error.description = %@",error.description);
+                                    
+                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                        model.status = kSKDownloadStatusPausing;
+                                        [self _dispactchUpdateUIWith:model];
+                                    });
 
                                 }];
     
@@ -161,20 +163,30 @@
     [SKNetworking startDownloadWithUrl:model.linkUrl
                        cachePath:model.destinationPath
                         progress:^(int64_t bytesRead, int64_t totalBytesRead) {
-                            NSLog(@"startDownloadWithModel:%lld, totalBytes:%lld",bytesRead,totalBytesRead);
-                            
                             dispatch_async(dispatch_get_main_queue(), ^{
-                                // cell.progress
                                 model.status = kSKDownloadStatusIsLoading;
+                                model.bytesRead = bytesRead;
+                                model.totalBytesRead = totalBytesRead;
                                 [self _dispactchUpdateUIWith:model];
-
                             });
                         }
                          success:^(id response) {
                              NSLog(@"%@",response);
+                             dispatch_async(dispatch_get_main_queue(), ^{
+                                 model.status = kSKDownloadStatusDone;
+                                 [self _dispactchUpdateUIWith:model];
+                             });
                          }
                          failure:^(NSError *error) {
                              NSLog(@"error.description = %@",error.description);
+                             
+                             if(error.code == NSURLErrorCancelled) { //正在暂停
+                                 
+                                 dispatch_async(dispatch_get_main_queue(), ^{
+                                     model.status = kSKDownloadStatusPausing;
+                                     [self _dispactchUpdateUIWith:model];
+                                 });
+                             }
                          }];
 }
 
@@ -183,6 +195,9 @@
     [self.dataArray replaceObjectAtIndex:model.tag withObject:model];
     [self.tableView reloadData];
 }
+
+
+//-(void)_dispactchUpdateUIWithModel:(SKDownloadModel *)model currentStatus 
 
 /**
  *  初始化视图
@@ -196,14 +211,28 @@
  */
 -(void)loadListData {
     
-    for (int i=1; i<8; i++) {
+    for (int i=1; i<5; i++) {
         SKDownloadModel *model = [[SKDownloadModel alloc]init];
         model.tag = i-1;
+        model.bytesRead = 0;
+        model.totalBytesRead = 1;
         model.name = [NSString stringWithFormat:@"速度与激情%d",i];
-        if (i%2 == 1) {
-            model.linkUrl = @"http://mw5.dwstatic.com/1/3/1528/133489-99-1436409822.mp4";
+        switch (i) {
+            case 1:
+                  model.linkUrl = @"http://mw5.dwstatic.com/1/3/1528/133489-99-1436409822.mp4";
+                break;
+            case 2:
+                model.linkUrl = @"http://android-mirror.bugly.qq.com:8080/eclipse_mirror/juno/content.jar";
+                break;
+            case 3:
+                model.linkUrl = @"http://dlsw.baidu.com/sw-search-sp/soft/2a/25677/QQ_V4.1.1.1456905733.dmg";
+                break;
+            case 4:
+                model.linkUrl = @"http://mw2.dwstatic.com/2/8/1528/133366-99-1436362095.mp4";
+                break;
+            default:
+                break;
         }
-        model.linkUrl = @"http://android-mirror.bugly.qq.com:8080/eclipse_mirror/juno/content.jar";
         model.destinationPath = model.name;
         model.status = kSKDownloadStatusNotLoaded;
         [self.dataArray addObject:model];

@@ -37,6 +37,13 @@ typedef void(^SKResponseSuccess)(id response);
 typedef void(^SKResponseFailure)(NSError *error);
 
 /**
+ *  缓存暂停时的回调
+ *
+ *  @param error error.code = -999
+ */
+typedef void(^SKResponsePausing)(NSError *error);
+
+/**
  *  所有接口返回的类型都是基类NSURLSessionTask，若要接收返回值
  *  且处理，请转换成对应的子类类型
  */
@@ -100,8 +107,10 @@ typedef NSURLSessionTask SKURLSessionTask;
  *  暂定下载
  *
  *  @param url 下载文件的URL
+ *  @param pausing 暂定下载的回调
  */
 + (void)pauseDownloadWithUrl:(NSString *)url;
+
 
 /**
  *  继续下载

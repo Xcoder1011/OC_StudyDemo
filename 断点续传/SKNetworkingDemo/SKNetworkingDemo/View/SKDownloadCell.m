@@ -19,17 +19,6 @@
 
 - (IBAction)tapIconImageView:(UITapGestureRecognizer *)sender {
     
-//    if (self.model.status == kSKDownloadStatusNotLoaded) { //没下载->正在缓存
-//        self.model.status = kSKDownloadStatusIsLoading;
-//    }
-//    
-//    if (self.model.status == kSKDownloadStatusPausing) {
-//        self.model.status = kSKDownloadStatusIsLoading; //暂定->缓存
-//        
-//    } else if (self.model.status == kSKDownloadStatusIsLoading) {
-//        self.model.status = kSKDownloadStatusPausing; //缓存->暂停
-//    }
-    
     if (self.startDownloadAciton) {
         self.startDownloadAciton(self.model);
     }
@@ -39,6 +28,8 @@
 -(void)setModel:(SKDownloadModel *)model{
     _model = model;
     self.titleLabel.text = model.name;
+    self.progressView.progress = (float) model.bytesRead / model.totalBytesRead;
+    self.currentProgress.text = [NSString stringWithFormat:@"%lld/%lld",model.bytesRead,model.totalBytesRead];
     switch (model.status) {
         case kSKDownloadStatusNotLoaded:
             self.statusLabel.text = @"开始缓存";

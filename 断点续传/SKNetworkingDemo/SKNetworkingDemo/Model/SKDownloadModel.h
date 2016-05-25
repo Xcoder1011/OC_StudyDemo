@@ -28,7 +28,10 @@ typedef NS_ENUM(NSInteger, SKDownloadStatus) {
 @property (nonatomic, assign) SKDownloadStatus status;
 /** tag */
 @property (nonatomic, assign) NSInteger tag;
-
+/** 已经下载大小 */
+@property (nonatomic, assign) int64_t bytesRead;
+/** 文件总的大小 */
+@property (nonatomic, assign) int64_t totalBytesRead;
 
 
 @end
