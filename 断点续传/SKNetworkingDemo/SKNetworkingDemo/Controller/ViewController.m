@@ -34,6 +34,7 @@
     [self loadListData];
     
     [SKNetworking enableInterfaceDebug:YES];
+    [SKNetworking updateLocalAllTasks];
 }
 
 
@@ -62,22 +63,49 @@
             }
         }
     }
-    [cell setModel:self.dataArray[indexPath.row]];
+    SKDownloadModel *model = self.dataArray[indexPath.row];
+    [model setTag:indexPath.row];
+    [cell setModel:model];
     __weak typeof(cell) weakCell  = cell;
     cell.startDownloadAciton = ^(SKDownloadModel *model) {
         
-        NSIndexPath *indexPath = [tableView indexPathForCell:weakCell];
-        [self.dataArray replaceObjectAtIndex:indexPath.row withObject:model];
-        
-        if (model.status == kSKDownloadStatusIsLoading) { //开始下载
-            NSLog(@"开始下载%ld",indexPath.row);
-            [weakSelf startDownloadWithModel:model];
+      
+        switch (model.status) {
+            case kSKDownloadStatusNotLoaded:
+            {
+                NSLog(@"开始缓存%ld",indexPath.row);
+                [weakSelf startDownloadWithModel:model];
+                model.status = kSKDownloadStatusIsLoading;
+            }
+                break;
+            case kSKDownloadStatusIsLoading:
+            {
+                NSLog(@"暂定缓存%ld",indexPath.row);
+                [weakSelf pauseDownloadWithModel:model];
+                model.status = kSKDownloadStatusPausing;
+            }
+                break;
+            case kSKDownloadStatusPausing:
+            {
+                NSLog(@"继续缓存%ld",indexPath.row);
+                [weakSelf resumeDownloadWithModel:model];
+                model.status = kSKDownloadStatusIsLoading;
+            }
+                break;
+            case kSKDownloadStatusDone:
+//                self.statusLabel.text = @"";
+                break;
+            case kSKDownloadStatusError:
+//                self.statusLabel.text = @"缓存出错";
+                break;
+            default:
+                break;
         }
-        if (model.status == kSKDownloadStatusPausing) { //暂定下载
-            NSLog(@"暂定下载%ld",indexPath.row);
-        }
-       
-        [weakSelf.tableView reloadData];
+//        
+//        NSIndexPath *indexPath = [tableView indexPathForCell:weakCell];
+//        [self.dataArray replaceObjectAtIndex:indexPath.row withObject:model];
+//       
+//        [weakSelf.tableView reloadData];
     };
     return cell;
 }
@@ -85,24 +113,77 @@
 
 #pragma mark -- Private method
 
+/**
+ *  继续下载
+ */
+- (void)resumeDownloadWithModel:(SKDownloadModel *)model {
+
+    [SKNetworking resumeDownloadWithUrl:model.linkUrl
+                               progress:^(int64_t bytesRead, int64_t totalBytesRead) {
+                                   //
+                                   NSLog(@"resumeDownloadWithUrl:%lld, totalBytes:%lld",bytesRead,totalBytesRead);
+                                   
+                                   dispatch_async(dispatch_get_main_queue(), ^{
+                                       // cell.progress
+                                   });
+                               }
+                                success:^(id response) {
+                                    //
+                                    NSLog(@"%@",response);
+
+                                }
+                                failure:^(NSError *error) {
+                                    //
+                                    NSLog(@"error.description = %@",error.description);
+
+                                }];
+    
+    
+}
+
+
+
+
+/**
+ *  暂停下载
+ */
+- (void)pauseDownloadWithModel:(SKDownloadModel *)model {
+
+    [SKNetworking pauseDownloadWithUrl:model.linkUrl];
+}
+
+
+/**
+ *  开始下载
+ */
 - (void)startDownloadWithModel:(SKDownloadModel *)model{
 
-    [SKNetworking downloadWithUrl:model.linkUrl
+    [SKNetworking startDownloadWithUrl:model.linkUrl
                        cachePath:model.destinationPath
                         progress:^(int64_t bytesRead, int64_t totalBytesRead) {
-                            NSLog(@"download:%lld, totalBytes:%lld",bytesRead,totalBytesRead);
+                            NSLog(@"startDownloadWithModel:%lld, totalBytes:%lld",bytesRead,totalBytesRead);
                             
                             dispatch_async(dispatch_get_main_queue(), ^{
                                 // cell.progress
+                                model.status = kSKDownloadStatusIsLoading;
+                                [self _dispactchUpdateUIWith:model];
+
                             });
                         }
                          success:^(id response) {
-                             NSLog(response);
+                             NSLog(@"%@",response);
                          }
                          failure:^(NSError *error) {
-                             NSLog(error.userInfo);
+                             NSLog(@"error.description = %@",error.description);
                          }];
 }
+
+-(void)_dispactchUpdateUIWith:(SKDownloadModel *)model {
+//    NSIndexPath *indexPath = [tableView indexPathForCell:weakCell];
+    [self.dataArray replaceObjectAtIndex:model.tag withObject:model];
+    [self.tableView reloadData];
+}
+
 /**
  *  初始化视图
  */
@@ -117,13 +198,14 @@
     
     for (int i=1; i<8; i++) {
         SKDownloadModel *model = [[SKDownloadModel alloc]init];
+        model.tag = i-1;
         model.name = [NSString stringWithFormat:@"速度与激情%d",i];
         if (i%2 == 1) {
             model.linkUrl = @"http://mw5.dwstatic.com/1/3/1528/133489-99-1436409822.mp4";
         }
         model.linkUrl = @"http://android-mirror.bugly.qq.com:8080/eclipse_mirror/juno/content.jar";
         model.destinationPath = model.name;
-        model.status = kSKDownloadStatusPausing;
+        model.status = kSKDownloadStatusNotLoaded;
         [self.dataArray addObject:model];
     }
     [self.tableView reloadData];

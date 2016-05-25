@@ -82,18 +82,38 @@ typedef NSURLSessionTask SKURLSessionTask;
 + (void)setCommonHttpHeaders:(NSDictionary *)httpHeaders;
 
 /**
- *  下载文件
+ *  开始下载
  *
- *  @param url       下载URL
+ *  @param url       下载文件的URL
  *  @param cachePath 缓存路径
  *  @param progress  下载进度
  *  @param success   下载成功回调
  *  @param failure   下载失败回调
  */
-+ (SKURLSessionTask *)downloadWithUrl:(NSString *)url
-                            cachePath:(NSString *)cachePath
-                             progress:(SKDownloadProgress)progress
-                              success:(SKResponseSuccess)success
-                              failure:(SKResponseFailure)failure;
++ (SKURLSessionTask *)startDownloadWithUrl:(NSString *)url
+                                 cachePath:(NSString *)cachePath
+                                  progress:(SKDownloadProgress)progress
+                                   success:(SKResponseSuccess)success
+                                   failure:(SKResponseFailure)failure;
+
+/**
+ *  暂定下载
+ *
+ *  @param url 下载文件的URL
+ */
++ (void)pauseDownloadWithUrl:(NSString *)url;
+
+/**
+ *  继续下载
+ */
++ (SKURLSessionTask *)resumeDownloadWithUrl:(NSString *)url
+                     progress:(SKDownloadProgress)progress
+                      success:(SKResponseSuccess)success
+                      failure:(SKResponseFailure)failure;
+
+/**
+ *  更新本地存储的下载任务
+ */
++ (void)updateLocalAllTasks;
 
 @end
