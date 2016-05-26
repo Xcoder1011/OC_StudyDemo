@@ -93,6 +93,7 @@
                 break;
             case kSKDownloadStatusError:
 //                self.statusLabel.text = @"缓存出错";
+                NSLog(@"缓存出错！");
                 break;
             default:
                 break;
@@ -110,7 +111,7 @@
  */
 - (void)resumeDownloadWithModel:(SKDownloadModel *)model {
 
-    [SKNetworking resumeDownloadWithUrl:model.linkUrl
+    [[SKNetworking shareInstance] resumeDownloadWithUrl:model.linkUrl
                                progress:^(int64_t bytesRead, int64_t totalBytesRead) {
                                    
                                    dispatch_async(dispatch_get_main_queue(), ^{
@@ -132,11 +133,17 @@
                                 failure:^(NSError *error) {
                                     //
                                     NSLog(@"error.description = %@",error.description);
-                                    
-                                    dispatch_async(dispatch_get_main_queue(), ^{
-                                        model.status = kSKDownloadStatusPausing;
-                                        [self _dispactchUpdateUIWith:model];
-                                    });
+                                    if(error.code == NSURLErrorCancelled) { //正在暂停
+                                        dispatch_async(dispatch_get_main_queue(), ^{
+                                            model.status = kSKDownloadStatusPausing;
+                                            [self _dispactchUpdateUIWith:model];
+                                        });
+                                    }else {
+                                        dispatch_async(dispatch_get_main_queue(), ^{
+                                            model.status = kSKDownloadStatusError;
+                                            [self _dispactchUpdateUIWith:model];
+                                        });
+                                    }
 
                                 }];
     
@@ -151,7 +158,7 @@
  */
 - (void)pauseDownloadWithModel:(SKDownloadModel *)model {
 
-    [SKNetworking pauseDownloadWithUrl:model.linkUrl];
+    [[SKNetworking shareInstance] pauseDownloadWithUrl:model.linkUrl];
 }
 
 
@@ -160,7 +167,7 @@
  */
 - (void)startDownloadWithModel:(SKDownloadModel *)model{
 
-    [SKNetworking startDownloadWithUrl:model.linkUrl
+    [[SKNetworking shareInstance] startDownloadWithUrl:model.linkUrl
                        cachePath:model.destinationPath
                         progress:^(int64_t bytesRead, int64_t totalBytesRead) {
                             dispatch_async(dispatch_get_main_queue(), ^{
