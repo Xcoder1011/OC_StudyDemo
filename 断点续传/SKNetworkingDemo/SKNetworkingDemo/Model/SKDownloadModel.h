@@ -9,11 +9,11 @@
 #import <Foundation/Foundation.h>
 
 typedef NS_ENUM(NSInteger, SKDownloadStatus) {
-    kSKDownloadStatusNotLoaded = 1, //没被下载
-    kSKDownloadStatusIsLoading,  // 正在下载
-    kSKDownloadStatusPausing,  // 停止下载（暂定）状态
-    kSKDownloadStatusDone,   // 下载完成
-    kSKDownloadStatusError    // 下载出错
+    kSKDownloadStatusNotLoaded = 1, // 初始状态（未下载）
+    kSKDownloadStatusIsLoading,     // 下载中
+    kSKDownloadStatusPausing,       // 暂定状态
+    kSKDownloadStatusDone,          // 下载完成
+    kSKDownloadStatusError          // 下载失败
 
 };
 

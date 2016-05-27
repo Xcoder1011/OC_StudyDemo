@@ -49,6 +49,25 @@
     return self.dataArray.count;
 }
 
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    return YES;
+}
+
+-(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    // 左侧删除
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        
+         SKDownloadModel *model = self.dataArray[indexPath.row];
+        
+         [self cancelDownloadWithModel:model];
+        
+        [self.dataArray removeObjectAtIndex:indexPath.row];
+    
+        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    }
+}
+
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     //SKDownloadCell *cell = [tableView dequeueReusableCellWithIdentifier:[SKDownloadCell description] forIndexPath:indexPath];
@@ -66,14 +85,14 @@
     SKDownloadModel *model = self.dataArray[indexPath.row];
     [model setTag:indexPath.row];
     [cell setModel:model];
-    __weak typeof(cell) weakCell  = cell;
+    __weak typeof(cell) weakCell = cell;
     cell.startDownloadAciton = ^(SKDownloadModel *model) {
         
         switch (model.status) {
             case kSKDownloadStatusNotLoaded:
             {
                 NSLog(@"开始缓存%ld",indexPath.row);
-                [weakSelf startDownloadWithModel:model];
+                [weakSelf startDownloadWithModel:model withTableViewCell:weakCell];
             }
                 break;
             case kSKDownloadStatusIsLoading:
@@ -85,7 +104,7 @@
             case kSKDownloadStatusPausing:
             {
                 NSLog(@"继续缓存%ld",indexPath.row);
-                [weakSelf resumeDownloadWithModel:model];
+                [weakSelf resumeDownloadWithModel:model withTableViewCell:weakCell];
             }
                 break;
             case kSKDownloadStatusDone:
@@ -99,6 +118,7 @@
                 break;
         }
 
+
     };
     return cell;
 }
@@ -106,10 +126,15 @@
 
 #pragma mark -- Private method
 
+-(void)cancelDownloadWithModel:(SKDownloadModel *)model{
+
+    [SKNetworking cancelDownloadWithUrl:model.linkUrl];
+}
+
 /**
  *  继续下载
  */
-- (void)resumeDownloadWithModel:(SKDownloadModel *)model {
+- (void)resumeDownloadWithModel:(SKDownloadModel *)model withTableViewCell:(SKDownloadCell *)cell {
 
     [SKNetworking resumeDownloadWithUrl:model.linkUrl
                                progress:^(int64_t bytesRead, int64_t totalBytesRead) {
@@ -118,7 +143,7 @@
                                        model.status = kSKDownloadStatusIsLoading;
                                        model.bytesRead = bytesRead;
                                        model.totalBytesRead = totalBytesRead;
-                                       [self _dispactchUpdateUIWith:model];
+                                       [self _dispactchUpdateUIWith:model withTableViewCell:cell];
                                    });
                                }
                                 success:^(id response) {
@@ -126,7 +151,7 @@
                                     NSLog(@"%@",response);
                                     dispatch_async(dispatch_get_main_queue(), ^{
                                         model.status = kSKDownloadStatusDone;
-                                        [self _dispactchUpdateUIWith:model];
+                                        [self _dispactchUpdateUIWith:model withTableViewCell:cell];
                                     });
 
                                 }
@@ -136,12 +161,12 @@
                                     if(error.code == NSURLErrorCancelled) { //正在暂停
                                         dispatch_async(dispatch_get_main_queue(), ^{
                                             model.status = kSKDownloadStatusPausing;
-                                            [self _dispactchUpdateUIWith:model];
+                                            [self _dispactchUpdateUIWith:model withTableViewCell:cell];
                                         });
                                     }else {
                                         dispatch_async(dispatch_get_main_queue(), ^{
                                             model.status = kSKDownloadStatusError;
-                                            [self _dispactchUpdateUIWith:model];
+                                            [self _dispactchUpdateUIWith:model withTableViewCell:cell];
                                         });
                                     }
 
@@ -165,7 +190,7 @@
 /**
  *  开始下载
  */
-- (void)startDownloadWithModel:(SKDownloadModel *)model{
+- (void)startDownloadWithModel:(SKDownloadModel *)model withTableViewCell:(SKDownloadCell *)cell{
 
     [SKNetworking startDownloadWithUrl:model.linkUrl
                        cachePath:model.destinationPath
@@ -174,14 +199,14 @@
                                 model.status = kSKDownloadStatusIsLoading;
                                 model.bytesRead = bytesRead;
                                 model.totalBytesRead = totalBytesRead;
-                                [self _dispactchUpdateUIWith:model];
+                                [self _dispactchUpdateUIWith:model withTableViewCell:cell];
                             });
                         }
                          success:^(id response) {
                              NSLog(@"%@",response);
                              dispatch_async(dispatch_get_main_queue(), ^{
                                  model.status = kSKDownloadStatusDone;
-                                 [self _dispactchUpdateUIWith:model];
+                                 [self _dispactchUpdateUIWith:model withTableViewCell:cell];
                              });
                          }
                          failure:^(NSError *error) {
@@ -191,16 +216,14 @@
                                  
                                  dispatch_async(dispatch_get_main_queue(), ^{
                                      model.status = kSKDownloadStatusPausing;
-                                     [self _dispactchUpdateUIWith:model];
+                                     [self _dispactchUpdateUIWith:model withTableViewCell:cell];
                                  });
                              }
                          }];
 }
 
--(void)_dispactchUpdateUIWith:(SKDownloadModel *)model {
-//    NSIndexPath *indexPath = [tableView indexPathForCell:weakCell];
-    [self.dataArray replaceObjectAtIndex:model.tag withObject:model];
-    [self.tableView reloadData];
+-(void)_dispactchUpdateUIWith:(SKDownloadModel *)model  withTableViewCell:(SKDownloadCell *)cell {
+    cell.model = model;
 }
 
 

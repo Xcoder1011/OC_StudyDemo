@@ -28,8 +28,17 @@
 -(void)setModel:(SKDownloadModel *)model{
     _model = model;
     self.titleLabel.text = model.name;
-    self.progressView.progress = (float) model.bytesRead / model.totalBytesRead;
-    self.currentProgress.text = [NSString stringWithFormat:@"%lld/%lld",model.bytesRead,model.totalBytesRead];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        self.progressView.progress = model.bytesRead / (CGFloat) model.totalBytesRead;
+        // self.currentProgress.text = [NSString stringWithFormat:@"%lld/%lld",model.bytesRead,model.totalBytesRead];
+        double byts =  model.bytesRead * 1.0 / 1024 / 1024;
+        double total =  model.totalBytesRead * 1.0 / 1024 / 1024;
+        self.currentProgress.text = [NSString stringWithFormat:@"%.1lfMB/%.1fMB",byts,total];
+
+    });
+    
     switch (model.status) {
         case kSKDownloadStatusNotLoaded:
             self.statusLabel.text = @"开始缓存";

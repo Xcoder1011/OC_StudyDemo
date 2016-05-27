@@ -99,7 +99,7 @@ typedef NSURLSessionDownloadTask SKURLSessionDownloadTask;
  *  @param success   下载成功回调
  *  @param failure   下载失败回调
  */
-+ (SKURLSessionTask *)startDownloadWithUrl:(NSString *)url
++ (SKURLSessionDownloadTask *)startDownloadWithUrl:(NSString *)url
                                  cachePath:(NSString *)cachePath
                                   progress:(SKDownloadProgress)progress
                                    success:(SKResponseSuccess)success
@@ -109,7 +109,6 @@ typedef NSURLSessionDownloadTask SKURLSessionDownloadTask;
  *  暂定下载
  *
  *  @param url 下载文件的URL
- *  @param pausing 暂定下载的回调
  */
 + (void)pauseDownloadWithUrl:(NSString *)url;
 
@@ -117,10 +116,20 @@ typedef NSURLSessionDownloadTask SKURLSessionDownloadTask;
 /**
  *  继续下载
  */
-+ (SKURLSessionTask *)resumeDownloadWithUrl:(NSString *)url
++ (SKURLSessionDownloadTask *)resumeDownloadWithUrl:(NSString *)url
                      progress:(SKDownloadProgress)progress
                       success:(SKResponseSuccess)success
                       failure:(SKResponseFailure)failure;
+
+/**
+ *  取消下载
+ *
+ *  @param url 下载文件的URL
+ */
++ (void)cancelDownloadWithUrl:(NSString *)url;
+
+
+
 
 /**
  *  更新本地存储的下载任务

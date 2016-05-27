@@ -8,8 +8,6 @@
 
 #import "SKNetworking.h"
 #import <AFNetworking.h>
-//#import <AFHTTPSessionManager.h>
-//#import <AFNetworkReachabilityManager.h>
 
 static NSString *default_baseUrl = nil;
 static NSTimeInterval default_timeout = 60.0f;
@@ -18,15 +16,8 @@ static NSDictionary *default_httpheaders = nil;
 static BOOL default_enableInterfaceDebug = NO;
 static NSMutableArray *default_requestTasks; //所有的下载任务
 
-static NSMutableDictionary *default_sessionDicts; //所有的下载任务(仅仅存储session)
-
-
 @interface SKNetworking ()
 
-/** 下载Task */
-@property (nonatomic, strong) NSURLSessionDownloadTask *sessionDownloadTask;
-/** 下载的局部数据 */
-@property (nonatomic, strong) NSData *partialData;
 @end
 
 @implementation SKNetworking
@@ -68,7 +59,8 @@ static inline NSString *getCachePath() {
     return [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
 }
 
-+ (SKURLSessionTask *)startDownloadWithUrl:(NSString *)url
+#pragma mark -- 开始下载
++ (SKURLSessionDownloadTask *)startDownloadWithUrl:(NSString *)url
                                  cachePath:(NSString *)cachePath
                                   progress:(SKDownloadProgress)progress
                                    success:(SKResponseSuccess)success
@@ -78,8 +70,6 @@ static inline NSString *getCachePath() {
         return nil;
     }
     
-    //判断cachePath
-    
     NSURLRequest *downloadRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
 
     NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
@@ -88,7 +78,7 @@ static inline NSString *getCachePath() {
     
     // AFHTTPSessionManager *manager = [self _manager];
     
-    SKURLSessionTask *sessionTask = nil;
+    SKURLSessionDownloadTask *sessionTask = nil;
   
     sessionTask = [manager downloadTaskWithRequest:downloadRequest
                                       progress:^(NSProgress * _Nonnull downloadProgress) {
@@ -147,7 +137,7 @@ static inline NSString *getCachePath() {
     return sessionTask;
 }
 
-// 暂停下载
+#pragma mark -- 暂停下载
 + (void)pauseDownloadWithUrl:(NSString *)url {
     
     if (![self _getSessionTaskWithUrl:url]) {
@@ -157,7 +147,7 @@ static inline NSString *getCachePath() {
     NSURLSessionDownloadTask *sessionTask = [self _getSessionTaskWithUrl:url];
     
     [sessionTask cancelByProducingResumeData:^(NSData * _Nullable resumeData) {
-        for (NSMutableDictionary *sessionDict in [self.class allTasks]) {
+        for (NSMutableDictionary *sessionDict in [self allTasks]) {
             if (sessionDict[@"url"] == url) {
                 if (resumeData) {
                     [sessionDict setObject:resumeData forKey:@"partialData"];
@@ -168,7 +158,7 @@ static inline NSString *getCachePath() {
     }];
 }
 
-// 继续下载
+#pragma mark --  继续下载
 + (SKURLSessionDownloadTask *)resumeDownloadWithUrl:(NSString *)url
                      progress:(SKDownloadProgress)progress
                       success:(SKResponseSuccess)success
@@ -205,10 +195,7 @@ static inline NSString *getCachePath() {
                                           
                                       }
                                 completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
-                                    //
-//                                    [[self allTasks] removeObject:session];
-//                                    [self writeToLocalFileWithAllTask:[self allTasks]];
-                                    
+  
                                     if (error) { // 错误
                                         [self handleCallbackWithError:error fail:failure];
                                         if (default_enableInterfaceDebug) {
@@ -244,14 +231,38 @@ static inline NSString *getCachePath() {
     return sessionTask;
 }
 
+#pragma mark -- 取消下载
++ (void)cancelDownloadWithUrl:(NSString *)url {
+    
+    if (![self _getSessionTaskWithUrl:url]) {
+        return;
+    }
+    
+    NSURLSessionDownloadTask *sessionTask = [self _getSessionTaskWithUrl:url];
+    [sessionTask cancel];
+    sessionTask = nil;
+    
+   __block NSMutableDictionary *sessionD  = nil;
+    
+    [[self allTasks] enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSMutableDictionary *sessionDict = obj;
+        if (sessionDict[@"url"] == url) {
+            sessionD = sessionDict;
+        }
+    }];
+    
+    [[self allTasks] removeObject:sessionD];
+    
+}
+
 
 // 更新本地存储的下载任务
 + (void)updateLocalAllTasks{
 
-    if ([self readLocalData]) {
-        [[self allTasks] removeAllObjects];
-        [[self allTasks] addObject:[self readLocalData]];
-    }
+//    if ([self readLocalData]) {
+//        [[self allTasks] removeAllObjects];
+//        [[self allTasks] addObject:[self readLocalData]];
+//    }
 }
 
 #pragma private Method
@@ -419,15 +430,6 @@ static inline NSString *getCachePath() {
     return default_requestTasks;
 }
 
-+(NSMutableDictionary *)allSessionTasks {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        if (default_sessionDicts == nil) {
-            default_sessionDicts = [[NSMutableDictionary alloc]init];
-        }
-    });
-    return default_sessionDicts;
-}
 
 + (AFHTTPSessionManager *)_manager {
 
