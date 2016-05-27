@@ -111,7 +111,7 @@
  */
 - (void)resumeDownloadWithModel:(SKDownloadModel *)model {
 
-    [[SKNetworking shareInstance] resumeDownloadWithUrl:model.linkUrl
+    [SKNetworking resumeDownloadWithUrl:model.linkUrl
                                progress:^(int64_t bytesRead, int64_t totalBytesRead) {
                                    
                                    dispatch_async(dispatch_get_main_queue(), ^{
@@ -158,7 +158,7 @@
  */
 - (void)pauseDownloadWithModel:(SKDownloadModel *)model {
 
-    [[SKNetworking shareInstance] pauseDownloadWithUrl:model.linkUrl];
+    [SKNetworking pauseDownloadWithUrl:model.linkUrl];
 }
 
 
@@ -167,7 +167,7 @@
  */
 - (void)startDownloadWithModel:(SKDownloadModel *)model{
 
-    [[SKNetworking shareInstance] startDownloadWithUrl:model.linkUrl
+    [SKNetworking startDownloadWithUrl:model.linkUrl
                        cachePath:model.destinationPath
                         progress:^(int64_t bytesRead, int64_t totalBytesRead) {
                             dispatch_async(dispatch_get_main_queue(), ^{
