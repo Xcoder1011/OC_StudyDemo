@@ -92,7 +92,8 @@
             case kSKDownloadStatusNotLoaded:
             {
                 NSLog(@"开始缓存%ld",indexPath.row);
-                [weakSelf startDownloadWithModel:model withTableViewCell:weakCell];
+                //[weakSelf startDownloadWithModel:model withTableViewCell:weakCell];
+                [weakSelf downloadWithModel:model withTableViewCell:weakCell];
             }
                 break;
             case kSKDownloadStatusIsLoading:
@@ -104,7 +105,9 @@
             case kSKDownloadStatusPausing:
             {
                 NSLog(@"继续缓存%ld",indexPath.row);
-                [weakSelf resumeDownloadWithModel:model withTableViewCell:weakCell];
+                //[weakSelf resumeDownloadWithModel:model withTableViewCell:weakCell];
+                [weakSelf downloadWithModel:model withTableViewCell:weakCell];
+
             }
                 break;
             case kSKDownloadStatusDone:
@@ -130,6 +133,38 @@
 
     [SKNetworking cancelDownloadWithUrl:model.linkUrl];
 }
+
+#pragma mark -- 下载
+- (void)downloadWithModel:(SKDownloadModel *)model withTableViewCell:(SKDownloadCell *)cell {
+
+    [SKNetworking downloadWithUrl:model.linkUrl
+                             cachePath:model.destinationPath
+                              progress:^(int64_t bytesRead, int64_t totalBytesRead) {
+                                  dispatch_async(dispatch_get_main_queue(), ^{
+                                      model.status = kSKDownloadStatusIsLoading;
+                                      model.bytesRead = bytesRead;
+                                      model.totalBytesRead = totalBytesRead;
+                                      [self _dispactchUpdateUIWith:model withTableViewCell:cell];
+                                  });
+                              }
+                               success:^(id response) {
+                                   NSLog(@"%@",response);
+                                   dispatch_async(dispatch_get_main_queue(), ^{
+                                       model.status = kSKDownloadStatusDone;
+                                       [self _dispactchUpdateUIWith:model withTableViewCell:cell];
+                                   });
+                               }
+                               failure:^(NSError *error) {
+                                   NSLog(@"error.description = %@",error.description);
+                                   
+                                   if(error.code == NSURLErrorCancelled) { //正在暂停
+                                       
+                                       dispatch_async(dispatch_get_main_queue(), ^{
+                                           model.status = kSKDownloadStatusPausing;
+                                           [self _dispactchUpdateUIWith:model withTableViewCell:cell];
+                                       });
+                                   }
+                               }];}
 
 /**
  *  继续下载

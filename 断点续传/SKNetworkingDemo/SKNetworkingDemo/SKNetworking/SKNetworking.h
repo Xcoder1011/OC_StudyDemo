@@ -129,6 +129,22 @@ typedef NSURLSessionDownloadTask SKURLSessionDownloadTask;
 + (void)cancelDownloadWithUrl:(NSString *)url;
 
 
+/**
+ *  下载
+ *  自动判别是 第一次下载 还是 继续下载, 
+ *  把 开始下载 和 继续下载 结合在一起
+ *
+ *  @param url       下载文件的URL
+ *  @param cachePath 缓存路径
+ *  @param progress  下载进度
+ *  @param success   下载成功回调
+ *  @param failure   下载失败回调
+ */
++ (SKURLSessionDownloadTask *)downloadWithUrl:(NSString *)url
+                                    cachePath:(NSString *)cachePath
+                                     progress:(SKDownloadProgress)progress
+                                      success:(SKResponseSuccess)success
+                                      failure:(SKResponseFailure)failure;
 
 
 /**
