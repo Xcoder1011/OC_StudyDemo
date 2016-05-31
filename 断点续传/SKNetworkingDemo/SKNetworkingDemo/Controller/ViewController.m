@@ -54,6 +54,11 @@
     return YES;
 }
 
+- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
+
+    return @"删除";
+}
+
 -(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     // 左侧删除
     if (editingStyle == UITableViewCellEditingStyleDelete) {
@@ -154,16 +159,19 @@
                                        [self _dispactchUpdateUIWith:model withTableViewCell:cell];
                                    });
                                }
-                               failure:^(NSError *error) {
+                               failure:^(NSError *error, SKDownloadingStatus downloadStatus) {
                                    NSLog(@"error.description = %@",error.description);
                                    
-                                   if(error.code == NSURLErrorCancelled) { //正在暂停
-                                       
-                                       dispatch_async(dispatch_get_main_queue(), ^{
-                                           model.status = kSKDownloadStatusPausing;
-                                           [self _dispactchUpdateUIWith:model withTableViewCell:cell];
-                                       });
+                                   if (downloadStatus == kSKDownloadingStatusSuspended) {
+                                          model.status = kSKDownloadStatusPausing;
+                                   } else {
+                                          model.status = kSKDownloadStatusError;
                                    }
+                                   
+                                   dispatch_async(dispatch_get_main_queue(), ^{
+                                       [self _dispactchUpdateUIWith:model withTableViewCell:cell];
+                                   });
+                                   
                                }];}
 
 /**
@@ -190,7 +198,7 @@
                                     });
 
                                 }
-                                failure:^(NSError *error) {
+                                failure:^(NSError *error , SKDownloadingStatus downloadStatus) {
                                     //
                                     NSLog(@"error.description = %@",error.description);
                                     if(error.code == NSURLErrorCancelled) { //正在暂停
@@ -244,7 +252,7 @@
                                  [self _dispactchUpdateUIWith:model withTableViewCell:cell];
                              });
                          }
-                         failure:^(NSError *error) {
+                         failure:^(NSError *error ,SKDownloadingStatus downloadStatus) {
                              NSLog(@"error.description = %@",error.description);
                              
                              if(error.code == NSURLErrorCancelled) { //正在暂停
@@ -261,8 +269,6 @@
     cell.model = model;
 }
 
-
-//-(void)_dispactchUpdateUIWithModel:(SKDownloadModel *)model currentStatus 
 
 /**
  *  初始化视图

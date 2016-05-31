@@ -14,6 +14,13 @@
 #define DLog(s, ... )
 #endif
 
+typedef NS_ENUM(NSInteger, SKDownloadingStatus) {
+
+    kSKDownloadingStatusSuspended = 1, // 暂定状态
+    kSKDownloadingStatusFailed ,       // 下载失败
+
+};
+
 /**
  *  下载进度
  *
@@ -34,14 +41,14 @@ typedef void(^SKResponseSuccess)(id response);
  *
  *  @param error 请求失败错误信息
  */
-typedef void(^SKResponseFailure)(NSError *error);
+typedef void(^SKResponseFailure)(NSError *error , SKDownloadingStatus downloadStatus);
 
 /**
  *  缓存暂停时的回调
  *
  *  @param error error.code = -999
  */
-typedef void(^SKResponsePausing)(NSError *error);
+typedef void(^SKResponsePausing)(NSError *error , SKDownloadingStatus downloadStatus);
 
 /**
  *  所有接口返回的类型都是基类NSURLSessionTask，若要接收返回值
@@ -90,6 +97,25 @@ typedef NSURLSessionDownloadTask SKURLSessionDownloadTask;
  */
 + (void)setCommonHttpHeaders:(NSDictionary *)httpHeaders;
 
+
+/**
+ *  -------------  下 载  -------------
+ *
+ *  推 荐 --> 自动判别是 第一次下载 还是 继续下载,
+ *         把 开始下载 和 继续下载 结合在一起
+ *
+ *  @param url       下载文件的URL
+ *  @param cachePath 缓存路径
+ *  @param progress  下载进度
+ *  @param success   下载成功回调
+ *  @param failure   下载失败回调
+ */
++ (SKURLSessionDownloadTask *)downloadWithUrl:(NSString *)url
+                                    cachePath:(NSString *)cachePath
+                                     progress:(SKDownloadProgress)progress
+                                      success:(SKResponseSuccess)success
+                                      failure:(SKResponseFailure)failure;
+
 /**
  *  开始下载
  *
@@ -129,22 +155,6 @@ typedef NSURLSessionDownloadTask SKURLSessionDownloadTask;
 + (void)cancelDownloadWithUrl:(NSString *)url;
 
 
-/**
- *  下载
- *  自动判别是 第一次下载 还是 继续下载, 
- *  把 开始下载 和 继续下载 结合在一起
- *
- *  @param url       下载文件的URL
- *  @param cachePath 缓存路径
- *  @param progress  下载进度
- *  @param success   下载成功回调
- *  @param failure   下载失败回调
- */
-+ (SKURLSessionDownloadTask *)downloadWithUrl:(NSString *)url
-                                    cachePath:(NSString *)cachePath
-                                     progress:(SKDownloadProgress)progress
-                                      success:(SKResponseSuccess)success
-                                      failure:(SKResponseFailure)failure;
 
 
 /**

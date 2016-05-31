@@ -146,7 +146,17 @@ static inline NSString *getCachePath() {
     
     NSURLSessionDownloadTask *sessionTask = [self _getSessionTaskWithUrl:url];
     
+    /**
+     *  resumeData只是一个chunk，而不是已经下载的全部数据，因此无法通过它实现断点续传，只能实现简单的暂停和继续
+     *
+     *  @param resumeData 记录一下恢复点的数据
+     *
+     *  要保证通过resume创建downloadTask时使用的session和创建被取消的downloadTask时使用的session是同一个，也就是所谓的session没有离线
+     */
     [sessionTask cancelByProducingResumeData:^(NSData * _Nullable resumeData) {
+        
+        NSLog( @"resumeData.length = %ld",resumeData.length);
+        
         for (NSMutableDictionary *sessionDict in [self allTasks]) {
             if (sessionDict[@"url"] == url) {
                 if (resumeData) {
@@ -257,8 +267,6 @@ static inline NSString *getCachePath() {
         return nil;
     }
     
-    NSURLRequest *downloadRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
-    
     NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
     
     AFURLSessionManager *manager = [[AFURLSessionManager alloc]initWithSessionConfiguration:config];
@@ -267,6 +275,19 @@ static inline NSString *getCachePath() {
     
     SKURLSessionDownloadTask *sessionTask = nil;
     
+    NSURLCache *urlCache = [[NSURLCache alloc]initWithMemoryCapacity:5 * 1024 * 1024
+                                                        diskCapacity:25 * 1024 * 1024
+                                                            diskPath:nil];
+    [NSURLCache setSharedURLCache:urlCache];
+    
+    // NSURLRequest *downloadRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+    NSMutableURLRequest *downloadRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+//    [downloadRequest setCachePolicy:NSURLRequestReturnCacheDataDontLoad];
+    
+
+    
+    NSCachedURLResponse* cacheResponse = [[NSURLCache sharedURLCache]cachedResponseForRequest:downloadRequest];
+    NSLog(@"cacheResponse.response = %@,\n cacheResponse.data = %@",cacheResponse.response,cacheResponse.data);
 
     if (![self _getSessionTaskWithUrl:url]) {  //第一次下载
         
@@ -278,14 +299,19 @@ static inline NSString *getCachePath() {
                                                   }
                                               }
                                            destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
-                                               //                                       NSString *path = [getCachePath() stringByAppendingPathComponent:cachePath];
-                                               //                                       return [NSURL URLWithString:path];
+                                               
+                                               //  将下载文件保存在缓存路径中
+                                               
+                                               NSLog(@" start _response = %@ \n targetPath = %@",response,targetPath);
+                                               
                                                NSString *cacheDir = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES)[0];
                                                NSString *path = [cacheDir stringByAppendingPathComponent:response.suggestedFilename];
-                                               return [NSURL fileURLWithPath:path];
+                                               return [NSURL fileURLWithPath:path]; // 使用本地URL
                                            }
                                      completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
                                          
+                                         NSLog(@" completionHandler _response = %@ \n filePath = %@",response,filePath);
+
                                          if (error) { // 错误
                                              [self handleCallbackWithError:error fail:failure];
                                              
@@ -339,16 +365,19 @@ static inline NSString *getCachePath() {
                                                      }
                                                  }
                                               destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
-                                                  //
-                                                  //                                          NSLog(@"targetPath:%@\n response:%@",targetPath,response);
-                                                  //                                          NSString *path = [getCachePath() stringByAppendingPathComponent:[self _getCachePathWithUrl:url]];
-                                                  //                                          return [NSURL URLWithString:path];
+                                                  
+                                                  //  将下载文件保存在缓存路径中
+
+                                                  NSLog(@" resume _response = %@ /n targetPath = %@",response,targetPath);
+
                                                   NSString *cacheDir = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES)[0];
                                                   NSString *path = [cacheDir stringByAppendingPathComponent:response.suggestedFilename];
                                                   return [NSURL fileURLWithPath:path];
                                                   
                                               }
                                         completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
+                                            
+                                            NSLog(@" completionHandler _response = %@ \n filePath = %@",response,filePath);
                                             
                                             if (error) { // 错误
                                                 [self handleCallbackWithError:error fail:failure];
@@ -547,11 +576,11 @@ static inline NSString *getCachePath() {
     if ([error code] == NSURLErrorCancelled) { //正在暂停
         // new add
         if (fail) {
-            fail(error);
+            fail(error , kSKDownloadingStatusSuspended);
         }
     }else {
         if (fail) {
-            fail(error);
+            fail(error, kSKDownloadingStatusFailed);
         }
     }
 }
