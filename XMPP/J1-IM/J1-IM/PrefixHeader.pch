@@ -1,0 +1,21 @@
+//
+//  PrefixHeader.pch
+//  J1-IM
+//
+//  Created by wushangkun on 16/1/21.
+//  Copyright © 2016年 J1. All rights reserved.
+//
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+#import <UIKit/UIKit.h>
+
+#import "ClassesPre.h"
+#import "J1-IM.h"
+#import "ThemeMacro.h"
+
+#endif /* PrefixHeader_pch */

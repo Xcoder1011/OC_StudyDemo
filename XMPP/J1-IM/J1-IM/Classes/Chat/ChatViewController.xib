@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ChatViewController">
+            <connections>
+                <outlet property="chatTableView" destination="961-PT-bG5" id="Mh7-oZ-PIp"/>
+                <outlet property="contentTV" destination="Wvu-wI-4rs" id="t8F-vG-m91"/>
+                <outlet property="inputVIewBottomConstraint" destination="nzV-Ou-VbJ" id="gvA-sS-pam"/>
+                <outlet property="inputView" destination="4OF-gj-8Om" id="lqG-OX-6Ce"/>
+                <outlet property="sendBtn" destination="ABf-vj-iRq" id="22x-aL-2pS"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="961-PT-bG5">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="556"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="DXz-Mt-KnF"/>
+                        <outlet property="delegate" destination="-1" id="jY0-SS-0jC"/>
+                    </connections>
+                </tableView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4OF-gj-8Om">
+                    <rect key="frame" x="0.0" y="556" width="600" height="44"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ABf-vj-iRq">
+                            <rect key="frame" x="500" y="7" width="45" height="30"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="45" id="lK9-ov-9Gd"/>
+                            </constraints>
+                            <state key="normal" title="发送"/>
+                            <connections>
+                                <action selector="sendBtnClick" destination="-1" eventType="touchUpInside" id="3Li-eA-9ox"/>
+                            </connections>
+                        </button>
+                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Wvu-wI-4rs">
+                            <rect key="frame" x="40" y="3" width="440" height="38"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                        </textView>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iEz-2Z-m8v">
+                            <rect key="frame" x="555" y="7" width="25" height="31"/>
+                            <state key="normal" image="MoreMyAlbum"/>
+                            <connections>
+                                <action selector="imageBtnClick" destination="-1" eventType="touchUpInside" id="Duy-qr-hBB"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstItem="iEz-2Z-m8v" firstAttribute="leading" secondItem="ABf-vj-iRq" secondAttribute="trailing" constant="10" id="0MD-Dn-X6y"/>
+                        <constraint firstAttribute="bottom" secondItem="Wvu-wI-4rs" secondAttribute="bottom" constant="3" id="1Gx-aS-iY9"/>
+                        <constraint firstItem="iEz-2Z-m8v" firstAttribute="top" secondItem="ABf-vj-iRq" secondAttribute="top" id="1LJ-Bi-StB"/>
+                        <constraint firstAttribute="trailing" secondItem="iEz-2Z-m8v" secondAttribute="trailing" constant="20" id="H3o-El-F4d"/>
+                        <constraint firstItem="Wvu-wI-4rs" firstAttribute="top" secondItem="4OF-gj-8Om" secondAttribute="top" constant="3" id="Kn0-Ox-84Y"/>
+                        <constraint firstAttribute="height" constant="44" id="LZ6-H2-E1S"/>
+                        <constraint firstItem="ABf-vj-iRq" firstAttribute="centerY" secondItem="4OF-gj-8Om" secondAttribute="centerY" id="NWA-ad-mGI"/>
+                        <constraint firstItem="Wvu-wI-4rs" firstAttribute="leading" secondItem="4OF-gj-8Om" secondAttribute="leading" constant="40" id="Wzw-2G-nbK"/>
+                        <constraint firstAttribute="trailing" secondItem="ABf-vj-iRq" secondAttribute="trailing" constant="20" id="afu-GG-eQv"/>
+                        <constraint firstItem="ABf-vj-iRq" firstAttribute="leading" secondItem="Wvu-wI-4rs" secondAttribute="trailing" constant="20" id="gmi-1n-e0V"/>
+                        <constraint firstItem="iEz-2Z-m8v" firstAttribute="centerY" secondItem="ABf-vj-iRq" secondAttribute="centerY" id="rTL-9d-EB1"/>
+                    </constraints>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="afu-GG-eQv"/>
+                        </mask>
+                    </variation>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="4OF-gj-8Om" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="IYN-ho-Kps"/>
+                <constraint firstItem="961-PT-bG5" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="JKv-QM-elg"/>
+                <constraint firstItem="4OF-gj-8Om" firstAttribute="top" secondItem="961-PT-bG5" secondAttribute="bottom" id="JnE-WQ-3v2"/>
+                <constraint firstAttribute="trailing" secondItem="961-PT-bG5" secondAttribute="trailing" id="WSW-tC-gw0"/>
+                <constraint firstItem="961-PT-bG5" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="d79-3X-KDu"/>
+                <constraint firstAttribute="trailing" secondItem="4OF-gj-8Om" secondAttribute="trailing" id="kZD-gg-FPh"/>
+                <constraint firstAttribute="bottom" secondItem="4OF-gj-8Om" secondAttribute="bottom" id="nzV-Ou-VbJ"/>
+            </constraints>
+        </view>
+    </objects>
+    <resources>
+        <image name="MoreMyAlbum" width="25" height="25"/>
+    </resources>
+</document>
