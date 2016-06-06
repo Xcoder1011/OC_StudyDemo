@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		21378CE91CFD397900B3E880 /* HYDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 21378CE81CFD397900B3E880 /* HYDownloadManager.m */; };
+		21378CEC1CFD399B00B3E880 /* HYDownloadModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 21378CEB1CFD399B00B3E880 /* HYDownloadModel.m */; };
 		21ACE5B91CEDB74200B9B4BA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 21ACE5B81CEDB74200B9B4BA /* main.m */; };
 		21ACE5BC1CEDB74200B9B4BA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 21ACE5BB1CEDB74200B9B4BA /* AppDelegate.m */; };
 		21ACE5C21CEDB74200B9B4BA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 21ACE5C01CEDB74200B9B4BA /* Main.storyboard */; };
@@ -22,6 +24,10 @@
 
 /* Begin PBXFileReference section */
 		04F12679772F299B6DA687CE /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		21378CE71CFD397900B3E880 /* HYDownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HYDownloadManager.h; sourceTree = "<group>"; };
+		21378CE81CFD397900B3E880 /* HYDownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HYDownloadManager.m; sourceTree = "<group>"; };
+		21378CEA1CFD399B00B3E880 /* HYDownloadModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HYDownloadModel.h; sourceTree = "<group>"; };
+		21378CEB1CFD399B00B3E880 /* HYDownloadModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HYDownloadModel.m; sourceTree = "<group>"; };
 		21ACE5B41CEDB74200B9B4BA /* SKNetworkingDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SKNetworkingDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		21ACE5B81CEDB74200B9B4BA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		21ACE5BA1CEDB74200B9B4BA /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -55,6 +61,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		21378CE61CFD2B8000B3E880 /* HYDownload */ = {
+			isa = PBXGroup;
+			children = (
+				21378CE71CFD397900B3E880 /* HYDownloadManager.h */,
+				21378CE81CFD397900B3E880 /* HYDownloadManager.m */,
+				21378CEA1CFD399B00B3E880 /* HYDownloadModel.h */,
+				21378CEB1CFD399B00B3E880 /* HYDownloadModel.m */,
+			);
+			path = HYDownload;
+			sourceTree = "<group>";
+		};
 		21ACE5AB1CEDB74200B9B4BA = {
 			isa = PBXGroup;
 			children = (
@@ -78,6 +95,7 @@
 			children = (
 				21ACE5BA1CEDB74200B9B4BA /* AppDelegate.h */,
 				21ACE5BB1CEDB74200B9B4BA /* AppDelegate.m */,
+				21378CE61CFD2B8000B3E880 /* HYDownload */,
 				21ACE5CE1CEDBCA500B9B4BA /* SKNetworking */,
 				21ACE5D61CEEB10B00B9B4BA /* Controller */,
 				21ACE5D91CEEB10B00B9B4BA /* Model */,
@@ -283,11 +301,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				21378CE91CFD397900B3E880 /* HYDownloadManager.m in Sources */,
 				21ACE5BC1CEDB74200B9B4BA /* AppDelegate.m in Sources */,
 				21ACE5B91CEDB74200B9B4BA /* main.m in Sources */,
 				21ACE5DC1CEEB10B00B9B4BA /* ViewController.m in Sources */,
 				21ACE5E81CEEB76700B9B4BA /* SKDownloadCell.m in Sources */,
 				21ACE5D51CEEB05900B9B4BA /* SKNetworking.m in Sources */,
+				21378CEC1CFD399B00B3E880 /* HYDownloadModel.m in Sources */,
 				21ACE5EC1CEEB78900B9B4BA /* SKDownloadModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
