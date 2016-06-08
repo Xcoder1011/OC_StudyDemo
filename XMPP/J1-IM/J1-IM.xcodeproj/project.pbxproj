@@ -159,6 +159,8 @@
 		2121DAD61C520CC800233634 /* MineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2121DAD51C520CC800233634 /* MineViewController.m */; };
 		2121DADF1C520D0A00233634 /* MessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2121DADC1C520D0A00233634 /* MessageViewController.m */; };
 		2121DAEB1C52192100233634 /* UIImage+Cut.m in Sources */ = {isa = PBXBuildFile; fileRef = 2121DAEA1C52192100233634 /* UIImage+Cut.m */; };
+		213C7D601D06B51700FB7587 /* HYXMPPManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 213C7D5F1D06B51700FB7587 /* HYXMPPManager.m */; };
+		213C7D651D06C5B200FB7587 /* HYConst.m in Sources */ = {isa = PBXBuildFile; fileRef = 213C7D641D06C5B200FB7587 /* HYConst.m */; };
 		214A34211C55C23300A303DC /* XmppRoomManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 214A34201C55C23300A303DC /* XmppRoomManager.m */; };
 		214A34241C55E7A400A303DC /* MessageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 214A34231C55E7A400A303DC /* MessageObject.m */; };
 		214A34351C55E9EC00A303DC /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 214A342B1C55E9EC00A303DC /* FMDatabase.m */; };
@@ -518,7 +520,6 @@
 		2103C2B01C50CA7B00585F75 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
 		2103C2B21C50CA8E00585F75 /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = usr/lib/libicucore.tbd; sourceTree = SDKROOT; };
 		2103C2B41C50CC0700585F75 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
-		21102CB71C7AAA350038113B /* J1-IM.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "J1-IM.entitlements"; sourceTree = "<group>"; };
 		2121DACB1C52094800233634 /* HYViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HYViewController.h; sourceTree = "<group>"; };
 		2121DACC1C52094800233634 /* HYViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HYViewController.m; sourceTree = "<group>"; };
 		2121DACE1C520C9000233634 /* ContactorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactorViewController.h; sourceTree = "<group>"; };
@@ -531,6 +532,11 @@
 		2121DADC1C520D0A00233634 /* MessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageViewController.m; sourceTree = "<group>"; };
 		2121DAE91C52192100233634 /* UIImage+Cut.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Cut.h"; sourceTree = "<group>"; };
 		2121DAEA1C52192100233634 /* UIImage+Cut.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Cut.m"; sourceTree = "<group>"; };
+		213C7D5E1D06B51700FB7587 /* HYXMPPManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HYXMPPManager.h; sourceTree = "<group>"; };
+		213C7D5F1D06B51700FB7587 /* HYXMPPManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HYXMPPManager.m; sourceTree = "<group>"; };
+		213C7D621D06BB9D00FB7587 /* HYXMPPConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HYXMPPConfig.h; sourceTree = "<group>"; };
+		213C7D631D06C5B200FB7587 /* HYConst.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HYConst.h; sourceTree = "<group>"; };
+		213C7D641D06C5B200FB7587 /* HYConst.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HYConst.m; sourceTree = "<group>"; };
 		214A341F1C55C23300A303DC /* XmppRoomManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XmppRoomManager.h; sourceTree = "<group>"; };
 		214A34201C55C23300A303DC /* XmppRoomManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XmppRoomManager.m; sourceTree = "<group>"; };
 		214A34221C55E7A400A303DC /* MessageObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageObject.h; sourceTree = "<group>"; };
@@ -737,7 +743,6 @@
 		2103C0C41C50C98D00585F75 /* J1-IM */ = {
 			isa = PBXGroup;
 			children = (
-				21102CB71C7AAA350038113B /* J1-IM.entitlements */,
 				21BE0C621C7558BF00765EF6 /* images */,
 				21F869241C51C35E00388145 /* Common */,
 				2103C0DC1C50CA4400585F75 /* Base */,
@@ -1670,6 +1675,18 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		213C7D5D1D06B1EB00FB7587 /* HYXMPPManager */ = {
+			isa = PBXGroup;
+			children = (
+				213C7D621D06BB9D00FB7587 /* HYXMPPConfig.h */,
+				213C7D631D06C5B200FB7587 /* HYConst.h */,
+				213C7D641D06C5B200FB7587 /* HYConst.m */,
+				213C7D5E1D06B51700FB7587 /* HYXMPPManager.h */,
+				213C7D5F1D06B51700FB7587 /* HYXMPPManager.m */,
+			);
+			path = HYXMPPManager;
+			sourceTree = "<group>";
+		};
 		214A34291C55E9EC00A303DC /* fmdb */ = {
 			isa = PBXGroup;
 			children = (
@@ -1834,6 +1851,7 @@
 		21BFD0CA1C50E85100440EF3 /* Tool */ = {
 			isa = PBXGroup;
 			children = (
+				213C7D5D1D06B1EB00FB7587 /* HYXMPPManager */,
 				214A343C1C55F59E00A303DC /* DB */,
 				189087AB1C532814004C65D0 /* Singleton.h */,
 				218236B51C531FD2000697A3 /* XmppManager.h */,
@@ -2092,6 +2110,7 @@
 				2103C23A1C50CA4400585F75 /* XMPPJID.m in Sources */,
 				2103C2361C50CA4400585F75 /* NSNumber+XMPP.m in Sources */,
 				21C041BA1C609A8500E5700C /* XMPPRoomMessageMemoryStorageObject.m in Sources */,
+				213C7D601D06B51700FB7587 /* HYXMPPManager.m in Sources */,
 				2103C28D1C50CA4400585F75 /* XMPPAutoPing.m in Sources */,
 				2103C2811C50CA4400585F75 /* XMPPCapabilities.m in Sources */,
 				2103C2401C50CA4400585F75 /* XMPPBandwidthMonitor.m in Sources */,
@@ -2186,6 +2205,7 @@
 				2103C2901C50CA4400585F75 /* XMPPTime.m in Sources */,
 				2103C2541C50CA4400585F75 /* XMPPPrivacy.m in Sources */,
 				2103C2821C50CA4400585F75 /* XMPPMessageArchiving.xcdatamodeld in Sources */,
+				213C7D651D06C5B200FB7587 /* HYConst.m in Sources */,
 				21C041B11C609A8500E5700C /* XMPPRoom.xcdatamodeld in Sources */,
 				2103C2641C50CA4400585F75 /* XMPPvCardAvatarCoreDataStorageObject.m in Sources */,
 				2103C2A41C50CA4400585F75 /* DDTTYLogger.m in Sources */,
@@ -2381,7 +2401,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "J1-IM/J1-IM.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
@@ -2394,7 +2414,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/J1-IM/Lib/XMPPFramework/Vendor/libidn",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.j1.hzzxhoc;
+				PRODUCT_BUNDLE_IDENTIFIER = com.j1.patient;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 			};
@@ -2404,7 +2424,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "J1-IM/J1-IM.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
@@ -2417,7 +2437,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/J1-IM/Lib/XMPPFramework/Vendor/libidn",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.j1.hzzxhoc;
+				PRODUCT_BUNDLE_IDENTIFIER = com.j1.patient;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 			};

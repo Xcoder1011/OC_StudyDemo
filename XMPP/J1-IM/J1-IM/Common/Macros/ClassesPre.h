@@ -26,6 +26,8 @@
 #import "XmppManager.h"
 #import "UIView+Frame.h"
 
+#import "HYXMPPConfig.h"
+
 
 // 偏好设置
 #define MyDefaults [NSUserDefaults standardUserDefaults]
