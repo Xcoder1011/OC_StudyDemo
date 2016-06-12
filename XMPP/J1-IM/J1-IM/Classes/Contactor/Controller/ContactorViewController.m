@@ -63,9 +63,9 @@
         // subscription的种类 none表示对方还没有确认  to 我关注对方   from 对方关注我   both 互粉
         request.predicate = [NSPredicate predicateWithFormat:@"!(subscription CONTAINS 'none')"];
         // 添加上下文
-        NSManagedObjectContext *ctx = [XmppManager sharedxmppManager].xmppRosterCoreDataStorage.mainThreadManagedObjectContext;
-        // 实例化结果控制器
-        _fetchedResultsController = [[NSFetchedResultsController alloc]initWithFetchRequest:request managedObjectContext:ctx sectionNameKeyPath:nil cacheName:nil];
+//        NSManagedObjectContext *ctx = [XmppManager sharedxmppManager].xmppRosterCoreDataStorage.mainThreadManagedObjectContext;
+//        // 实例化结果控制器
+//        _fetchedResultsController = [[NSFetchedResultsController alloc]initWithFetchRequest:request managedObjectContext:ctx sectionNameKeyPath:nil cacheName:nil];
         // 设置他的代理
         _fetchedResultsController.delegate = self;
     

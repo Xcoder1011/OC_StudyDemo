@@ -9,9 +9,18 @@
 #import <Foundation/Foundation.h>
 #import "HYXMPPConfig.h"
 
+/**
+ * 判断当前操作是 登录 or 注册
+ */
+typedef NS_ENUM(NSInteger, XMPPOperation) {
+    
+    XMPPLoginServerOperation = 10, // 登录操作:认证服务器
+    XMPPRegisterServerOperation,   // 注册操作
+};
 
-typedef NS_ENUM(NSInteger, XMPPErrorCode)
-{
+
+typedef NS_ENUM(NSInteger, XMPPErrorCode) {
+    
     XMPPErrorStreamError = -10001,       // 连接错误
     XMPPErrorParamsError,                // 输入的参数错误
     XMPPErrorConnectServerError,         // 连接服务器错误
@@ -31,26 +40,7 @@ typedef NS_ENUM(NSInteger, XMPPResultType) {
     XMPPResultTypeLoginFailure,    // 登录失败
     XMPPResultTypeLogoutSuccess,   // 登出成功
     XMPPResultTypeLogoutFailure,   // 登出失败
- 
 };
-
-/**
- *  成功回调
- *
- *  @param result 结果
- */
-typedef void(^Success)(id result);
-/**
- *  失败回调
- *
- *  @param error 错误信息
- */
-typedef void(^Failure)(XMPPErrorCode *errorCode);
-
-
-@interface HYXMPPManager : NSObject{
-
-}
 
 
 /**
@@ -70,6 +60,10 @@ typedef void(^AuthFailure)(XMPPErrorCode errorCode);
 
 
 
+@interface HYXMPPManager : NSObject
+{
+    
+}
 
 /** 当前的登录用户id */
 @property (nonatomic, copy) NSString *jidName;
@@ -78,7 +72,7 @@ typedef void(^AuthFailure)(XMPPErrorCode errorCode);
 /** XML流 */
 @property (nonatomic, strong, readonly) XMPPStream *xmppStream;
 /** 自动重连 */
-@property (nonatomic, strong, readonly) XMPPReconnect *xmppReconnet;
+@property (nonatomic, strong, readonly) XMPPReconnect *xmppReconnect;
 /** 花名册 */
 @property (nonatomic, strong, readonly) XMPPRoster *xmppRoster;
 @property (nonatomic, strong, readonly) XMPPRosterCoreDataStorage *xmppRosterStorage;
@@ -105,6 +99,8 @@ typedef void(^AuthFailure)(XMPPErrorCode errorCode);
                  passWord:(NSString *)passWord
                   success:(AuthSuccess)success
                   failure:(AuthFailure)failure;
+
+- (void)teardownXmppStream;
 /**
  *  登录
  */

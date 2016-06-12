@@ -43,9 +43,9 @@
     // 这里只需要取出聊天对象的消息    bare举例：spark@127.0.0.1
     request.predicate = [NSPredicate predicateWithFormat:@"bareJidStr = %@", self.friendJid.bare];
     // 获取上下文
-    NSManagedObjectContext *ctx = [XmppManager sharedxmppManager].xmppMessageArchivingCoreDataStorage.mainThreadManagedObjectContext;
-    // 实例化结果调度器
-    _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:ctx sectionNameKeyPath:nil cacheName:nil];
+//    NSManagedObjectContext *ctx = [XmppManager sharedxmppManager].xmppMessageArchivingCoreDataStorage.mainThreadManagedObjectContext;
+//    // 实例化结果调度器
+//    _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:ctx sectionNameKeyPath:nil cacheName:nil];
     _fetchedResultsController.delegate = self;
     return _fetchedResultsController;
 }
@@ -73,7 +73,7 @@ static NSString * const FriendChatCellId = @"friendChatCell";
 // 点击了发送Btn
 - (IBAction)sendBtnClick {
     NSLog(@"发送的文字为：%@", self.contentTV.text);
-    [[XmppManager sharedxmppManager] sendMessage:self.contentTV.text toUser:self.friendJid];
+//    [[XmppManager sharedxmppManager] sendMessage:self.contentTV.text toUser:self.friendJid];
     self.contentTV.text = nil;
 }
 
@@ -101,7 +101,7 @@ static NSString * const FriendChatCellId = @"friendChatCell";
     //包含子节点
     [message addChild:attachment];
     // 发送消息
-    [[XmppManager sharedxmppManager].xmppStream sendElement:message];
+//    [[XmppManager sharedxmppManager].xmppStream sendElement:message];
 }
 
 #pragma mark - ******************** imgPickerController代理方法

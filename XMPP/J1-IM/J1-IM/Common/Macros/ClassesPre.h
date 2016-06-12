@@ -23,7 +23,8 @@
 #import "Const.h"
 #import "UserOperation.h"
 #import "NSString+Extension.h"
-#import "XmppManager.h"
+//#import "XmppManager.h"
+#import "HYXMPPManager.h"
 #import "UIView+Frame.h"
 
 #import "HYXMPPConfig.h"
