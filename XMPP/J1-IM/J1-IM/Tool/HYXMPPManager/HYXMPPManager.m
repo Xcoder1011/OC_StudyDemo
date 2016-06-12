@@ -55,15 +55,23 @@
     _xmppReconnect = [[XMPPReconnect alloc]init];
     _xmppReconnect.autoReconnect = YES;
     
-    //花名册
+    //通讯录管理
+    _xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc]init];
     
-
+    //花名册
+    _xmppRoster = [[XMPPRoster alloc]initWithRosterStorage:_xmppRosterStorage];
+    _xmppRoster.autoFetchRoster = YES;
+    _xmppRoster.autoAcceptKnownPresenceSubscriptionRequests = YES;
 
     [_xmppStream addDelegate:self delegateQueue:dispatch_get_main_queue()];
     [_xmppReconnect addDelegate:self delegateQueue:dispatch_get_main_queue()];
 
     [_xmppReconnect activate:_xmppStream];
+    [_xmppRoster activate:_xmppStream];
+    [_xmppReconnect activate:_xmppStream];
+
  
+    [_xmppRosterStorage mainThreadManagedObjectContext];
 }
 
 #pragma mark --  注册
@@ -93,6 +101,7 @@
 //    self.jidName = [userName stringByAppendingFormat:@"@%@",kServerName];
     self.userName = userName;
     
+    // resource: iPhone土豪金
     XMPPJID *xmppJID = [XMPPJID jidWithUser:userName domain:hostName resource:@"iOS"];
     [_xmppStream setMyJID:xmppJID];
     
@@ -176,8 +185,8 @@
 {
     // presence 的状态：available 上线   away 离开    do not disturb 忙碌    unavailable 下线
     NSLog(@"用户上线了");
-    XMPPPresence *presence = [XMPPPresence presenceWithType:@"available"];
-//    XMPPPresence *presence = [XMPPPresence presence];
+//    XMPPPresence *presence = [XMPPPresence presenceWithType:@"available"];
+    XMPPPresence *presence = [XMPPPresence presence];
     [_xmppStream sendElement:presence];
 }
 
@@ -303,8 +312,12 @@
     }
 }
 
+/**
+ *  注册失败时调用
+ */
 - (void)xmppStream:(XMPPStream *)sender didNotRegister:(NSXMLElement *)error {
     NSLog(@"%s,line = %d",__FUNCTION__,__LINE__);
+    // 重复注册了用户名,注册名已存在!
     if (_authFailure) {
         _authFailure(XMPPErrorRegisterServerError);
     }
@@ -312,14 +325,15 @@
 }
 
 /**
- *  授权成功时调用
+ *  授权(登录)成功时调用
  */
 - (void)xmppStreamDidAuthenticate:(XMPPStream *)sender {
     NSLog(@"%s,line = %d",__FUNCTION__,__LINE__);
-    NSLog(@"授权成功");
+    NSLog(@"完成认证，发送在线状态");
     // 通知服务器用户上线
     [self goOnline];
     [UserOperation shareduser].loginStatus = YES;
+    [_xmppRoster fetchRoster];
     if (_authSuccess) {
         _authSuccess();
     }

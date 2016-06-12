@@ -75,6 +75,7 @@ typedef void(^AuthFailure)(XMPPErrorCode errorCode);
 @property (nonatomic, strong, readonly) XMPPReconnect *xmppReconnect;
 /** 花名册 */
 @property (nonatomic, strong, readonly) XMPPRoster *xmppRoster;
+/** 通讯录管理 */
 @property (nonatomic, strong, readonly) XMPPRosterCoreDataStorage *xmppRosterStorage;
 
 
@@ -100,16 +101,10 @@ typedef void(^AuthFailure)(XMPPErrorCode errorCode);
                   success:(AuthSuccess)success
                   failure:(AuthFailure)failure;
 
-- (void)teardownXmppStream;
 /**
- *  登录
+ *  销毁
  */
-- (void)loginWithUserName:(NSString *)userName
-                 passWord:(NSString *)passWord
-               loginBlock:(void(^)(XMPPResultType))loginBlock;
-
-/** 登录的回调 */
-@property (nonatomic, copy) void(^loginBlock)(XMPPResultType);
+- (void)teardownXmppStream;
 
 
 /** 授权成功 */
