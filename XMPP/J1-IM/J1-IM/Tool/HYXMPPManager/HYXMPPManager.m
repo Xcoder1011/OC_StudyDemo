@@ -61,20 +61,30 @@
  
 }
 
-#pragma mark --  登录
+#pragma mark --  注册
 
-- (void)loginWithUserName:(NSString *)userName
-                 passWord:(NSString *)passWord
-                  success:(Success)success
-                  failure:(Failure)failure{
+- (void)registerWithUserName:(NSString *)userName
+                    passWord:(NSString *)passWord
+                     success:(AuthSuccess)success
+                     failure:(AuthFailure)failure{
     
-//    self.userName = userName;
-//    self.jidName = []
+    _authSuccess = success;
+    _authFailure = failure;
+    
     if (!userName || !passWord ) {
+        _authFailure(XMPPErrorParamsError);
         return ;
     }
-    NSString *xmppJIDString = [NSString stringWithFormat:@"%@@%@",userName,kServerName];
-    [self.xmppStream setMyJID:[XMPPJID jidWithString:xmppJIDString resource:@"iOS"]];
+    
+    if ([_xmppStream isConnecting]) {
+        return;
+    }
+    
+    self.jidName = [userName stringByAppendingFormat:@"@%@",kServerName];
+    self.userName = userName;
+    
+    XMPPJID *xmppJID = [XMPPJID jidWithUser:userName domain:kServerName resource:@"iOS"];
+    [_xmppStream setMyJID:xmppJID];
     
     NSError *error = nil;
     
@@ -82,18 +92,71 @@
         [_xmppStream authenticateWithPassword:passWord error:&error];
         
         if (error) {
-            failure(error);
+            _authFailure(XMPPErrorRegisterServerError);
         }
         return;
     }
     
     if (![_xmppStream connectWithTimeout:kConnectTimeOut error:&error]) {
         if (error) {
-            failure(error);
+            failure(XMPPErrorConnectServerError);
+            return;
+        }
+    }
+
+}
+
+
+#pragma mark --  登录
+
+- (void)loginWithUserName:(NSString *)userName
+                 passWord:(NSString *)passWord
+                  success:(AuthSuccess)success
+                  failure:(AuthFailure)failure;{
+    _authSuccess = success;
+    _authFailure = failure;
+
+    if (!userName || !passWord ) {
+        _authFailure(XMPPErrorParamsError);
+        return ;
+    }
+    
+    if ([_xmppStream isConnecting]) {
+        return;
+    }
+    
+    if ([_xmppStream isConnected] && [_xmppStream isAuthenticated]) {
+        _authSuccess();
+        return;
+    }
+
+    
+    self.jidName = [userName stringByAppendingFormat:@"@%@",kServerName];
+    self.userName = userName;
+    
+    [self.xmppStream setMyJID:[XMPPJID jidWithString:self.jidName resource:@"iOS"]];
+    
+    NSError *error = nil;
+    
+    if ([_xmppStream isConnected]) {
+        [_xmppStream authenticateWithPassword:passWord error:&error];
+        
+        if (error) {
+            _authFailure(XMPPErrorAuthenticateServerError);
         }
         return;
     }
+    
+    if (![_xmppStream connectWithTimeout:kConnectTimeOut error:&error]) {
+        if (error) {
+            failure(XMPPErrorConnectServerError);
+            return;
+        }
+    }
 }
+
+
+
 
 
 @end
