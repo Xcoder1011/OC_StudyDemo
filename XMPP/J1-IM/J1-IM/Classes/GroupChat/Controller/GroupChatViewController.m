@@ -169,10 +169,10 @@
 {
     
     CGRect frame = self.frame;  //frame = (origin = (x = 0, y = 524), size = (width = 320, height = 44))
-    CGFloat inv = 0;
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) {
-        inv = 64;
-    }
+//    CGFloat inv = 0;
+//    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) {
+//        inv = 64;
+//    }
     //frame.origin.y = self.window.frame.size.height - height - frame.size.height - inv ; //new add
     frame.origin.y = self.window.frame.size.height - height - frame.size.height ; //new add
 
@@ -462,7 +462,7 @@
 @implementation GroupChatViewController
 
 -(void)viewWillAppear:(BOOL)animated{
-    
+    [super viewWillAppear:animated];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshTalkNotification:) name:RefreshTalksNotification object:nil];
 }
 
@@ -651,7 +651,7 @@
 
 
 -(void)viewDidDisappear:(BOOL)animated{
-    
+    [super viewDidDisappear:animated];
     [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
 

@@ -40,6 +40,8 @@
     if (_contactorsFetchedResultsController != nil) {
         return _contactorsFetchedResultsController;
     }
+    TICK;
+    
     // 指定查询的实体，也就是指定查哪一张表（这一张表格是xmppframework已经创建的）
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"XMPPUserCoreDataStorageObject"];
     // 在线状态排序（排序关键字为表格中的key）
@@ -50,11 +52,13 @@
     // subscription的种类 none表示对方还没有确认  to 我关注对方   from 对方关注我   both 互粉
     request.predicate = [NSPredicate predicateWithFormat:@"!(subscription CONTAINS 'none')"];
     // 添加上下文
-//    NSManagedObjectContext *ctx = [XmppManager sharedxmppManager].xmppRosterCoreDataStorage.mainThreadManagedObjectContext;
-//    // 实例化结果控制器
-//    _contactorsFetchedResultsController = [[NSFetchedResultsController alloc]initWithFetchRequest:request managedObjectContext:ctx sectionNameKeyPath:nil cacheName:nil];
+    NSManagedObjectContext *ctx = [XmppManager sharedxmppManager].xmppRosterCoreDataStorage.mainThreadManagedObjectContext;
+    // 实例化结果控制器
+    _contactorsFetchedResultsController = [[NSFetchedResultsController alloc]initWithFetchRequest:request managedObjectContext:ctx sectionNameKeyPath:nil cacheName:nil];
     // 设置他的代理
     _contactorsFetchedResultsController.delegate = self;
+    
+    TOCK;
     
     return _contactorsFetchedResultsController;
 }

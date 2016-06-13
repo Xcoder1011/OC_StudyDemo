@@ -528,7 +528,7 @@ static GroupChatManager* _sharedGroupChatManager;
         NSXMLElement *element = iq.childElement;
         for (NSXMLElement *element_item in element.children) {
             NSString *chatRoomJid = element_item.attributesAsDictionary[@"jid"];
-            NSString *chatRoomName = element_item.attributesAsDictionary[@"name"];
+//            NSString *chatRoomName = element_item.attributesAsDictionary[@"name"];
             ///chatRoomJid里面没有@就说明他只是一个service地址
             if ([chatRoomJid rangeOfString:@"@"].location == NSNotFound) {
                 [_chatRoomServices addObject:chatRoomJid];

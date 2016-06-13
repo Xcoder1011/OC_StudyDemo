@@ -178,6 +178,53 @@
     }
 }
 
+#pragma mark -- 联系人列表
+- (NSArray *)friendList:(void(^)(BOOL isUpdate))friendsUpdate{
+    
+    self.friendsUpdate = friendsUpdate;
+    NSManagedObjectContext*context=[_xmppRosterStorage mainThreadManagedObjectContext];
+    NSEntityDescription*entity=[NSEntityDescription entityForName:@"XMPPUserCoreDataStorageObject" inManagedObjectContext:context];
+    
+    //谓词搜索条件为streamBareJidStr关键词
+    NSPredicate*predicate=[NSPredicate predicateWithFormat:@"streamBareJidStr==%@",self.jidName];
+    NSFetchRequest*request=[[NSFetchRequest alloc]init];
+    [request setEntity:entity];
+    [request setPredicate:predicate];//筛选条件
+    
+    NSError*error;
+    NSArray*friends=[context executeFetchRequest:request error:&error];//从数据库中取出数据
+    NSMutableArray*guanzhu=[NSMutableArray arrayWithCapacity:0];
+    NSMutableArray*beiguanzhu=[NSMutableArray arrayWithCapacity:0];
+    NSMutableArray*duifang=[NSMutableArray arrayWithCapacity:0];
+    NSMutableArray*haoyou=[NSMutableArray arrayWithCapacity:0];
+    for (XMPPUserCoreDataStorageObject *obj in friends) {
+        if ([obj.subscription isEqualToString:@"to"]) {
+            [guanzhu addObject:obj];
+        }
+        if ([obj.subscription isEqualToString:@"from"]) {
+            [beiguanzhu addObject:obj];
+        }
+        if ([obj.subscription isEqualToString:@"none"]) {
+            [duifang addObject:obj];
+        }
+        if ([obj.subscription isEqualToString:@"both"]) {
+            [haoyou addObject:obj];
+        }
+        /*
+         @dynamic nickname;//昵称
+         @dynamic displayName, primitiveDisplayName;//
+         @dynamic subscription;//关注状态  from 你关注我  to  我关注对方 同意   none 我关注对方 没同意
+         @dynamic ask;//发个请求
+         @dynamic unreadMessages;//未读消息
+         @dynamic photo;
+         */
+    }
+    NSLog(@"%ld",haoyou.count);
+    NSArray*list=@[haoyou,guanzhu,beiguanzhu,duifang];
+    return list;
+}
+
+
 #pragma mark -
 #pragma mark online/offline
 
@@ -345,6 +392,9 @@
 - (void)xmppStream:(XMPPStream *)sender didNotAuthenticate:(NSXMLElement *)error {
     NSLog(@"授权失败");
     // 断开与服务器的连接
+    if (_authFailure) {
+        _authFailure(XMPPErrorAuthenticateServerError);
+    }
     [self disconnect];
     // 清理用户偏好
     [self clearUserDefaults];
@@ -357,10 +407,7 @@
     NSLog(@"%s,line = %d",__FUNCTION__,__LINE__);
 
 }
-- (void)xmppStream:(XMPPStream *)sender didReceivePresence:(XMPPPresence *)presence{
-    NSLog(@"%s,line = %d",__FUNCTION__,__LINE__);
 
-}
 
 - (void)xmppStreamConnectDidTimeout:(XMPPStream *)sender{
     NSLog(@"%s,line = %d",__FUNCTION__,__LINE__);
@@ -370,6 +417,77 @@
     }
 }
 
+
+
+
+#pragma mark 更新花名册状态！发生在好友请求里面
+- (void)xmppRoster:(XMPPRoster *)sender didReceivePresenceSubscriptionRequest:(XMPPPresence *)presence {
+    NSString *presenceType = [NSString stringWithFormat:@"%@", [presence type]];
+    NSLog(@"花名册代理触发   user--%@   type---%@  status--%@ ",[[presence from] user],presenceType,[presence status]);
+
+    XMPPJID *jid = [XMPPJID jidWithString:self.jidName];
+    
+    if ([presenceType isEqualToString:@"unsubscribed"]) {
+        // 拒绝
+        [_xmppRoster rejectPresenceSubscriptionRequestFrom:jid];
+    }
+    
+    if ([presenceType isEqualToString:@"subscribed"]) {
+        // 同意
+        [_xmppRoster acceptPresenceSubscriptionRequestFrom:jid andAddToRoster:YES];//同意
+    }
+}
+
+#pragma mark 别人是否同意好友请求以及上线下线更新
+
+- (void)xmppStream:(XMPPStream *)sender didReceivePresence:(XMPPPresence *)presence{
+    NSLog(@"%s,line = %d",__FUNCTION__,__LINE__);
+    
+    NSString *presenceType = [presence type];
+    NSLog(@"好友状态更新   user--%@   type---%@  status--%@ ",[[presence from] user],presenceType,[presence status]);
+    
+    XMPPJID *jid = [XMPPJID jidWithString:self.jidName];
+    
+    if ([presenceType isEqualToString:@"subscribe"]) {
+        
+        if (self.subscribeArray.count == 0) {
+            [self.subscribeArray addObject:presence];
+        } else {
+            BOOL isExist = NO;
+            for (XMPPPresence *pre in self.subscribeArray) {
+                if ([pre.from.user isEqualToString:presence.from.user]) {
+                    isExist = YES;
+                }
+            }
+            if (!isExist) {
+                [self.subscribeArray addObject:presence];
+            }
+        
+        }
+    }
+    
+    if ([presenceType isEqualToString:@"unsubscribed"]) {
+        // 拒绝
+        [_xmppRoster rejectPresenceSubscriptionRequestFrom:jid];
+    }
+    
+    if ([presenceType isEqualToString:@"unsubscribe"]) {
+        // 遇到对方拒绝我的请求，我也拒绝他，然后从列表中删除这个人
+        [_xmppRoster unsubscribePresenceFromUser:jid];
+    }
+    
+    if ([presenceType isEqualToString:@"subscribed"]) {
+        //取得状态 subscribed同意后   subscribe 同意前
+        //别人添加你，状态为subscribe为同意前，然后发送同意给对方 ，对方收到后为subscribed
+        //你添加别人，状态为subscribed为同意前，然后发送状态，刷新列表
+        //双向关注后为好友
+        [_xmppRoster acceptPresenceSubscriptionRequestFrom:jid andAddToRoster:YES];//同意
+    }
+    
+    if (self.friendsUpdate) {
+        self.friendsUpdate(YES);
+    }
+}
 
 
 

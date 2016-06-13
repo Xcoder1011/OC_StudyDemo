@@ -17,6 +17,8 @@
 @property (nonatomic, weak) UITableView *contactorsTable;
 /** 结果调度器 */
 @property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
+
+@property (nonatomic, strong) NSMutableArray* friendsList;
 @end
 
 @implementation ContactorViewController
@@ -26,6 +28,7 @@
     // 设置子控件
     [self setupChildView];
     
+    
     NSError *error = nil;
     // 查询数据， 如果有错误，打印错误
     [self.fetchedResultsController performFetch:&error];
@@ -34,6 +37,22 @@
     }
     
 }
+
+//-(NSMutableArray *)friendsList {
+//    if (!_friendsList) {
+//        _friendsList = @[].mutableCopy;
+//    }
+//    _friendsList = [NSMutableArray arrayWithArray:[[HYXMPPManager sharedManager] friendList:^(BOOL isUpdate) {
+//        //
+//        if (isUpdate) {
+//            [self.tableView reloadData];
+//        }
+//    }]];
+//    
+//    return _friendsList;
+//}
+
+
 
 /** 设置子控件 */
 - (void)setupChildView{
@@ -63,9 +82,9 @@
         // subscription的种类 none表示对方还没有确认  to 我关注对方   from 对方关注我   both 互粉
         request.predicate = [NSPredicate predicateWithFormat:@"!(subscription CONTAINS 'none')"];
         // 添加上下文
-//        NSManagedObjectContext *ctx = [XmppManager sharedxmppManager].xmppRosterCoreDataStorage.mainThreadManagedObjectContext;
-//        // 实例化结果控制器
-//        _fetchedResultsController = [[NSFetchedResultsController alloc]initWithFetchRequest:request managedObjectContext:ctx sectionNameKeyPath:nil cacheName:nil];
+        NSManagedObjectContext *ctx = [XmppManager sharedxmppManager].xmppRosterCoreDataStorage.mainThreadManagedObjectContext;
+        // 实例化结果控制器
+        _fetchedResultsController = [[NSFetchedResultsController alloc]initWithFetchRequest:request managedObjectContext:ctx sectionNameKeyPath:nil cacheName:nil];
         // 设置他的代理
         _fetchedResultsController.delegate = self;
     
@@ -86,9 +105,14 @@
 
 #pragma mark - ******************** dataSource Methods
 
+//- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+//    return self.friendsList.count;
+//}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     NSLog(@"联系人界面-%ld", self.fetchedResultsController.fetchedObjects.count);
     return self.fetchedResultsController.fetchedObjects.count;
+//    return [self.friendsList[section] count];
 }
 
 static NSString * const ContactCellId = @"ContactCellId";

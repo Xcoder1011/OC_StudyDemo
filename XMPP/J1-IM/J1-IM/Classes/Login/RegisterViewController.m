@@ -40,24 +40,24 @@
     user.password = self.passwordField.text;
     user.hostUrl = self.hostUrlField.text;
     
-    [[HYXMPPManager sharedManager] registerWithUserName:user.username passWord:user.password success:^{
-        //
-        NSLog(@"注册成功1123");
-        
-    } failure:^(XMPPErrorCode errorCode) {
-        
-        [[[UIAlertView alloc] initWithTitle:@"提示" message:@"注册失败" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
-    }];
+//    [[HYXMPPManager sharedManager] registerWithUserName:user.username passWord:user.password success:^{
+//        //
+//        NSLog(@"注册成功1123");
+//        
+//    } failure:^(XMPPErrorCode errorCode) {
+//        
+//        [[[UIAlertView alloc] initWithTitle:@"提示" message:@"注册失败" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+//    }];
     
 //    // 通过xmppManager发送注册消息
-//    XmppManager *manager = [XmppManager sharedxmppManager];
-//    // 标记为注册操作
-//    manager.isRegisterOperation = YES;
-//    [self.view endEditing:YES];
-//    // 连接到服务器
-//    [manager connect:^(NSString *errorMessage) {
-//        [[[UIAlertView alloc] initWithTitle:@"提示" message:errorMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
-//    }];
+    XmppManager *manager = [XmppManager sharedxmppManager];
+    // 标记为注册操作
+    manager.isRegisterOperation = YES;
+    [self.view endEditing:YES];
+    // 连接到服务器
+    [manager connect:^(NSString *errorMessage) {
+        [[[UIAlertView alloc] initWithTitle:@"提示" message:errorMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+    }];
     
 }
 

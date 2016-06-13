@@ -59,6 +59,13 @@ typedef void(^AuthSuccess)();
 typedef void(^AuthFailure)(XMPPErrorCode errorCode);
 
 
+/**
+ *  联系人列表有更新
+ *
+ *  @param result 结果
+ */
+typedef void(^FriendsUpdate)(BOOL isUpdate);
+
 
 @interface HYXMPPManager : NSObject
 {
@@ -77,6 +84,15 @@ typedef void(^AuthFailure)(XMPPErrorCode errorCode);
 @property (nonatomic, strong, readonly) XMPPRoster *xmppRoster;
 /** 通讯录管理 */
 @property (nonatomic, strong, readonly) XMPPRosterCoreDataStorage *xmppRosterStorage;
+
+
+@property (nonatomic,retain)NSMutableArray*subscribeArray;
+@property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
+@property (readonly, nonatomic) NSManagedObjectModel *managedObjectModel;
+@property (readonly, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+@property (retain,nonatomic)NSMutableDictionary*yanzhengxiaoxi;
+//用于记录出席列表
+@property(nonatomic,retain)NSMutableDictionary*presentDic;
 
 
 /**
@@ -100,6 +116,14 @@ typedef void(^AuthFailure)(XMPPErrorCode errorCode);
                  passWord:(NSString *)passWord
                   success:(AuthSuccess)success
                   failure:(AuthFailure)failure;
+/**
+ *  联系人列表
+ *
+ *  @param friendsUpdate 联系人列表有更新block
+ *  依次为：[haoyou,guanzhu,beiguanzhu,duifang];
+ */
+- (NSArray *)friendList:(void(^)(BOOL isUpdate))friendsUpdate;
+
 
 /**
  *  销毁
@@ -111,4 +135,6 @@ typedef void(^AuthFailure)(XMPPErrorCode errorCode);
 @property (nonatomic, copy) AuthSuccess authSuccess;
 /** 授权失败 */
 @property (nonatomic, copy) AuthFailure authFailure;
+/** 联系人列表有更新 */
+@property (nonatomic, copy) void(^friendsUpdate)(BOOL isUpdate);
 @end
