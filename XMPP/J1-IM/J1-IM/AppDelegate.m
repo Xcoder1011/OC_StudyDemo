@@ -58,18 +58,18 @@
 // 当程序被激活的时候连接到服务器
 - (void)applicationDidBecomeActive:(UIApplication *)application{
     NSLog(@"程序激活，连接到服务器");
-    [[XmppManager sharedxmppManager] connect:^(NSString *errorMessage) {
-        [[[UIAlertView alloc] initWithTitle:@"提示" message:@"您的密码可能在其他的计算机上被修改，请重新登录。" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
-    }];
+//    [[XmppManager sharedxmppManager] connect:^(NSString *errorMessage) {
+//        [[[UIAlertView alloc] initWithTitle:@"提示" message:@"您的密码可能在其他的计算机上被修改，请重新登录。" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+//    }];
     
-//    [HYXMPPManager sharedManager];
+    [HYXMPPManager sharedManager];
     
 }
 
 // 程序退出的时候断开连接
 - (void)applicationWillTerminate:(UIApplication *)application{
     NSLog(@"程序进程被销毁");
-    [[XmppManager sharedxmppManager] teardownXmppStream];
-//    [[HYXMPPManager sharedManager] teardownXmppStream];
+//    [[XmppManager sharedxmppManager] teardownXmppStream];
+    [[HYXMPPManager sharedManager] teardownXmppStream];
 }
 @end

@@ -186,6 +186,11 @@
     NSEntityDescription*entity=[NSEntityDescription entityForName:@"XMPPUserCoreDataStorageObject" inManagedObjectContext:context];
     
     //谓词搜索条件为streamBareJidStr关键词
+
+    UserOperation *user = [UserOperation shareduser];
+    NSString *hostName = user.hostUrl;
+    self.jidName = [user.username stringByAppendingFormat:@"@%@",hostName];
+
     NSPredicate*predicate=[NSPredicate predicateWithFormat:@"streamBareJidStr==%@",self.jidName];
     NSFetchRequest*request=[[NSFetchRequest alloc]init];
     [request setEntity:entity];
@@ -266,6 +271,17 @@
     
     // 刚存完偏好设置，必须同步一下
     [defaults synchronize];
+}
+
+
+// 登出
+- (void)logout {
+    NSLog(@"当前用户已被注销");
+    // 所有用户信息是保存在用户偏好，注销应该删除用户偏好记录
+    [self clearUserDefaults];
+    
+    // 下线，并且断开连接
+    [self disconnect];
 }
 
 /** 销毁调用 */

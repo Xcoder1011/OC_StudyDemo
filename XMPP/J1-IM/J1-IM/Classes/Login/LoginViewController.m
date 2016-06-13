@@ -34,20 +34,20 @@
     user.password = self.passwordField.text;
     user.hostUrl = self.hostUrlField.text;
     
-//    [[HYXMPPManager sharedManager]loginWithUserName:user.username passWord:user.password success:^{
-//         [[NSNotificationCenter defaultCenter] postNotificationName:LoginResultNotification object:@(YES)];
-//    } failure:^(XMPPErrorCode errorCode) {
-//        //
-//        [[[UIAlertView alloc] initWithTitle:@"提示" message:@"登录失败" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
-//        
-//    }];
-//    // 通过xmppManager发送注册消息
-    XmppManager *manager = [XmppManager sharedxmppManager];
-    [self.view endEditing:YES];
-    // 连接到服务器
-    [manager connect:^(NSString *errorMessage) {
-        [[[UIAlertView alloc] initWithTitle:@"提示" message:errorMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+    [[HYXMPPManager sharedManager]loginWithUserName:user.username passWord:user.password success:^{
+         [[NSNotificationCenter defaultCenter] postNotificationName:LoginResultNotification object:@(YES)];
+    } failure:^(XMPPErrorCode errorCode) {
+        //
+        [[[UIAlertView alloc] initWithTitle:@"提示" message:@"登录失败" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+        
     }];
+//    // 通过xmppManager发送注册消息
+//    XmppManager *manager = [XmppManager sharedxmppManager];
+//    [self.view endEditing:YES];
+//    // 连接到服务器
+//    [manager connect:^(NSString *errorMessage) {
+//        [[[UIAlertView alloc] initWithTitle:@"提示" message:errorMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+//    }];
 }
 
 - (IBAction)registerBtnClick {

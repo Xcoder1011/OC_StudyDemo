@@ -126,6 +126,11 @@ typedef void(^FriendsUpdate)(BOOL isUpdate);
 
 
 /**
+ *  登出
+ */
+- (void)logout;
+
+/**
  *  销毁
  */
 - (void)teardownXmppStream;

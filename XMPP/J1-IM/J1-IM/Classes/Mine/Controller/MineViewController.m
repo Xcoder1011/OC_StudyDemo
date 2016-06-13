@@ -28,7 +28,8 @@
 - (IBAction)exitBtnClick {
     NSLog(@"退出该账号");
     // 退出该账号，发送通知切换控制器
-    [[XmppManager sharedxmppManager] logout];
+//    [[XmppManager sharedxmppManager] logout];
+    [[HYXMPPManager sharedManager] logout];
     [[NSNotificationCenter defaultCenter] postNotificationName:LoginResultNotification object:@(NO)];
 }
 

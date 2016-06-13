@@ -38,19 +38,19 @@
     
 }
 
-//-(NSMutableArray *)friendsList {
-//    if (!_friendsList) {
-//        _friendsList = @[].mutableCopy;
-//    }
-//    _friendsList = [NSMutableArray arrayWithArray:[[HYXMPPManager sharedManager] friendList:^(BOOL isUpdate) {
-//        //
-//        if (isUpdate) {
+-(NSMutableArray *)friendsList {
+    if (!_friendsList) {
+        _friendsList = @[].mutableCopy;
+    }
+    _friendsList = [NSMutableArray arrayWithArray:[[HYXMPPManager sharedManager] friendList:^(BOOL isUpdate) {
+        //
+        if (isUpdate) {
 //            [self.tableView reloadData];
-//        }
-//    }]];
-//    
-//    return _friendsList;
-//}
+        }
+    }]];
+    
+    return _friendsList;
+}
 
 
 
@@ -82,9 +82,9 @@
         // subscription的种类 none表示对方还没有确认  to 我关注对方   from 对方关注我   both 互粉
         request.predicate = [NSPredicate predicateWithFormat:@"!(subscription CONTAINS 'none')"];
         // 添加上下文
-        NSManagedObjectContext *ctx = [XmppManager sharedxmppManager].xmppRosterCoreDataStorage.mainThreadManagedObjectContext;
-        // 实例化结果控制器
-        _fetchedResultsController = [[NSFetchedResultsController alloc]initWithFetchRequest:request managedObjectContext:ctx sectionNameKeyPath:nil cacheName:nil];
+//        NSManagedObjectContext *ctx = [XmppManager sharedxmppManager].xmppRosterCoreDataStorage.mainThreadManagedObjectContext;
+//        // 实例化结果控制器
+//        _fetchedResultsController = [[NSFetchedResultsController alloc]initWithFetchRequest:request managedObjectContext:ctx sectionNameKeyPath:nil cacheName:nil];
         // 设置他的代理
         _fetchedResultsController.delegate = self;
     
@@ -105,14 +105,14 @@
 
 #pragma mark - ******************** dataSource Methods
 
-//- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-//    return self.friendsList.count;
-//}
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    return self.friendsList.count;
+}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    NSLog(@"联系人界面-%ld", self.fetchedResultsController.fetchedObjects.count);
-    return self.fetchedResultsController.fetchedObjects.count;
-//    return [self.friendsList[section] count];
+//    NSLog(@"联系人界面-%ld", self.fetchedResultsController.fetchedObjects.count);
+//    return self.fetchedResultsController.fetchedObjects.count;
+    return [self.friendsList[section] count];
 }
 
 static NSString * const ContactCellId = @"ContactCellId";
@@ -121,7 +121,8 @@ static NSString * const ContactCellId = @"ContactCellId";
     if(cell == nil){
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:ContactCellId];
     }
-    XMPPUserCoreDataStorageObject *user = [self.fetchedResultsController objectAtIndexPath:indexPath];
+//    XMPPUserCoreDataStorageObject *user = [self.fetchedResultsController objectAtIndexPath:indexPath];
+     XMPPUserCoreDataStorageObject*user=[self.friendsList[indexPath.section] objectAtIndex:indexPath.row];
     // 打印好友相关信息
     NSLog(@"%zd %@ %@ %@", user.section, user.sectionName, user.sectionNum, user.jidStr);
     // 设置cell显示信息
