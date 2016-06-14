@@ -74,6 +74,59 @@
     [_xmppRosterStorage mainThreadManagedObjectContext];
 }
 
+#pragma mark --  连接...
+
+- (void)connectSuccess:(AuthSuccess)success
+               failure:(AuthFailure)failure{
+    _authSuccess = success;
+    _authFailure = failure;
+    _xmppOperation = XMPPLoginServerOperation;
+  
+    if ([_xmppStream isConnecting]) {
+        return;
+    }
+    
+    if ([_xmppStream isConnected] && [_xmppStream isAuthenticated]) {
+        _authSuccess();
+        return;
+    }
+    
+    UserOperation *user = [UserOperation shareduser];
+    NSString *hostName = user.hostUrl;
+    NSString *userName = user.username;
+    NSString *passWord = user.password;
+
+    if (!userName || !passWord ) {
+        _authFailure(XMPPErrorParamsError);
+        return ;
+    }
+
+    self.jidName = [userName stringByAppendingFormat:@"@%@",hostName];
+    self.userName = user.username ;
+    
+    [self.xmppStream setMyJID:[XMPPJID jidWithString:self.jidName resource:@"iOS"]];
+    
+    NSError *error = nil;
+    
+    if ([_xmppStream isConnected]) {
+        [_xmppStream authenticateWithPassword:passWord error:&error];
+        
+        if (error) {
+            _authFailure(XMPPErrorAuthenticateServerError);
+        }
+        return;
+    }
+    
+    if (![_xmppStream connectWithTimeout:kConnectTimeOut error:&error]) {
+        if (error) {
+            _authFailure(XMPPErrorConnectServerError);
+            return;
+        }
+    }
+
+}
+
+
 #pragma mark --  注册
 
 - (void)registerWithUserName:(NSString *)userName
@@ -126,56 +179,16 @@
 }
 
 
+
+
+
 #pragma mark --  登录
 
 - (void)loginWithUserName:(NSString *)userName
                  passWord:(NSString *)passWord
                   success:(AuthSuccess)success
                   failure:(AuthFailure)failure;{
-    _authSuccess = success;
-    _authFailure = failure;
-    _xmppOperation = XMPPLoginServerOperation;
-
-    if (!userName || !passWord ) {
-        _authFailure(XMPPErrorParamsError);
-        return ;
-    }
-    
-    if ([_xmppStream isConnecting]) {
-        return;
-    }
-    
-    if ([_xmppStream isConnected] && [_xmppStream isAuthenticated]) {
-        _authSuccess();
-        return;
-    }
-    
-    UserOperation *user = [UserOperation shareduser];
-    NSString *hostName = user.hostUrl;
-    self.jidName = [userName stringByAppendingFormat:@"@%@",hostName];
-    
-//    self.jidName = [userName stringByAppendingFormat:@"@%@",kServerName];
-    self.userName = userName;
-    
-    [self.xmppStream setMyJID:[XMPPJID jidWithString:self.jidName resource:@"iOS"]];
-    
-    NSError *error = nil;
-    
-    if ([_xmppStream isConnected]) {
-        [_xmppStream authenticateWithPassword:passWord error:&error];
-        
-        if (error) {
-            _authFailure(XMPPErrorAuthenticateServerError);
-        }
-        return;
-    }
-    
-    if (![_xmppStream connectWithTimeout:kConnectTimeOut error:&error]) {
-        if (error) {
-            _authFailure(XMPPErrorConnectServerError);
-            return;
-        }
-    }
+    [self connectSuccess:success failure:failure];
 }
 
 #pragma mark -- 联系人列表
@@ -186,6 +199,15 @@
     NSEntityDescription*entity=[NSEntityDescription entityForName:@"XMPPUserCoreDataStorageObject" inManagedObjectContext:context];
     
     //谓词搜索条件为streamBareJidStr关键词
+
+//    XMPPUserCoreDataStorageObject*user=[self.friendsList[indexPath.section] objectAtIndex:indexPath.row];
+//    // 打印好友相关信息
+//    NSLog(@"%zd %@ %@ %@", user.section, user.sectionName, user.sectionNum, user.jidStr);
+//    // 设置cell显示信息
+//    NSString *str = [user.jidStr stringByAppendingFormat:@" | %@", [NSString relationshipWithFriend:user.subscription]];
+//    cell.textLabel.text = str ;
+//    cell.detailTextLabel.text = [self userStatusWithSection:user.section];
+//    return cell;
 
     UserOperation *user = [UserOperation shareduser];
     NSString *hostName = user.hostUrl;
@@ -227,6 +249,42 @@
     NSLog(@"%ld",haoyou.count);
     NSArray*list=@[haoyou,guanzhu,beiguanzhu,duifang];
     return list;
+}
+
+
+#pragma mark 添加好友 可以带一个消息
+-(void)addFrinedWithName:(NSString *)name
+                aMessage:(NSString*)message
+                 success:(void(^)())success
+                 failure:(void(^)(NSString *errorInfo))failure {
+    
+    // 检索输入框，看是否有@符号
+    NSRange range = [name rangeOfString:@"@"];
+    // 如果没有找到，那么location为NSNotFound
+    if (range.location == NSNotFound) {
+        name = [name stringByAppendingFormat:@"@%@",kServerName];
+        NSLog(@"%@--addFriend", name);
+    }
+    // 根据好友名字创建一个JID对象
+    XMPPJID *friendJid = [XMPPJID jidWithString:name];
+    // 判断好友是否已存在花名册中
+    BOOL contains = [self.xmppRosterStorage userExistsWithJID:friendJid xmppStream:_xmppStream];
+    // 如果已存在，弹框提醒用户
+    if (contains) {
+        failure(@"已经是好友，无需添加");
+        return;
+    }
+    
+    if (message) {
+        XMPPMessage *mes=[XMPPMessage messageWithType:@"chat" to:friendJid];
+        [mes addChild:[DDXMLNode elementWithName:@"body" stringValue:message]];
+        [_xmppStream sendElement:mes];
+    }
+    // 如果不存在，将用户添加到当前用户的花名册
+    [_xmppRoster subscribePresenceToUser:friendJid];
+    
+    success();
+
 }
 
 

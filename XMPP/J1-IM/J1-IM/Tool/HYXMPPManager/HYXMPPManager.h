@@ -100,6 +100,11 @@ typedef void(^FriendsUpdate)(BOOL isUpdate);
  */
 + (HYXMPPManager *)sharedManager;
 
+/**
+ *  连接....
+ */
+- (void)connectSuccess:(AuthSuccess)success
+                failure:(AuthFailure)failure;
 
 /**
  *  注册
@@ -117,6 +122,12 @@ typedef void(^FriendsUpdate)(BOOL isUpdate);
                   success:(AuthSuccess)success
                   failure:(AuthFailure)failure;
 /**
+ *  登出
+ */
+- (void)logout;
+
+
+/**
  *  联系人列表
  *
  *  @param friendsUpdate 联系人列表有更新block
@@ -125,10 +136,23 @@ typedef void(^FriendsUpdate)(BOOL isUpdate);
 - (NSArray *)friendList:(void(^)(BOOL isUpdate))friendsUpdate;
 
 
+
+/****************好友类的处理********************/
+
 /**
- *  登出
+ *  添加好友
+ *
+ *  @param message 附带一个消息
+ *  @param failure 添加失败的回调
  */
-- (void)logout;
+-(void)addFrinedWithName:(NSString *)name
+                aMessage:(NSString*)message
+                 success:(void(^)())success
+                 failure:(void(^)(NSString *errorInfo))failure;
+
+
+
+
 
 /**
  *  销毁
@@ -142,4 +166,6 @@ typedef void(^FriendsUpdate)(BOOL isUpdate);
 @property (nonatomic, copy) AuthFailure authFailure;
 /** 联系人列表有更新 */
 @property (nonatomic, copy) void(^friendsUpdate)(BOOL isUpdate);
+/** 联系人列表有更新 */
+@property (nonatomic, copy) void(^is)(BOOL isUpdate);
 @end

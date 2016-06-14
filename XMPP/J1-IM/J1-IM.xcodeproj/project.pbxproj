@@ -153,6 +153,7 @@
 		2103C2AF1C50CA7300585F75 /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2103C2AE1C50CA7300585F75 /* libresolv.tbd */; };
 		2103C2B11C50CA7B00585F75 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2103C2B01C50CA7B00585F75 /* libxml2.tbd */; };
 		2103C2B31C50CA8E00585F75 /* libicucore.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2103C2B21C50CA8E00585F75 /* libicucore.tbd */; };
+		2110234B1D0FB60E00B03724 /* HYMember.m in Sources */ = {isa = PBXBuildFile; fileRef = 2110234A1D0FB60E00B03724 /* HYMember.m */; };
 		2121DACD1C52094800233634 /* HYViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2121DACC1C52094800233634 /* HYViewController.m */; };
 		2121DAD01C520C9000233634 /* ContactorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2121DACF1C520C9000233634 /* ContactorViewController.m */; };
 		2121DAD31C520CB200233634 /* DiscoveryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2121DAD21C520CB200233634 /* DiscoveryViewController.m */; };
@@ -520,6 +521,8 @@
 		2103C2B01C50CA7B00585F75 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
 		2103C2B21C50CA8E00585F75 /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = usr/lib/libicucore.tbd; sourceTree = SDKROOT; };
 		2103C2B41C50CC0700585F75 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
+		211023491D0FB60E00B03724 /* HYMember.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HYMember.h; sourceTree = "<group>"; };
+		2110234A1D0FB60E00B03724 /* HYMember.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HYMember.m; sourceTree = "<group>"; };
 		2121DACB1C52094800233634 /* HYViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HYViewController.h; sourceTree = "<group>"; };
 		2121DACC1C52094800233634 /* HYViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HYViewController.m; sourceTree = "<group>"; };
 		2121DACE1C520C9000233634 /* ContactorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactorViewController.h; sourceTree = "<group>"; };
@@ -1683,6 +1686,8 @@
 				213C7D641D06C5B200FB7587 /* HYConst.m */,
 				213C7D5E1D06B51700FB7587 /* HYXMPPManager.h */,
 				213C7D5F1D06B51700FB7587 /* HYXMPPManager.m */,
+				211023491D0FB60E00B03724 /* HYMember.h */,
+				2110234A1D0FB60E00B03724 /* HYMember.m */,
 			);
 			path = HYXMPPManager;
 			sourceTree = "<group>";
@@ -2195,6 +2200,7 @@
 				2103C2471C50CA4400585F75 /* XMPPRoster.xcdatamodel in Sources */,
 				21C041B91C609A8500E5700C /* XMPPRoomMemoryStorage.m in Sources */,
 				21C041B81C609A8500E5700C /* XMPPRoomOccupantHybridMemoryStorageObject.m in Sources */,
+				2110234B1D0FB60E00B03724 /* HYMember.m in Sources */,
 				2103C27F1C50CA4400585F75 /* XMPPCapsCoreDataStorageObject.m in Sources */,
 				2103C2991C50CA4400585F75 /* DDList.m in Sources */,
 				2103C23D1C50CA4400585F75 /* XMPPParser.m in Sources */,

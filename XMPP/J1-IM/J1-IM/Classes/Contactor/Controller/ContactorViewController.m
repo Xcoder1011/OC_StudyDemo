@@ -45,7 +45,7 @@
     _friendsList = [NSMutableArray arrayWithArray:[[HYXMPPManager sharedManager] friendList:^(BOOL isUpdate) {
         //
         if (isUpdate) {
-//            [self.tableView reloadData];
+            [self.tableView reloadData];
         }
     }]];
     

@@ -44,9 +44,18 @@
 - (void)addFriendBtnClick{
     NSString *friendName = self.searchFriendTF.text;
     // 添加朋友的具体操作封装到xmppManager中
-    [[XmppManager sharedxmppManager] addFriendWithFriendName:friendName];
+//    [[XmppManager sharedxmppManager] addFriendWithFriendName:friendName];
     
-    [self.navigationController popViewControllerAnimated:YES];
+    [[HYXMPPManager sharedManager] addFrinedWithName:friendName aMessage:@"我是zhangsan" success:^{
+        //
+        [self.navigationController popViewControllerAnimated:YES];
+        
+    } failure:^(NSString *errorInfo) {
+        //
+       [[[UIAlertView alloc] initWithTitle:@"提示" message:errorInfo delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+        
+    }];
+    
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{

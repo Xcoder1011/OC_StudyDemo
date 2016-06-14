@@ -62,7 +62,11 @@
 //        [[[UIAlertView alloc] initWithTitle:@"提示" message:@"您的密码可能在其他的计算机上被修改，请重新登录。" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
 //    }];
     
-    [HYXMPPManager sharedManager];
+    [[HYXMPPManager sharedManager] connectSuccess:^{
+        NSLog(@"登录成功");
+    } failure:^(XMPPErrorCode errorCode) {
+        NSLog(@"登录失败");
+    }];
     
 }
 
