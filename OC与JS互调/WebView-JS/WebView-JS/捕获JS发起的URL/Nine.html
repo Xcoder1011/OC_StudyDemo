@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+    
+    <head>
+        <meta charset="utf-8">
+            <title>OC与JS互相调用</title>
+            </head>
+    <body>
+        
+        
+        <div >
+            <select id="js_shouw_text">
+                <option>
+                    展示OC调用JS无参数
+                </option>
+            </select>
+        </div>
+        <div>
+            <BR/>
+            <input type="button" value="打开相机" onclick="openCamera()"/>
+        </div>
+        <div>
+            <BR/>
+            <input type="button" value="打开相册" onclick="openPhoto()"/>
+        </div>
+        
+        <div>
+            <BR/>
+            <input type="button" value="检测网络" onclick="DetectionNet()"/>
+        </div>
+        
+        <div>
+            <BR/>
+            <input type="button" value="刷新网页" onclick="reloadHtml()"/>
+        </div>
+        
+        <div>
+            <BR/>
+            <input type="button" value="调取通讯录" onclick="openAddressBook()"/>
+        </div>
+        
+        <div>
+            <BR/>
+            <input type="button" value="打印一下" onclick="Log()"/>
+        </div>
+        <script type="text/javascript" src="test.js" charset="UTF-8"></script>
+        <script type="text/javascript">
+        function openCamera()
+        {
+            var iFrame;
+            iFrame = document.createElement("iframe");
+            iFrame.setAttribute("src", "ios://openCamera");
+            document.body.appendChild(iFrame);
+            iFrame.parentNode.removeChild(iFrame);
+            iFrame = null;
+        }
+        function openPhoto()
+        {
+            var iFrame;
+            iFrame = document.createElement("iframe");
+            iFrame.setAttribute("src", "ios://openPhoto");
+            document.body.appendChild(iFrame);
+            iFrame.parentNode.removeChild(iFrame);
+            iFrame = null;
+        }
+        function DetectionNet()
+        {
+            var iFrame;
+            iFrame = document.createElement("iframe");
+            iFrame.setAttribute("src", "ios://DetectionNet");
+            document.body.appendChild(iFrame);
+            iFrame.parentNode.removeChild(iFrame);
+            iFrame = null;
+        }
+        function reloadHtml()
+        {
+            var iFrame;
+            iFrame = document.createElement("iframe");
+            iFrame.setAttribute("src", "ios://reloadHtml");
+            document.body.appendChild(iFrame);
+            iFrame.parentNode.removeChild(iFrame);
+            iFrame = null;
+        }
+        function openAddressBook()
+        {
+            var iFrame;
+            iFrame = document.createElement("iframe");
+            iFrame.setAttribute("src", "ios://openAddressBook");
+            document.body.appendChild(iFrame);
+            iFrame.parentNode.removeChild(iFrame);
+            iFrame = null;
+        }
+        function Log()
+        {
+            var iFrame;
+            iFrame = document.createElement("iframe");
+            iFrame.setAttribute("src", "ios://Log");
+            document.body.appendChild(iFrame);
+            iFrame.parentNode.removeChild(iFrame);
+            iFrame = null;
+        }
+            </script>
+    </body>
+    
+</html>

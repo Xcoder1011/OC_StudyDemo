@@ -14,6 +14,7 @@
 #import "FiveViewController.h"
 #import "SixViewController.h"
 #import "SevenViewController.h"
+#import "NineViewController.h"
 
 @interface ViewController ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -101,7 +102,13 @@
         [weakSelf.navigationController pushViewController:[[SevenViewController alloc]initWithNibName:@"SevenViewController" bundle:[NSBundle mainBundle]] animated:YES];
     };
     
-    self.dataArray = @[model1,model2,model3,model4,model5,model6,model7];
+    CellModel *model9 = [[CellModel alloc]init];
+    model9.name = @"捕获JS发起的URL";
+    model9.clickBlock = ^{
+        [weakSelf.navigationController pushViewController:[[NineViewController alloc]init] animated:YES];
+    };
+    
+    self.dataArray = @[model1,model2,model3,model4,model5,model6,model7,model9];
 }
 
 #pragma mark  UITableViewDelegate
@@ -116,7 +123,10 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     static NSString *cellIdentifier  = @"IdentifierCell";
-    UITableViewCell *cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    if (nil == cell) {
+        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
+    }
     CellModel *model = self.dataArray[indexPath.row];
     cell.textLabel.text = model.name;
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
