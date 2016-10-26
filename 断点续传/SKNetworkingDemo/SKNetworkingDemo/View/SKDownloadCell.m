@@ -50,7 +50,7 @@
             self.statusLabel.text = @"继续缓存";
             break;
         case kSKDownloadStatusDone:
-            self.statusLabel.text = @"";
+            self.statusLabel.text = @"已缓存";
             break;
         case kSKDownloadStatusError:
             self.statusLabel.text = @"缓存出错";

@@ -15,6 +15,8 @@ static NSInteger default_maxConcurrentOperationCount = 3;
 static NSDictionary *default_httpheaders = nil;
 static BOOL default_enableInterfaceDebug = NO;
 static NSMutableArray *default_requestTasks; //所有的下载任务
+static AFHTTPSessionManager *default_sharedManager = nil;
+
 
 @interface SKNetworking ()
 
@@ -59,12 +61,166 @@ static inline NSString *getCachePath() {
     return [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
 }
 
+
+/**
+ *  GET 请求
+ */
++ (SKURLSessionTask *)GETWithUrl:(NSString *)url
+                          params:(NSDictionary *)params
+                         success:(SKResponseSuccess)success
+                            fail:(SKResponseFailure)fail{
+    
+    return [self _requestWithUrl:url
+                      httpMethod:1
+                          params:params
+                        progress:nil
+                         success:success
+                            fail:fail];
+}
+/**
+ *  GET 请求 （progress）
+ */
++ (SKURLSessionTask *)GETWithUrl:(NSString *)url
+                          params:(NSDictionary *)params
+                        progress:(SKDownloadProgress)progress
+                         success:(SKResponseSuccess)success
+                            fail:(SKResponseFailure)fail{
+
+    return [self _requestWithUrl:url
+                      httpMethod:1
+                          params:params
+                        progress:progress
+                         success:success
+                            fail:fail];
+}
+
+/**
+ *  POST 请求
+ */
++ (SKURLSessionTask *)POSTWithUrl:(NSString *)url
+                           params:(NSDictionary *)params
+                          success:(SKResponseSuccess)success
+                             fail:(SKResponseFailure)fail{
+
+    return [self _requestWithUrl:url
+                      httpMethod:2
+                          params:params
+                        progress:nil
+                         success:success
+                            fail:fail];
+}
+/**
+ *  POST 请求 （progress）
+ */
++ (SKURLSessionTask *)POSTWithUrl:(NSString *)url
+                           params:(NSDictionary *)params
+                         progress:(SKDownloadProgress)progress
+                          success:(SKResponseSuccess)success
+                             fail:(SKResponseFailure)fail{
+    return [self _requestWithUrl:url
+                      httpMethod:2
+                          params:params
+                        progress:progress
+                         success:success
+                            fail:fail];
+
+}
+
+
+#pragma mark -- 统一请求数据
+
++ (SKURLSessionTask * )_requestWithUrl:(NSString *)url
+                            httpMethod:(NSUInteger)httpMethod
+                                params:(NSDictionary *)params
+                              progress:(SKDownloadProgress)progress
+                               success:(SKResponseSuccess)success
+                                  fail:(SKResponseFailure)fail {
+    
+    if (![self checkUrlWithUrl:url]) {
+        return nil;
+    }
+    
+    AFHTTPSessionManager *manager = [self _manager];
+    
+    SKURLSessionTask *session = nil;
+
+    if (httpMethod == 1) {  // GET
+        
+        session = [manager GET:url parameters:params progress:^(NSProgress * _Nonnull downloadProgress) {
+            if (progress) {
+                progress(downloadProgress.completedUnitCount, downloadProgress.totalUnitCount);
+            }
+        } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            
+            [self handleResponseObject:responseObject successCallBack:success];
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+
+            if (fail) {
+                fail(error);
+            }
+        }];
+    }
+    
+    if (httpMethod == 2) { // POST
+        session = [manager POST:url parameters:params progress:^(NSProgress * _Nonnull uploadProgress) {
+            if (progress) {
+                progress(uploadProgress.completedUnitCount, uploadProgress.totalUnitCount);
+            }
+        } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            
+            [self handleResponseObject:responseObject successCallBack:success];
+
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            
+            if (fail) {
+                fail(error);
+            }
+        }];
+    }
+
+    return session;
+}
+
++ (void)handleResponseObject:(id)responseObject successCallBack:(SKResponseSuccess)success {
+    if (success) {
+        success([self parseResponseObject:responseObject]);
+    }
+}
+
++ (id)parseResponseObject:(id)responseObject {
+    
+    if ([responseObject isKindOfClass:[NSData class]]) {
+        
+        if (responseObject != nil) {
+            
+            NSError *error = nil;
+            id response = [NSJSONSerialization JSONObjectWithData:responseObject
+                                                                     options:NSJSONReadingMutableContainers
+                                                                       error:&error];
+            if (error != nil) {
+                DLog(@"parseResponseObject error = %@",error.description);
+            } else {
+                if ([response isKindOfClass:[NSDictionary class]]) {
+                    NSDictionary *responseDict = (NSDictionary *)response;
+                    return responseDict;
+                }
+            }
+        }
+        
+        return responseObject;
+    } else {
+        return responseObject;
+    }
+}
+
+
 #pragma mark -- 开始下载
 + (SKURLSessionDownloadTask *)startDownloadWithUrl:(NSString *)url
                                  cachePath:(NSString *)cachePath
                                   progress:(SKDownloadProgress)progress
                                    success:(SKResponseSuccess)success
-                                   failure:(SKResponseFailure)failure{
+                                   failure:(SKDownloadFailure)failure{
     
     if (![self checkUrlWithUrl:url]) {
         return nil;
@@ -83,26 +239,21 @@ static inline NSString *getCachePath() {
     sessionTask = [manager downloadTaskWithRequest:downloadRequest
                                       progress:^(NSProgress * _Nonnull downloadProgress) {
                                           if (progress) {
-                                              //NSLog(@"download - %f", downloadProgress.fractionCompleted);
                                               progress(downloadProgress.completedUnitCount, downloadProgress.totalUnitCount);
                                           }
                                       }
                                    destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
-//                                       NSString *path = [getCachePath() stringByAppendingPathComponent:cachePath];
-//                                       return [NSURL URLWithString:path];
-                                       NSString *cacheDir = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES)[0];
-                                       NSString *path = [cacheDir stringByAppendingPathComponent:response.suggestedFilename];
-                                       return [NSURL fileURLWithPath:path];
+                                       return [NSURL fileURLWithPath:cachePath];
                                    }
                              completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
                                  
-                                 if (error) { // 错误
+                                 if (error) {
                                      [self handleCallbackWithError:error fail:failure];
                                      
                                      if (default_enableInterfaceDebug) {
                                          DLog(@"Download fail for url:%@ \n filePath:%@",[self absoluteUrlWithUrl:url],filePath);
                                      }
-                                 }else { // 没有错误
+                                 }else {
                                      if (success) {
                                          // 删除当前的下载任务
                                          [self _deleteTaskDictWithUrl:url];
@@ -172,7 +323,7 @@ static inline NSString *getCachePath() {
 + (SKURLSessionDownloadTask *)resumeDownloadWithUrl:(NSString *)url
                      progress:(SKDownloadProgress)progress
                       success:(SKResponseSuccess)success
-                      failure:(SKResponseFailure)failure {
+                      failure:(SKDownloadFailure)failure {
     
     // 1.更新本地数据
     [self updateLocalAllTasks];
@@ -190,28 +341,20 @@ static inline NSString *getCachePath() {
                                          progress:^(NSProgress * _Nonnull downloadProgress) {
                                              
                                              if (progress) {
-                                                 //NSLog(@"download - %f", downloadProgress.fractionCompleted);
                                                  progress(downloadProgress.completedUnitCount, downloadProgress.totalUnitCount);
                                              }
                                          }
                                       destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
-                                          //
-//                                          NSLog(@"targetPath:%@\n response:%@",targetPath,response);
-//                                          NSString *path = [getCachePath() stringByAppendingPathComponent:[self _getCachePathWithUrl:url]];
-//                                          return [NSURL URLWithString:path];
-                                          NSString *cacheDir = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES)[0];
-                                          NSString *path = [cacheDir stringByAppendingPathComponent:response.suggestedFilename];
-                                          return [NSURL fileURLWithPath:path];
-                                          
+                                          return [NSURL fileURLWithPath:[self _getCachePathWithUrl:url]];
                                       }
                                 completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
   
-                                    if (error) { // 错误
+                                    if (error) {
                                         [self handleCallbackWithError:error fail:failure];
                                         if (default_enableInterfaceDebug) {
                                             DLog(@"Download fail for url:%@ \n filePath:%@",[self absoluteUrlWithUrl:url],filePath);
                                         }
-                                    }else { // 没有错误
+                                    }else {
                                         if (success) {
                                             success(filePath.absoluteString);
                                             [self _deleteTaskDictWithUrl:url];
@@ -261,7 +404,7 @@ static inline NSString *getCachePath() {
                                     cachePath:(NSString *)cachePath
                                      progress:(SKDownloadProgress)progress
                                       success:(SKResponseSuccess)success
-                                      failure:(SKResponseFailure)failure {
+                                      failure:(SKDownloadFailure)failure {
     
     if (![self checkUrlWithUrl:url]) {
         return nil;
@@ -270,55 +413,38 @@ static inline NSString *getCachePath() {
     NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
     
     AFURLSessionManager *manager = [[AFURLSessionManager alloc]initWithSessionConfiguration:config];
-    
     // AFHTTPSessionManager *manager = [self _manager];
     
     SKURLSessionDownloadTask *sessionTask = nil;
-    
-    NSURLCache *urlCache = [[NSURLCache alloc]initWithMemoryCapacity:5 * 1024 * 1024
-                                                        diskCapacity:25 * 1024 * 1024
-                                                            diskPath:nil];
-    [NSURLCache setSharedURLCache:urlCache];
-    
-    // NSURLRequest *downloadRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
-    NSMutableURLRequest *downloadRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
-//    [downloadRequest setCachePolicy:NSURLRequestReturnCacheDataDontLoad];
-    
+//    NSURLCache *urlCache = [[NSURLCache alloc]initWithMemoryCapacity:5 * 1024 * 1024
+//                                                        diskCapacity:25 * 1024 * 1024
+//                                                            diskPath:nil];
+//    [NSURLCache setSharedURLCache:urlCache];
+//    NSMutableURLRequest *downloadRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+////    [downloadRequest setCachePolicy:NSURLRequestReturnCacheDataDontLoad];
+//    NSCachedURLResponse* cacheResponse = [[NSURLCache sharedURLCache]cachedResponseForRequest:downloadRequest];
+//    NSLog(@"cacheResponse.response = %@,\n cacheResponse.data = %@",cacheResponse.response,cacheResponse.data);
 
+    NSURLRequest *downloadRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
     
-    NSCachedURLResponse* cacheResponse = [[NSURLCache sharedURLCache]cachedResponseForRequest:downloadRequest];
-    NSLog(@"cacheResponse.response = %@,\n cacheResponse.data = %@",cacheResponse.response,cacheResponse.data);
-
     if (![self _getSessionTaskWithUrl:url]) {  //第一次下载
         
         sessionTask = [manager downloadTaskWithRequest:downloadRequest
                                               progress:^(NSProgress * _Nonnull downloadProgress) {
                                                   if (progress) {
-                                                      //NSLog(@"download - %f", downloadProgress.fractionCompleted);
                                                       progress(downloadProgress.completedUnitCount, downloadProgress.totalUnitCount);
                                                   }
                                               }
                                            destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
-                                               
-                                               //  将下载文件保存在缓存路径中
-                                               
-                                               NSLog(@" start _response = %@ \n targetPath = %@",response,targetPath);
-                                               
-                                               NSString *cacheDir = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES)[0];
-                                               NSString *path = [cacheDir stringByAppendingPathComponent:response.suggestedFilename];
-                                               return [NSURL fileURLWithPath:path]; // 使用本地URL
+                                               return [NSURL fileURLWithPath:cachePath];
                                            }
                                      completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
-                                         
-                                         NSLog(@" completionHandler _response = %@ \n filePath = %@",response,filePath);
-
-                                         if (error) { // 错误
+                                         if (error) {
                                              [self handleCallbackWithError:error fail:failure];
-                                             
                                              if (default_enableInterfaceDebug) {
                                                  DLog(@"Download fail for url:%@ \n filePath:%@",[self absoluteUrlWithUrl:url],filePath);
                                              }
-                                         }else { // 没有错误
+                                         }else {
                                              if (success) {
                                                  // 删除当前的下载任务
                                                  [self _deleteTaskDictWithUrl:url];
@@ -355,36 +481,24 @@ static inline NSString *getCachePath() {
         if (![self _getPartialDataWithUrl:url]) {
             return sessionTask;
         }
-        
         sessionTask = [manager downloadTaskWithResumeData:[self _getPartialDataWithUrl:url]
                                                  progress:^(NSProgress * _Nonnull downloadProgress) {
-                                                     
                                                      if (progress) {
-                                                         //NSLog(@"download - %f", downloadProgress.fractionCompleted);
                                                          progress(downloadProgress.completedUnitCount, downloadProgress.totalUnitCount);
                                                      }
                                                  }
                                               destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
-                                                  
-                                                  //  将下载文件保存在缓存路径中
-
-                                                  NSLog(@" resume _response = %@ /n targetPath = %@",response,targetPath);
-
-                                                  NSString *cacheDir = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES)[0];
-                                                  NSString *path = [cacheDir stringByAppendingPathComponent:response.suggestedFilename];
-                                                  return [NSURL fileURLWithPath:path];
-                                                  
+//                                                  NSString *cacheDir = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES)[0];
+//                                                  NSString *path = [cacheDir stringByAppendingPathComponent:response.suggestedFilename];
+                                                  return [NSURL fileURLWithPath:cachePath];
                                               }
                                         completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
-                                            
-                                            NSLog(@" completionHandler _response = %@ \n filePath = %@",response,filePath);
-                                            
-                                            if (error) { // 错误
+                                            if (error) {
                                                 [self handleCallbackWithError:error fail:failure];
                                                 if (default_enableInterfaceDebug) {
                                                     DLog(@"Download fail for url:%@ \n filePath:%@",[self absoluteUrlWithUrl:url],filePath);
                                                 }
-                                            }else { // 没有错误
+                                            }else {
                                                 if (success) {
                                                     success(filePath.absoluteString);
                                                     [self _deleteTaskDictWithUrl:url];
@@ -436,6 +550,9 @@ static inline NSString *getCachePath() {
     return NO;
 }
 
+/**
+ *  删除任务
+ */
 + (void)_deleteTaskDictWithUrl:(NSString *)url {
     
     __block NSMutableDictionary *sessionD  = nil;
@@ -447,10 +564,9 @@ static inline NSString *getCachePath() {
         }
     }];
     
-    [[self allTasks] removeObject:sessionD];
-    NSLog(@"[self allTasks] = %@",[self allTasks]);
-    
-    //[self writeToLocalFileWithAllTask:[self allTasks]];
+    if (sessionD) {
+        [[self allTasks] removeObject:sessionD];
+    }
 }
 
 /**
@@ -571,7 +687,7 @@ static inline NSString *getCachePath() {
  *  处理失败的回调
  */
 + (void)handleCallbackWithError:(NSError *)error
-                           fail:(SKResponseFailure)fail {
+                           fail:(SKDownloadFailure)fail {
 
     if ([error code] == NSURLErrorCancelled) { //正在暂停
         // new add
@@ -626,11 +742,15 @@ static inline NSString *getCachePath() {
                                                                               @"text/javascript",
                                                                               @"text/xml",
                                                                               @"image/*"]];
+    default_sharedManager = manager;
     return manager;
 }
 
-
-
+// UTF8编码 URL
++ (NSString *)sk_URLEncode:(NSString *)url {
+    // deprecated !!  [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    return [url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+}
 
 
 // 检测URL是否有效

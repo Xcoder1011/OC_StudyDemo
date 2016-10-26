@@ -22,8 +22,6 @@
 @implementation ViewController
 
 
-
-
 #pragma mark -- Life circle
 
 - (void)viewDidLoad {
@@ -160,7 +158,6 @@
                                    });
                                }
                                failure:^(NSError *error, SKDownloadingStatus downloadStatus) {
-                                   NSLog(@"error.description = %@",error.description);
                                    
                                    if (downloadStatus == kSKDownloadingStatusSuspended) {
                                           model.status = kSKDownloadStatusPausing;
@@ -199,8 +196,6 @@
 
                                 }
                                 failure:^(NSError *error , SKDownloadingStatus downloadStatus) {
-                                    //
-                                    NSLog(@"error.description = %@",error.description);
                                     if(error.code == NSURLErrorCancelled) { //正在暂停
                                         dispatch_async(dispatch_get_main_queue(), ^{
                                             model.status = kSKDownloadStatusPausing;
@@ -253,7 +248,6 @@
                              });
                          }
                          failure:^(NSError *error ,SKDownloadingStatus downloadStatus) {
-                             NSLog(@"error.description = %@",error.description);
                              
                              if(error.code == NSURLErrorCancelled) { //正在暂停
                                  
@@ -304,7 +298,8 @@
             default:
                 break;
         }
-        model.destinationPath = model.name;
+        NSString *cacheDir = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES)[0];
+        model.destinationPath = [cacheDir stringByAppendingPathComponent:model.name];
         model.status = kSKDownloadStatusNotLoaded;
         [self.dataArray addObject:model];
     }
@@ -313,7 +308,9 @@
 
 -(UITableView *)tableView {
     if (!_tableView) {
-        _tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStylePlain];
+        CGRect rect = self.view.bounds;
+        rect.origin.y += 20;
+        _tableView = [[UITableView alloc]initWithFrame:rect style:UITableViewStylePlain];
         _tableView.delegate = self;
         _tableView.dataSource =self;
         [_tableView setRowHeight:80];

@@ -213,6 +213,7 @@
 				TargetAttributes = {
 					21ACE5B31CEDB74200B9B4BA = {
 						CreatedOnToolsVersion = 7.3;
+						DevelopmentTeam = LH66V26Z7L;
 					};
 				};
 			};
@@ -423,6 +424,7 @@
 			baseConfigurationReference = 222CD57718ADAE7CB8BBF3A5 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = LH66V26Z7L;
 				INFOPLIST_FILE = SKNetworkingDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = J1.SKNetworkingDemo;
@@ -435,6 +437,7 @@
 			baseConfigurationReference = 369F7C9A950C1353296FFE5C /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = LH66V26Z7L;
 				INFOPLIST_FILE = SKNetworkingDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = J1.SKNetworkingDemo;

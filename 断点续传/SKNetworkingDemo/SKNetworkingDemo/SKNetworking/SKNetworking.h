@@ -36,19 +36,21 @@ typedef void(^SKDownloadProgress)(int64_t bytesRead,
  *  @param response 请求成功返回的数据
  */
 typedef void(^SKResponseSuccess)(id response);
+
 /**
  *  请求失败
  *
  *  @param error 请求失败错误信息
  */
-typedef void(^SKResponseFailure)(NSError *error , SKDownloadingStatus downloadStatus);
+typedef void(^SKResponseFailure)(NSError *error);
 
 /**
- *  缓存暂停时的回调
+ *  下载失败回调
  *
- *  @param error error.code = -999
+ *  @param error 下载失败错误信息
  */
-typedef void(^SKResponsePausing)(NSError *error , SKDownloadingStatus downloadStatus);
+typedef void(^SKDownloadFailure)(NSError *error , SKDownloadingStatus downloadStatus);
+
 
 /**
  *  所有接口返回的类型都是基类NSURLSessionTask，若要接收返回值
@@ -97,6 +99,38 @@ typedef NSURLSessionDownloadTask SKURLSessionDownloadTask;
  */
 + (void)setCommonHttpHeaders:(NSDictionary *)httpHeaders;
 
+/**
+ *  GET 请求
+ */
++ (SKURLSessionTask *)GETWithUrl:(NSString *)url
+                          params:(NSDictionary *)params
+                         success:(SKResponseSuccess)success
+                            fail:(SKResponseFailure)fail;
+/**
+ *  GET 请求 （progress）
+ */
++ (SKURLSessionTask *)GETWithUrl:(NSString *)url
+                          params:(NSDictionary *)params
+                        progress:(SKDownloadProgress)progress
+                         success:(SKResponseSuccess)success
+                            fail:(SKResponseFailure)fail;
+
+/**
+ *  POST 请求
+ */
++ (SKURLSessionTask *)POSTWithUrl:(NSString *)url
+                           params:(NSDictionary *)params
+                          success:(SKResponseSuccess)success
+                             fail:(SKResponseFailure)fail;
+/**
+ *  POST 请求 （progress）
+ */
++ (SKURLSessionTask *)POSTWithUrl:(NSString *)url
+                           params:(NSDictionary *)params
+                         progress:(SKDownloadProgress)progress
+                          success:(SKResponseSuccess)success
+                             fail:(SKResponseFailure)fail;
+
 
 /**
  *  -------------  下 载  -------------
@@ -114,7 +148,7 @@ typedef NSURLSessionDownloadTask SKURLSessionDownloadTask;
                                     cachePath:(NSString *)cachePath
                                      progress:(SKDownloadProgress)progress
                                       success:(SKResponseSuccess)success
-                                      failure:(SKResponseFailure)failure;
+                                      failure:(SKDownloadFailure)failure;
 
 /**
  *  开始下载
@@ -129,7 +163,7 @@ typedef NSURLSessionDownloadTask SKURLSessionDownloadTask;
                                  cachePath:(NSString *)cachePath
                                   progress:(SKDownloadProgress)progress
                                    success:(SKResponseSuccess)success
-                                   failure:(SKResponseFailure)failure;
+                                   failure:(SKDownloadFailure)failure;
 
 /**
  *  暂定下载
@@ -145,7 +179,7 @@ typedef NSURLSessionDownloadTask SKURLSessionDownloadTask;
 + (SKURLSessionDownloadTask *)resumeDownloadWithUrl:(NSString *)url
                      progress:(SKDownloadProgress)progress
                       success:(SKResponseSuccess)success
-                      failure:(SKResponseFailure)failure;
+                      failure:(SKDownloadFailure)failure;
 
 /**
  *  取消下载
