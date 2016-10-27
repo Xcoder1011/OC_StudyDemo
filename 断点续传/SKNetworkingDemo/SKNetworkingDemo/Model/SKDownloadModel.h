@@ -32,6 +32,8 @@ typedef NS_ENUM(NSInteger, SKDownloadStatus) {
 @property (nonatomic, assign) int64_t bytesRead;
 /** 文件总的大小 */
 @property (nonatomic, assign) int64_t totalBytesRead;
+/** 网速 */
+@property (nonatomic, strong) NSString* speed;
 
 
 @end

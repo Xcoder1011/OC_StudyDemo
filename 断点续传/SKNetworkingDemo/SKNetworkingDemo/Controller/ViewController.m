@@ -95,7 +95,6 @@
             case kSKDownloadStatusNotLoaded:
             {
                 NSLog(@"开始缓存%ld",indexPath.row);
-                //[weakSelf startDownloadWithModel:model withTableViewCell:weakCell];
                 [weakSelf downloadWithModel:model withTableViewCell:weakCell];
             }
                 break;
@@ -108,7 +107,6 @@
             case kSKDownloadStatusPausing:
             {
                 NSLog(@"继续缓存%ld",indexPath.row);
-                //[weakSelf resumeDownloadWithModel:model withTableViewCell:weakCell];
                 [weakSelf downloadWithModel:model withTableViewCell:weakCell];
 
             }
@@ -117,7 +115,6 @@
                 NSLog(@"缓存完成%ld",indexPath.row);
                 break;
             case kSKDownloadStatusError:
-//                self.statusLabel.text = @"缓存出错";
                 NSLog(@"缓存出错！");
                 break;
             default:
@@ -142,11 +139,12 @@
 
     [SKNetworking downloadWithUrl:model.linkUrl
                              cachePath:model.destinationPath
-                              progress:^(int64_t bytesRead, int64_t totalBytesRead) {
+                              progress:^(int64_t bytesRead, int64_t totalBytesRead,NSString *speed) {
                                   dispatch_async(dispatch_get_main_queue(), ^{
                                       model.status = kSKDownloadStatusIsLoading;
                                       model.bytesRead = bytesRead;
                                       model.totalBytesRead = totalBytesRead;
+                                      model.speed = speed;
                                       [self _dispactchUpdateUIWith:model withTableViewCell:cell];
                                   });
                               }
@@ -177,12 +175,13 @@
 - (void)resumeDownloadWithModel:(SKDownloadModel *)model withTableViewCell:(SKDownloadCell *)cell {
 
     [SKNetworking resumeDownloadWithUrl:model.linkUrl
-                               progress:^(int64_t bytesRead, int64_t totalBytesRead) {
+                               progress:^(int64_t bytesRead, int64_t totalBytesRead,NSString *speed) {
                                    
                                    dispatch_async(dispatch_get_main_queue(), ^{
                                        model.status = kSKDownloadStatusIsLoading;
                                        model.bytesRead = bytesRead;
                                        model.totalBytesRead = totalBytesRead;
+                                       model.speed = speed;
                                        [self _dispactchUpdateUIWith:model withTableViewCell:cell];
                                    });
                                }
@@ -232,11 +231,12 @@
 
     [SKNetworking startDownloadWithUrl:model.linkUrl
                        cachePath:model.destinationPath
-                        progress:^(int64_t bytesRead, int64_t totalBytesRead) {
+                        progress:^(int64_t bytesRead, int64_t totalBytesRead,NSString *speed) {
                             dispatch_async(dispatch_get_main_queue(), ^{
                                 model.status = kSKDownloadStatusIsLoading;
                                 model.bytesRead = bytesRead;
                                 model.totalBytesRead = totalBytesRead;
+                                model.speed = speed;
                                 [self _dispactchUpdateUIWith:model withTableViewCell:cell];
                             });
                         }

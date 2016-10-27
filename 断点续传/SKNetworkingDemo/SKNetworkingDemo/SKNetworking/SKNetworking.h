@@ -28,7 +28,8 @@ typedef NS_ENUM(NSInteger, SKDownloadingStatus) {
  *  @param totalBytesRead 文件总大小
  */
 typedef void(^SKDownloadProgress)(int64_t bytesRead,
-                                  int64_t totalBytesRead);
+                                  int64_t totalBytesRead,
+                                  NSString *speed);
 
 /**
  *  请求成功
@@ -189,15 +190,18 @@ typedef NSURLSessionDownloadTask SKURLSessionDownloadTask;
 + (void)cancelDownloadWithUrl:(NSString *)url;
 
 
-
-
 /**
  *  更新本地存储的下载任务
  */
 + (void)updateLocalAllTasks;
 
 
-+ (instancetype)shareInstance;
+/**
+ * 计算缓存的占用存储大小
+ */
++ (NSString *)convertSize:(NSUInteger)length;
 
+
++ (instancetype)shareInstance;
 
 @end
