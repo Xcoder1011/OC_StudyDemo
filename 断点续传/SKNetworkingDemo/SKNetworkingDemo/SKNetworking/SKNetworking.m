@@ -166,6 +166,18 @@ static inline NSString *getCachePath() {
     
     AFHTTPSessionManager *manager = [self _manager];
     
+    // 请求超时时间
+    manager.requestSerializer.timeoutInterval = default_timeout;
+    // 允许同时最大并发数量
+    manager.operationQueue.maxConcurrentOperationCount = default_maxConcurrentOperationCount;
+    // 配置请求头
+    for (NSString *key in default_httpheaders) {
+        if (default_httpheaders[key] != nil) {
+            [manager.requestSerializer setValue:default_httpheaders[key] forHTTPHeaderField:key];
+        }
+    }
+
+    
     SKURLSessionTask *session = nil;
 
     if (httpMethod == 1) {  // GET
@@ -225,14 +237,6 @@ static inline NSString *getCachePath() {
     // AFHTTPSessionManager *manager = [self _manager];
     
     SKURLSessionDownloadTask *sessionTask = nil;
-    //    NSURLCache *urlCache = [[NSURLCache alloc]initWithMemoryCapacity:5 * 1024 * 1024
-    //                                                        diskCapacity:25 * 1024 * 1024
-    //                                                            diskPath:nil];
-    //    [NSURLCache setSharedURLCache:urlCache];
-    //    NSMutableURLRequest *downloadRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
-    ////    [downloadRequest setCachePolicy:NSURLRequestReturnCacheDataDontLoad];
-    //    NSCachedURLResponse* cacheResponse = [[NSURLCache sharedURLCache]cachedResponseForRequest:downloadRequest];
-    //    NSLog(@"cacheResponse.response = %@,\n cacheResponse.data = %@",cacheResponse.response,cacheResponse.data);
     
     SKDownloadTask *task = nil;
     for (NSMutableDictionary *sessionDict in [self allTasks]) {
@@ -247,6 +251,23 @@ static inline NSString *getCachePath() {
     }
     
     NSURLRequest *downloadRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+    /*
+    //检查文件是否已经下载了一部分
+    unsigned long long downloadedBytes = 0;
+    if ([[NSFileManager defaultManager] fileExistsAtPath:cachePath]) {
+        //获取已下载的文件长度
+        downloadedBytes = [self fileSizeForPath:cachePath];
+        if (downloadedBytes > 0) {
+            NSMutableURLRequest *mutableURLRequest = [downloadRequest mutableCopy];
+            NSString *requestRange = [NSString stringWithFormat:@"bytes=%llu-", downloadedBytes];
+            NSLog(@"requestRange = %@",requestRange);
+            [mutableURLRequest setValue:requestRange forHTTPHeaderField:@"Range"];
+            downloadRequest = mutableURLRequest;
+        }
+    }
+    //不使用缓存，避免断点续传出现问题
+    [[NSURLCache sharedURLCache] removeCachedResponseForRequest:downloadRequest];
+     */
     
     if (![self _getSessionTaskWithUrl:url]) {  // 第一次下载
         
@@ -811,14 +832,34 @@ static inline NSString *getCachePath() {
 
 
 + (AFHTTPSessionManager *)_manager {
-
-    AFHTTPSessionManager *manager = nil;
     
-    if (![self baseUrl]) {
-        manager = [AFHTTPSessionManager manager];
-    }else {
-        manager = [[AFHTTPSessionManager alloc]initWithBaseURL:[NSURL URLWithString:[self baseUrl]]];
-    }
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        
+        if (![self baseUrl]) {
+            default_sharedManager = [AFHTTPSessionManager manager];
+        }else {
+            default_sharedManager = [[AFHTTPSessionManager alloc]initWithBaseURL:[NSURL URLWithString:[self baseUrl]]];
+        }
+        
+        default_sharedManager.requestSerializer.stringEncoding = NSUTF8StringEncoding;
+        default_sharedManager.responseSerializer.acceptableContentTypes = [NSSet setWithArray:@[@"application/json",
+                                                                                                @"text/html",
+                                                                                                @"text/json",
+                                                                                                @"text/plain",
+                                                                                                @"text/javascript",
+                                                                                                @"text/xml",
+                                                                                                @"image/*"]];
+    });
+    
+    return default_sharedManager;
+    
+    /*
+     
+     *****  采取单例模式  为了  修复 每次请求创建AFHTTPSessionManager 后没有释放  引起的内存泄漏 bug !!
+    
+     
+    AFHTTPSessionManager *manager = nil;
     // 请求超时时间
     manager.requestSerializer.timeoutInterval = default_timeout;
     // 允许同时最大并发数量
@@ -838,8 +879,10 @@ static inline NSString *getCachePath() {
                                                                               @"text/xml",
                                                                               @"image/*"]];
     default_sharedManager = manager;
-    return manager;
+
+     */
 }
+
 
 /**
  * UTF8编码 URL
@@ -901,6 +944,21 @@ static inline NSString *getCachePath() {
     NSString *decodeFilename = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     
     return decodeFilename;
+}
+
+
+//获取已下载的文件大小
++ (unsigned long long)fileSizeForPath:(NSString *)path {
+    signed long long fileSize = 0;
+    NSFileManager *fileManager = [NSFileManager new]; // default is not thread safe
+    if ([fileManager fileExistsAtPath:path]) {
+        NSError *error = nil;
+        NSDictionary *fileDict = [fileManager attributesOfItemAtPath:path error:&error];
+        if (!error && fileDict) {
+            fileSize = [fileDict fileSize];
+        }
+    }
+    return fileSize;
 }
 
 + (NSString *)getFileSizeWith:(unsigned long)size

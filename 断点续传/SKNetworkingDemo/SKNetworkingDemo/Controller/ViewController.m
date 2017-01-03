@@ -298,7 +298,7 @@
             default:
                 break;
         }
-        NSString *cacheDir = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES)[0];
+        NSString *cacheDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
         model.destinationPath = [cacheDir stringByAppendingPathComponent:model.name];
         model.status = kSKDownloadStatusNotLoaded;
         [self.dataArray addObject:model];
