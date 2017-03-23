@@ -2033,7 +2033,7 @@
 				TargetAttributes = {
 					2103C0C11C50C98D00585F75 = {
 						CreatedOnToolsVersion = 7.2;
-						DevelopmentTeam = BMZP26248F;
+						DevelopmentTeam = LH66V26Z7L;
 						SystemCapabilities = {
 							com.apple.OMC = {
 								enabled = 0;
@@ -2404,6 +2404,7 @@
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = LH66V26Z7L;
 				ENABLE_BITCODE = NO;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/J1-IM/PrefixHeader.pch";
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
@@ -2428,6 +2429,7 @@
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = LH66V26Z7L;
 				ENABLE_BITCODE = NO;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/J1-IM/PrefixHeader.pch";
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
