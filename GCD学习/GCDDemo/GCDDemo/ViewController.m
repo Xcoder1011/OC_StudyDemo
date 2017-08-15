@@ -650,16 +650,93 @@
         NSLog(@"start");
         [NSThread sleepForTimeInterval:2.f];
         NSLog(@"semaphore +1");
+        // dispatch_semaphore_signal会使信号值加1，
         dispatch_semaphore_signal(semaphore); // +1 semaphore
     });
-    
+    // dispatch_semaphore_wait会使信号值减1
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    // 如果信号值为0，则等待
     NSLog(@"continue");
     /*
      2016-05-03 13:54:31.224 GCDDemo[2786:632219] start
      2016-05-03 13:54:33.230 GCDDemo[2786:632219] semaphore +1
      2016-05-03 13:54:33.230 GCDDemo[2786:632022] continue
      */
+}
+
+
+/**
+ 信号量 实现网络请求同步
+
+ 等待多个网络请求完成后，页面再刷新UI。
+ */
+-(void)dispatch_Semaphore_example
+{
+    void(^requestA)() = ^{
+    
+        dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            NSLog(@"开始异步请求数据");
+            [NSThread sleepForTimeInterval:2.f];
+            //发送
+            dispatch_semaphore_signal(semaphore); // +1 semaphore
+        });
+        
+         //等待
+        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+        
+    };
+    
+    void (^requestB)() = ^{
+    
+        dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            NSLog(@"开始异步请求数据");
+            [NSThread sleepForTimeInterval:2.f];
+            
+            dispatch_semaphore_signal(semaphore); // +1 semaphore
+        });
+        
+        
+        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    };
+    
+    void (^requestC)() = ^{
+        
+        dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            NSLog(@"开始异步请求数据");
+            [NSThread sleepForTimeInterval:2.f];
+            
+            dispatch_semaphore_signal(semaphore); // +1 semaphore
+        });
+        
+        
+        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    };
+    
+    
+    
+    dispatch_group_t group = dispatch_group_create();
+    
+    dispatch_group_async(group, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        requestA();
+    });
+    dispatch_group_async(group, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        requestB();
+    });
+    dispatch_group_async(group, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        requestC();
+    });
+    
+    
+    // 当A、B、C request的信号量全部都释放后，就会通知group_notify并执行其操作。
+    dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+        // 可以刷新 界面了
+        
+    });
+    
+    // Tips : 也可以 1.使用NSLock进行线程同步  2.使用@synchronized进行线程同步
 }
 
 
