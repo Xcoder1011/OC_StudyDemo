@@ -426,25 +426,40 @@
 }
 
 #pragma mark -- 方法二 : dispatch_group_notify
+
+/**
+ 适用于一个界面刷新需要等待多个网络请求完成
+ */
 -(void)dispatchGroupNotifyDemo{
     
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_group_t group = dispatch_group_create();
     
     // 比如你执行三个下载任务，当三个任务都下载完成后你才通知界面说完成
+    dispatch_group_enter(group);
     dispatch_group_async(group, queue, ^{
         NSLog(@"task 1 done");
+        dispatch_group_leave(group);
     });
+    
+    dispatch_group_enter(group);
     dispatch_group_async(group, queue, ^{
         NSLog(@"task 2 done");
+        dispatch_group_leave(group);
     });
+    
+    dispatch_group_enter(group);
     dispatch_group_async(group, queue, ^{
         NSLog(@"task 3 done");
+        dispatch_group_leave(group);
     });
 
     // 使用dispatch_group_notify，异步执行闭包，不会阻塞
     dispatch_group_notify(group, queue, ^{
         NSLog(@"all task end");
+        /*
+         等待三个下载任务均调用dispatch_group_leave后, 则进入dispatch_group_notify 的 completion();
+         */
     });
     /*
      2016-04-29 14:01:25.156 GCDDemo[2561:1054338] task 3 done
