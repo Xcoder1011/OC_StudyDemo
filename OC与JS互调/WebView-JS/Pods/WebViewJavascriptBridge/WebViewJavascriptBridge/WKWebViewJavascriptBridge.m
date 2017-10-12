@@ -148,6 +148,7 @@ decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
             [_base logUnkownMessage:url];
         }
         decisionHandler(WKNavigationActionPolicyCancel);
+        return; // new add  fix 'Completion handler passed to -[WKWebViewJavascriptBridge webView:decidePolicyForNavigationAction:decisionHandler:] was called more than once'
     }
     
     if (strongDelegate && [strongDelegate respondsToSelector:@selector(webView:decidePolicyForNavigationAction:decisionHandler:)]) {

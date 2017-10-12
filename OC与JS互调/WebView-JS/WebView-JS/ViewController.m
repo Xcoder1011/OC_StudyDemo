@@ -16,6 +16,7 @@
 #import "SevenViewController.h"
 #import "NineViewController.h"
 #import "TestBridgeViewController.h"
+#import "WKWebViewBridgeViewController.h"
 
 
 @interface ViewController ()<UITableViewDelegate,UITableViewDataSource>
@@ -116,7 +117,14 @@
         [weakSelf.navigationController pushViewController:[[TestBridgeViewController alloc]initWithNibName:@"TestBridgeViewController" bundle:[NSBundle mainBundle]] animated:YES];
     };
     
-    self.dataArray = @[model1,model2,model3,model4,model5,model6,model7,model9,model10];
+    CellModel *model11 = [[CellModel alloc]init];
+    model11.name = @"WKWebView与JS交互(Bridge)";
+    model11.clickBlock = ^{
+        
+        [weakSelf.navigationController pushViewController:[[WKWebViewBridgeViewController alloc]initWithNibName:@"WKWebViewBridgeViewController" bundle:[NSBundle mainBundle]] animated:YES];
+    };
+    
+    self.dataArray = @[model1,model2,model3,model4,model5,model6,model7,model9,model10,model11];
 }
 
 #pragma mark  UITableViewDelegate

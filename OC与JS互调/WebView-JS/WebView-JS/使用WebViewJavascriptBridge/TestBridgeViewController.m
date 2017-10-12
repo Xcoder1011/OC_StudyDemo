@@ -52,6 +52,8 @@
         UIImagePickerController *imageVC = [[UIImagePickerController alloc] init];
         imageVC.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
         [self presentViewController:imageVC animated:YES completion:nil];
+        responseCallback(@"结果返回给js");
+
     }];
     
     
@@ -69,27 +71,32 @@
          
          */
         self.navigationController.navigationBar.barTintColor = [UIColor redColor];
+        responseCallback(@"导航栏颜色已经改变");
+
     }];
-    
-    
-    
-    
+  
 }
 
 - (IBAction)getUserInfomation:(UIButton *)sender {
     
-    [self.bridge callHandler:@"getUserInfo" data:@{} responseCallback:^(id responseData) {
+    [self.bridge callHandler:@"getUserInfo" data:@{@"new":@"dtas"} responseCallback:^(id responseData) {
         //
     }];
 }
 
 
 - (IBAction)insertImage:(UIButton *)sender {
+    
+    [self.bridge callHandler:@"insertImgToWebPage" data:@{@"url":@"http://zxpic.gtimg.com/infonew/0/wechat_pics_-214270.jpg/168"} responseCallback:^(id responseData) {
+        //
+    }];
 }
 
 
 - (IBAction)pushToNext:(UIButton *)sender {
-    
+    [self.bridge callHandler:@"pushToNewWebSite" data:@{@"url":@"https://www.baidu.com/"} responseCallback:^(id responseData) {
+        //
+    }];
 }
 
 @end

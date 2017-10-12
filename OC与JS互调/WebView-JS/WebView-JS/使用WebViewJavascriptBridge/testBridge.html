@@ -48,15 +48,15 @@
            bridge.registerHandler('getUserInfo', function(data, responseCallback) {
                console.log("OC中传递过来的参数:", data);
                // 把处理好的结果返回给OC
-               responseCallback({"userID":"DX001", "userName":"旋之华", "age":"18", "otherName":"旋之华"})
+               responseCallback({"userID":"DX001", "userName":"kun", "age":"26", "otherName":"vincent"})
            });
 
-           //  弹框输出
+           // 弹框输出
            bridge.registerHandler('alertMessage', function(data, responseCallback) {
                alert(data);
            });
 
-           //  动态跳转到京东商城
+           //  动态跳转到。。。
            bridge.registerHandler('pushToNewWebSite', function(data, responseCallback) {
                window.location.href = data.url;
            });
@@ -67,6 +67,7 @@
                 img.src = data.url;
                 img.width = 200;
                 document.body.appendChild(img);
+                responseCallback("图形的宽度为200");
 
            });
 
