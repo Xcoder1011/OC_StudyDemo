@@ -8,6 +8,7 @@
 
 #import "SKNetworking.h"
 #import <AFNetworking.h>
+#import <SystemConfiguration/CaptiveNetwork.h>
 
 static NSString *default_baseUrl = nil;
 static NSTimeInterval default_timeout = 60.0f;
@@ -81,6 +82,79 @@ static inline NSString *getCachePath() {
     return [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
 }
 
+
++ (BOOL)checkProxySetting {
+
+    NSDictionary * proxySettings = (__bridge NSDictionary *)(CFNetworkCopySystemProxySettings());
+    NSArray *proxies = (__bridge NSArray *)(CFNetworkCopyProxiesForURL((__bridge CFURLRef _Nonnull)([NSURL URLWithString:@"https://www.baidu.com"]), (__bridge CFDictionaryRef _Nonnull)(proxySettings)));
+    NSLog(@"proxies = \n%@",proxies);
+ 
+    NSDictionary *settings = proxies[0];
+    NSLog(@"%@",[settings objectForKey:(NSString *)kCFProxyHostNameKey]);   // 10.10.29.25
+    NSLog(@"%@",[settings objectForKey:(NSString *)kCFProxyPortNumberKey]); // 8888
+    NSLog(@"%@",[settings objectForKey:(NSString *)kCFProxyTypeKey]);       // kCFProxyTypeHTTPS
+    
+    if ([[settings objectForKey:(NSString *)kCFProxyTypeKey] isEqualToString:@"kCFProxyTypeNone"])
+    {
+        NSLog(@"没设置代理");
+        /*
+         proxies = (
+         {
+         kCFProxyTypeKey = kCFProxyTypeNone;
+         }
+         )
+         */
+        return NO;
+    }
+    else
+    {
+        /*
+         proxies =
+         (
+         {
+         kCFProxyHostNameKey = "10.10.29.25";
+         kCFProxyPortNumberKey = 8888;
+         kCFProxyTypeKey = kCFProxyTypeHTTPS;
+         }
+         )
+         */
+        NSLog(@"设置了代理");
+        return YES;
+    }
+}
+
++ (id)fetchSSIDInfo {
+    NSArray *ifs = (__bridge_transfer id)CNCopySupportedInterfaces();
+    NSLog(@"Supported interfaces: %@", ifs);
+    /*
+    Supported interfaces: (
+                           en0
+                           )
+     */
+    id info = nil;
+    for (NSString *ifnam in ifs) {
+        info = (__bridge_transfer id)CNCopyCurrentNetworkInfo((__bridge CFStringRef)ifnam);
+        NSLog(@"%@ => %@\n", ifnam, info);
+        if (info && [info count]) { break; }
+        /*
+        en0 => {
+            BSSID = "74:67:f7:ac:e1:51";
+            SSID = "chelun-guest";
+            SSIDDATA = <6368656c 756e2d67 75657374>;
+        }
+         */
+    }
+    return info;
+}
+
++ (id)fetchHttpProxy {
+    CFDictionaryRef dicRef = CFNetworkCopySystemProxySettings();
+    const CFStringRef proxyCFstr = (const CFStringRef)CFDictionaryGetValue(dicRef,
+                                                                           (const void*)kCFNetworkProxiesHTTPProxy);
+    NSString* proxy = (__bridge NSString *)proxyCFstr;
+    NSLog(@"fetchHttpProxy HostName  = %@", proxy); // fetchHttpProxy HostName = 10.10.29.25
+    return  proxy;
+}
 
 
 #pragma mark - GET请求

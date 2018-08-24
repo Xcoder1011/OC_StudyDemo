@@ -101,6 +101,11 @@ typedef NSURLSessionDownloadTask SKURLSessionDownloadTask;
 + (void)setCommonHttpHeaders:(NSDictionary *)httpHeaders;
 
 /**
+ *  检测是否使用了代理
+ */
++ (BOOL)checkProxySetting;
+
+/**
  *  GET 请求
  */
 + (SKURLSessionTask *)GETWithUrl:(NSString *)url

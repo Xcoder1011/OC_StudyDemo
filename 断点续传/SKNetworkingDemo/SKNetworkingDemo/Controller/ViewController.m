@@ -33,6 +33,8 @@
     
     [SKNetworking enableInterfaceDebug:YES];
     [SKNetworking updateLocalAllTasks];
+    
+    [SKNetworking checkProxySetting];
 }
 
 
@@ -287,7 +289,7 @@
                   model.linkUrl = @"http://mw5.dwstatic.com/1/3/1528/133489-99-1436409822.mp4";
                 break;
             case 2:
-                model.linkUrl = @"http://android-mirror.bugly.qq.com:8080/eclipse_mirror/juno/content.jar";
+                model.linkUrl = @"http://static.clfile.com/g1/img/p/supercoach/newyear/%E5%BA%95%E9%83%A8%E8%83%8C%E6%99%AF.jpg";
                 break;
             case 3:
                 model.linkUrl = @"http://dlsw.baidu.com/sw-search-sp/soft/2a/25677/QQ_V4.1.1.1456905733.dmg";

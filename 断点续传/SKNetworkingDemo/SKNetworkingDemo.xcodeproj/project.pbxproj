@@ -213,7 +213,8 @@
 				TargetAttributes = {
 					21ACE5B31CEDB74200B9B4BA = {
 						CreatedOnToolsVersion = 7.3;
-						DevelopmentTeam = LH66V26Z7L;
+						DevelopmentTeam = H9J886PZ98;
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -424,11 +425,14 @@
 			baseConfigurationReference = 222CD57718ADAE7CB8BBF3A5 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = LH66V26Z7L;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = H9J886PZ98;
 				INFOPLIST_FILE = SKNetworkingDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = J1.SKNetworkingDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "2227da1f-1ef0-4aa4-847e-046e00c8c9a7";
+				PROVISIONING_PROFILE_SPECIFIER = SC_Any_App;
 			};
 			name = Debug;
 		};
@@ -437,11 +441,14 @@
 			baseConfigurationReference = 369F7C9A950C1353296FFE5C /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = LH66V26Z7L;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = H9J886PZ98;
 				INFOPLIST_FILE = SKNetworkingDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = J1.SKNetworkingDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "2227da1f-1ef0-4aa4-847e-046e00c8c9a7";
+				PROVISIONING_PROFILE_SPECIFIER = SC_Any_App;
 			};
 			name = Release;
 		};
