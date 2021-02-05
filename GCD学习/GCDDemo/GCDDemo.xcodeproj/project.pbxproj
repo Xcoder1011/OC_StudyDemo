@@ -13,6 +13,7 @@
 		21329D0B1CD2F224002407FD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 21329D091CD2F224002407FD /* Main.storyboard */; };
 		21329D0D1CD2F224002407FD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 21329D0C1CD2F224002407FD /* Assets.xcassets */; };
 		21329D101CD2F224002407FD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 21329D0E1CD2F224002407FD /* LaunchScreen.storyboard */; };
+		2155923F25A2EBA800520A51 /* LockViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2155923E25A2EBA800520A51 /* LockViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +28,8 @@
 		21329D0F1CD2F224002407FD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		21329D111CD2F224002407FD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		21329D271CD3066E002407FD /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
+		2155923D25A2EBA800520A51 /* LockViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LockViewController.h; sourceTree = "<group>"; };
+		2155923E25A2EBA800520A51 /* LockViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LockViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +66,8 @@
 				21329D041CD2F224002407FD /* AppDelegate.m */,
 				21329D061CD2F224002407FD /* ViewController.h */,
 				21329D071CD2F224002407FD /* ViewController.m */,
+				2155923D25A2EBA800520A51 /* LockViewController.h */,
+				2155923E25A2EBA800520A51 /* LockViewController.m */,
 				21329D091CD2F224002407FD /* Main.storyboard */,
 				21329D0C1CD2F224002407FD /* Assets.xcassets */,
 				21329D0E1CD2F224002407FD /* LaunchScreen.storyboard */,
@@ -112,6 +117,8 @@
 				TargetAttributes = {
 					21329CFC1CD2F223002407FD = {
 						CreatedOnToolsVersion = 7.3;
+						DevelopmentTeam = H9J886PZ98;
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -120,6 +127,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -154,6 +162,7 @@
 				21329D081CD2F224002407FD /* ViewController.m in Sources */,
 				21329D051CD2F224002407FD /* AppDelegate.m in Sources */,
 				21329D021CD2F224002407FD /* main.m in Sources */,
+				2155923F25A2EBA800520A51 /* LockViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -265,6 +274,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = H9J886PZ98;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/GCDDemo/PrefixHeader.pch";
 				INFOPLIST_FILE = GCDDemo/Info.plist;
@@ -272,6 +283,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = J1.GCDDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "chelun any app";
 			};
 			name = Debug;
 		};
@@ -279,6 +291,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = H9J886PZ98;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/GCDDemo/PrefixHeader.pch";
 				INFOPLIST_FILE = GCDDemo/Info.plist;
@@ -286,6 +300,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = J1.GCDDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "chelun any app";
 			};
 			name = Release;
 		};

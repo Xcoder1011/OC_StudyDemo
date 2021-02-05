@@ -654,8 +654,9 @@
 // -------------——   9. Dispatch Semaphore和的介绍   -----------
 /*
  * 另外一种保证同步的方法:
- * 使用dispatch_semaphore_signal加1,dispatch_semaphore_wait减1,
- * 为0时等待的设置方式来达到线程同步的目的,和同步锁一样能够解决资源抢占的问题。
+ * 使用dispatch_semaphore_signal加1, dispatch_semaphore_wait减1,
+ * 和同步锁一样能够解决资源抢占的问题。
+ * 信号量的值<=0，当前线程就会进入休眠等待
  */
 -(void)dispatch_Semaphore
 {

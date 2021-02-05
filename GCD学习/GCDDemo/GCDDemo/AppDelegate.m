@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "LockViewController.h"
 
 @interface AppDelegate ()
 
@@ -16,7 +17,10 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+    
+    LockViewController *lock = [[LockViewController alloc] initWithStyle:UITableViewStylePlain];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:lock];
+    self.window.rootViewController = nav;
     return YES;
 }
 
