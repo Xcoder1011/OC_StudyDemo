@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "LockViewController.h"
+#import "GCDDemo-Swift.h"
 
 @interface AppDelegate ()
 
@@ -15,12 +16,13 @@
 
 @implementation AppDelegate
 
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    
-    LockViewController *lock = [[LockViewController alloc] initWithStyle:UITableViewStylePlain];
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:lock];
-    self.window.rootViewController = nav;
+    LockViewController *lockController = [[LockViewController alloc] initWithStyle:UITableViewStylePlain];
+    QueueTestController *queueController = [[QueueTestController alloc] initWithStyle:UITableViewStylePlain];
+    UITabBarController *tabController = [[UITabBarController alloc] init];
+    tabController.viewControllers = @[lockController, queueController];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:tabController];
+       self.window.rootViewController = nav;
     return YES;
 }
 

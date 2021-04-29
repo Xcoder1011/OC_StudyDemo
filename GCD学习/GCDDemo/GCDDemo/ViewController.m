@@ -661,7 +661,7 @@
 -(void)dispatch_Semaphore
 {
     //创建semaphore
-    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(1);
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSLog(@"start");
         [NSThread sleepForTimeInterval:2.f];
@@ -832,6 +832,7 @@
      2016-05-03 15:00:17.661 GCDDemo[3197:853317] 2
      */
 }
+
 -(void)deadLockCase4{
     
     dispatch_queue_t serialQueue = dispatch_queue_create("com.test.serialQueue", DISPATCH_QUEUE_SERIAL);

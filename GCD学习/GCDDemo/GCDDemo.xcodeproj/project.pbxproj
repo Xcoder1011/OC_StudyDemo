@@ -14,6 +14,7 @@
 		21329D0D1CD2F224002407FD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 21329D0C1CD2F224002407FD /* Assets.xcassets */; };
 		21329D101CD2F224002407FD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 21329D0E1CD2F224002407FD /* LaunchScreen.storyboard */; };
 		2155923F25A2EBA800520A51 /* LockViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2155923E25A2EBA800520A51 /* LockViewController.m */; };
+		217B7CB9263A993D002883CA /* QueueTestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217B7CB8263A993D002883CA /* QueueTestController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,8 @@
 		21329D271CD3066E002407FD /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		2155923D25A2EBA800520A51 /* LockViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LockViewController.h; sourceTree = "<group>"; };
 		2155923E25A2EBA800520A51 /* LockViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LockViewController.m; sourceTree = "<group>"; };
+		217B7CB7263A993D002883CA /* GCDDemo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GCDDemo-Bridging-Header.h"; sourceTree = "<group>"; };
+		217B7CB8263A993D002883CA /* QueueTestController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueTestController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,12 +71,14 @@
 				21329D071CD2F224002407FD /* ViewController.m */,
 				2155923D25A2EBA800520A51 /* LockViewController.h */,
 				2155923E25A2EBA800520A51 /* LockViewController.m */,
+				217B7CB8263A993D002883CA /* QueueTestController.swift */,
 				21329D091CD2F224002407FD /* Main.storyboard */,
 				21329D0C1CD2F224002407FD /* Assets.xcassets */,
 				21329D0E1CD2F224002407FD /* LaunchScreen.storyboard */,
 				21329D111CD2F224002407FD /* Info.plist */,
 				21329D271CD3066E002407FD /* PrefixHeader.pch */,
 				21329D001CD2F224002407FD /* Supporting Files */,
+				217B7CB7263A993D002883CA /* GCDDemo-Bridging-Header.h */,
 			);
 			path = GCDDemo;
 			sourceTree = "<group>";
@@ -118,6 +123,7 @@
 					21329CFC1CD2F223002407FD = {
 						CreatedOnToolsVersion = 7.3;
 						DevelopmentTeam = H9J886PZ98;
+						LastSwiftMigration = 1170;
 						ProvisioningStyle = Manual;
 					};
 				};
@@ -160,6 +166,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				21329D081CD2F224002407FD /* ViewController.m in Sources */,
+				217B7CB9263A993D002883CA /* QueueTestController.swift in Sources */,
 				21329D051CD2F224002407FD /* AppDelegate.m in Sources */,
 				21329D021CD2F224002407FD /* main.m in Sources */,
 				2155923F25A2EBA800520A51 /* LockViewController.m in Sources */,
@@ -274,7 +281,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Manual;
+				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = H9J886PZ98;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/GCDDemo/PrefixHeader.pch";
@@ -284,6 +293,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = J1.GCDDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "chelun any app";
+				SWIFT_OBJC_BRIDGING_HEADER = "GCDDemo/GCDDemo-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -291,7 +303,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Manual;
+				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = H9J886PZ98;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/GCDDemo/PrefixHeader.pch";
@@ -301,6 +315,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = J1.GCDDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "chelun any app";
+				SWIFT_OBJC_BRIDGING_HEADER = "GCDDemo/GCDDemo-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
