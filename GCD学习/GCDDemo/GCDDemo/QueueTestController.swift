@@ -53,6 +53,20 @@ import UIKit
             "title":"并行队列，异步->同步 混合情况",
             "action":"concurrentQueue_Sync_Async"
         ],
+        [
+            "title":"==========================================",
+            "action":""
+        ],
+        
+        [
+            "title":"Tagged Pointer",
+            "action":"taggedPointerTest"
+        ],
+        
+        [
+            "title":"Tagged Pointer多线程",
+            "action":"taggedPointer_queue_operation_Test"
+        ],
         
     ]
     
@@ -368,6 +382,235 @@ import UIKit
          5  <NSThread: 0x2806d4f00>{number = 7, name = (null)}
          
          */
+    }
+    
+    
+    // Tagged Pointer
+    @objc func taggedPointerTest() {
+        
+        print(">>>>>>>>>>>>>> 开始打印 NSString")
+        let c: Character = "a"
+        var str = ""
+        guard var v = c.asciiValue else { return }
+        var classType = ""
+        repeat {
+            str.append(Character(UnicodeScalar(v)))
+            let nsString = NSString(string: str)
+            classType = type(of: nsString).description()
+            let size = MemoryLayout.size(ofValue: nsString)
+            print("字符串：\(nsString) ，字符串类型：\(classType)， 指针：\(String(format: "%p", nsString)), memory size:\(size)")
+            v += 1
+        } while (classType == "NSTaggedPointerString")
+        
+        print("\n>>>>>>>>> 类型开始变化的字符串长度为：\(str.count), 字符串：\(str)")
+        for i in v ..< v+10 {
+            str.append(Character(UnicodeScalar(i)))
+            let nsString = NSString(string: str)
+            classType = type(of: nsString).description()
+            let size = MemoryLayout.size(ofValue: nsString)
+            print("字符串：\(nsString) ，字符串类型：\(classType)， 指针：\(String(format: "%p", nsString)), memory size:\(size)")
+        }
+        
+        print("\n>>>>>>>>>>>>>> 开始打印 NSNumber")
+        let nums = [1, 2, 2.6, 3]
+        for num in nums {
+            let number = NSNumber(value: num)
+            classType = type(of: number).description()
+            let size = MemoryLayout.size(ofValue: number)
+            print("Number：\(number) ，类型：\(classType)， 指针：\(String(format: "%p", number)), memory size:\(size)")
+        }
+        
+        /*
+         打印结果：
+         
+         >>>>>>>>>>>>>> 开始打印 NSString
+         字符串：a ，字符串类型：NSTaggedPointerString， 指针：0x90195bc20122acf3, memory size:8
+         字符串：ab ，字符串类型：NSTaggedPointerString， 指针：0x90195bc20113aceb, memory size:8
+         字符串：abc ，字符串类型：NSTaggedPointerString， 指针：0x90195bc23093ace3, memory size:8
+         字符串：abcd ，字符串类型：NSTaggedPointerString， 指针：0x90195bf03093acdb, memory size:8
+         字符串：abcde ，字符串类型：NSTaggedPointerString， 指针：0x901969703093acd3, memory size:8
+         字符串：abcdef ，字符串类型：NSTaggedPointerString， 指针：0x902a69703093accb, memory size:8
+         字符串：abcdefg ，字符串类型：NSTaggedPointerString， 指针：0xa3aa69703093acc3, memory size:8
+         字符串：abcdefgh ，字符串类型：NSTaggedPointerString， 指针：0x90085a0701a9d6bb, memory size:8
+         字符串：abcdefghi ，字符串类型：NSTaggedPointerString， 指针：0x94592a8223f03cb3, memory size:8
+         字符串：abcdefghij ，字符串类型：__NSCFString， 指针：0x281454bc0, memory size:8
+
+         >>>>>>>>> 类型开始变化的字符串长度为：10, 字符串：abcdefghij
+         字符串：abcdefghijk ，字符串类型：__NSCFString， 指针：0x2814515a0, memory size:8
+         字符串：abcdefghijkl ，字符串类型：__NSCFString， 指针：0x281450b80, memory size:8
+         字符串：abcdefghijklm ，字符串类型：__NSCFString， 指针：0x281451580, memory size:8
+         字符串：abcdefghijklmn ，字符串类型：__NSCFString， 指针：0x2814508a0, memory size:8
+         字符串：abcdefghijklmno ，字符串类型：__NSCFString， 指针：0x281a21e00, memory size:8
+         字符串：abcdefghijklmnop ，字符串类型：__NSCFString， 指针：0x281a224c0, memory size:8
+         字符串：abcdefghijklmnopq ，字符串类型：__NSCFString， 指针：0x281a224f0, memory size:8
+         字符串：abcdefghijklmnopqr ，字符串类型：__NSCFString， 指针：0x281a22520, memory size:8
+         字符串：abcdefghijklmnopqrs ，字符串类型：__NSCFString， 指针：0x281a22550, memory size:8
+         字符串：abcdefghijklmnopqrst ，字符串类型：__NSCFString， 指针：0x281a22580, memory size:8
+
+         >>>>>>>>>>>>>> 开始打印 NSNumber
+         Number：1 ，类型：__NSCFNumber， 指针：0x90195bc201229cd2, memory size:8
+         Number：2 ，类型：__NSCFNumber， 指针：0x90195bc201229d52, memory size:8
+         Number：2.6 ，类型：__NSCFNumber， 指针：0x281451460, memory size:8
+         Number：3 ，类型：__NSCFNumber， 指针：0x90195bc201229dd2, memory size:8
+
+        */
+        
+        
+        /*
+         小结：
+         1、从 64位架构处理器开始，苹果引入了标记指针（Tagged Pointer）技术；
+         2、Tagged Pointer专门用来存储小对象，比如NSString、NSNumber、NSDate、NSIndexPath；
+         3、__NSCFConstantString ： 常量字符串，存储在常量区，继承于 __NSCFString。相同内容的 __NSCFConstantString 对象的地址相同；
+         4、__NSCFString：存储在堆区，需要维护其引用计数；
+         5、NSTaggedPointerString: 字符串的值直接存储在了指针上，其初始化的引用计数为2^64-1；
+         6、Tagged Pointer指针的值不再是堆区地址，而是包含该数据的值，所以它不会在堆上再开辟空间（存储在栈中），也不需要管理对象的生命周期。（简单说 就不是一个对象，没有isa指针）；
+         7、Tagged Pointer位视图： 标识位 + 类标识位 + 存储数据 + 数据类型；
+         8、当Tagged Pointer存储数据位不够存储该数据时，就会使用动态分配内存的方式来存储数据，此时指针指向的是堆中该对象的地址值；
+         9、小数不是Tagged Pointer，而是普通的对象，指向堆中地址。
+        */
+       
+    }
+    
+    var name: NSString?
+    
+    @objc func taggedPointer_queue_operation_Test() {
+        
+        let queue = DispatchQueue.global(priority: .default)
+        for i in 0...1000 {
+            queue.async {
+                self.name = NSString("abcdefghi")
+                if let name = self.name {
+                    let classType = type(of: name).description()
+                    let size = MemoryLayout.size(ofValue: name)
+                    print("【\(i)】self.name：\(name) ，字符串类型：\(classType)， 指针：\(String(format: "%p", name)), memory size:\(size)，Thread：\(Thread.current)")
+                }
+            }
+        }
+        
+        /*
+         【0】self.name：abcdefghi ，字符串类型：NSTaggedPointerString， 指针：0xb0d65176d01db9cb, memory size:8，Thread：<NSThread: 0x282d30e00>{number = 6, name = (null)}
+         【2】self.name：abcdefghi ，字符串类型：NSTaggedPointerString， 指针：0xb0d65176d01db9cb, memory size:8，Thread：<NSThread: 0x282d1ccc0>{number = 9, name = (null)}
+         【4】self.name：abcdefghi ，字符串类型：NSTaggedPointerString， 指针：0xb0d65176d01db9cb, memory size:8，Thread：<NSThread: 0x282d30e00>{number = 6, name = (null)}
+         【5】self.name：abcdefghi ，字符串类型：NSTaggedPointerString， 指针：0xb0d65176d01db9cb, memory size:8，Thread：<NSThread: 0x282d15e80>{number = 10, name = (null)}
+         【1】self.name：abcdefghi ，字符串类型：NSTaggedPointerString， 指针：0xb0d65176d01db9cb, memory size:8，Thread：<NSThread: 0x282d1cd40>{number = 8, name = (null)}
+         【8】self.name：abcdefghi ，字符串类型：NSTaggedPointerString， 指针：0xb0d65176d01db9cb, memory size:8，Thread：<NSThread: 0x282d15e80>{number = 10, name = (null)}
+         【3】self.name：abcdefghi ，字符串类型：NSTaggedPointerString， 指针：0xb0d65176d01db9cb, memory size:8，Thread：<NSThread: 0x282d15f00>{number = 7, name = (null)}
+         【12】self.name：abcdefghi ，字符串类型：NSTaggedPointerString， 指针：0xb0d65176d01db9cb, memory size:8，Thread：<NSThread: 0x282d15e80>{number = 10, name = (null)}
+         【13】self.name：abcdefghi ，字符串类型：NSTaggedPointerString， 指针：0xb0d65176d01db9cb, memory size:8，Thread：<NSThread: 0x282d15f00>{number = 7, name = (null)}
+         【9】self.name：abcdefghi ，字符串类型：NSTaggedPointerString， 指针：0xb0d65176d01db9cb, memory size:8，Thread：<NSThread: 0x282d1cd40>{number = 8, name = (null)}
+         【14】self.name：abcdefghi ，字符串类型：NSTaggedPointerString， 指针：0xb0d65176d01db9cb, memory size:8，Thread：<NSThread: 0x282d15e80>{number = 10, name = (null)}
+         
+         
+         总结：
+         
+         __attribute__((aligned(16)))
+         void objc_release(id obj)
+         {
+             if (!obj) return;
+             if (obj->isTaggedPointer()) return;
+             return obj->release();
+         }
+         
+         
+         1、NSTaggedPointerString类型的字符串，值不变的情况下，其标记指针的值也不不会发生变化；
+         2、源码分析：Tagged Pointer不支持release、retain、autorelease、malloc和free等操作，其初始化的引用计数为2^64-1；
+         3、NSTaggedPointerString字符串进行赋值，访问的是栈中的地址，不是一个对象，直接取值操作，所以不会crash，而且效率极高。
+
+         */
+        
+        
+        for i in 0...1000 {
+            queue.async {
+                self.name = NSString("abcdefghij")
+                if let name = self.name {
+                    let classType = type(of: name).description()
+                    let size = MemoryLayout.size(ofValue: name)
+                    print("【\(i)】self.name：\(name) ，字符串类型：\(classType)， 指针：\(String(format: "%p", name)), memory size:\(size)，Thread：\(Thread.current)")
+                }
+            }
+        }
+        
+        /*
+         
+         【1】self.name：abcdefghij ，字符串类型：__NSCFString， 指针：0x280720560, memory size:8，Thread：<NSThread: 0x28122fd00>{number = 3, name = (null)}
+         【0】self.name：abcdefghij ，字符串类型：__NSCFString， 指针：0x280734440, memory size:8，Thread：<NSThread: 0x28125cb80>{number = 4, name = (null)}
+         【5】self.name：abcdefghij ，字符串类型：__NSCFString， 指针：0x28075be80, memory size:8，Thread：<NSThread: 0x28122fd00>{number = 3, name = (null)}
+         【6】self.name：abcdefghij ，字符串类型：__NSCFString， 指针：0x2807344e0, memory size:8，Thread：<NSThread: 0x28125cb80>{number = 4, name = (null)}
+         【7】self.name：abcdefghij ，字符串类型：__NSCFString， 指针：0x28075bc60, memory size:8，Thread：<NSThread: 0x28122fd00>{number = 3, name = (null)}
+         【8】self.name：abcdefghij ，字符串类型：__NSCFString， 指针：0x280734500, memory size:8，Thread：<NSThread: 0x28125cb80>{number = 4, name = (null)}
+         【3】self.name：abcdefghij ，字符串类型：__NSCFString， 指针：0x2807209e0, memory size:8，Thread：<NSThread: 0x2812545c0>{number = 7, name = (null)}
+         【4】self.name：abcdefghij ，字符串类型：__NSCFString， 指针：0x280720500, memory size:8，Thread：<NSThread: 0x281254580>{number = 9, name = (null)}
+         【13】self.name：abcdefghij ，字符串类型：__NSCFString， 指针：0x28073d040, memory size:8，Thread：<NSThread: 0x2812545c0>{number = 7, name = (null)}
+         
+         
+         总结：
+         
+         - (void)setName:(NSString *)name {
+             if(_name != name) {
+                 [_name release];
+                 _name = [name retain]; // or [name copy]
+             }
+         
+         1、__NSCFString存储在堆中，需要维护引用计数。self.name通过setter方法为其赋值；
+         2、异步并发执行setter方法，可能就会有多条线程同时执行[_name release]，连续release两次就会造成对象的过度释放，导致Crash。
+         
+         */
+        
+        
+        // 解决办法1： 加锁处理：
+        let lock = NSLock()
+        for i in 0...1000 {
+            queue.async {
+                if lock.try() {
+                    lock.lock()
+                }
+                self.name = NSString("abcdefghij")
+                if let name = self.name {
+                    let classType = type(of: name).description()
+                    let size = MemoryLayout.size(ofValue: name)
+                    print("【\(i)】self.name：\(name) ，字符串类型：\(classType)， 指针：\(String(format: "%p", name)), memory size:\(size)，Thread：\(Thread.current)")
+                }
+                lock.unlock()
+            }
+        }
+        
+        
+        // 解决办法2： 信号量处理
+        let semphore = DispatchSemaphore(value: 1)
+        for i in 0...1000 {
+            queue.async {
+                semphore.wait()
+                self.name = NSString("abcdefghij")
+                if let name = self.name {
+                    let classType = type(of: name).description()
+                    let size = MemoryLayout.size(ofValue: name)
+                    print("【\(i)】self.name：\(name) ，字符串类型：\(classType)， 指针：\(String(format: "%p", name)), memory size:\(size)，Thread：\(Thread.current)")
+                }
+                semphore.signal()
+            }
+        }
+    }
+    
+    // 拓展一个面试题:
+    // 以下两种情形分别会发生什么？
+    var number: NSNumber?
+    func test() {
+        
+        let queue = DispatchQueue.global(priority: .default)
+        
+        // 情形一：
+        for _ in 0...1000 {
+            queue.async {
+                self.number = NSNumber(1)
+            }
+        }
+        
+        // 情形二：
+        for _ in 0...1000 {
+            queue.async {
+                self.number = NSNumber(1.1)
+            }
+        }
     }
     
     // MARK: - Table view data source
