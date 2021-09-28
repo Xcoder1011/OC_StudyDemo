@@ -151,6 +151,16 @@
         //
     });
     
+    /* 总结
+    
+    dispatch_sync 同步执行：
+        不管是在主队列、串行队列还是并发队列，都没有开启新线程，都是串行执行任务
+     
+    dispatch_async 异步执行：
+        1. 在主队列中，没有开启新线程、串行执行任务
+        2. 在手动创建的串行队列中，开启一个新线程，串行执行任务
+        3. 在全局并发队列中， 开启多条新线程， 并发执行任务
+    */
     
     
     // -------------——   4. 队列的类型    -----------——
@@ -231,7 +241,7 @@
         NSURL *url = [NSURL URLWithString:@"http://avatar.csdn.net/2/C/D/1_totogo2010.jpg"];
         NSData *data = [[NSData alloc]initWithContentsOfURL:url];
         UIImage *image = [[UIImage alloc]initWithData:data];
-        if (data != nil) {
+        if (image != nil) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 // 更新界面
                 // self.imageView.image = image;
@@ -654,10 +664,13 @@
 // -------------——   9. Dispatch Semaphore和的介绍   -----------
 /*
  * 另外一种保证同步的方法:
- * 使用dispatch_semaphore_signal加1, dispatch_semaphore_wait减1,
  * 和同步锁一样能够解决资源抢占的问题。
- * 信号量的值<=0，当前线程就会进入休眠等待
+ * 信号量的初始值可以用来控制线程并发发访问的最大数量。
+ * 信号量的初始值为1，代表同时允许1条线程访问资源，这样就可以达到线程同步的目的
+ * 使用dispatch_semaphore_signal加1, dispatch_semaphore_wait减1,
+ * 信号量的值<=0，当前线程就会进入休眠等待； 信号量的值>0往下执行后面的代码。
  */
+
 -(void)dispatch_Semaphore
 {
     //创建semaphore
@@ -890,9 +903,5 @@
      2016-05-03 15:18:52.494 GCDDemo[3495:952368] 1
      */
 }
-
-
-
-
 
 @end
